@@ -1,4 +1,4 @@
-import { Text, TextProps } from '@pancakeswap/uikit'
+import { Text, TextProps } from '@uikit'
 import { useTranslation } from 'contexts/Localization'
 import { TranslatableText as AchievementDescriptionType } from 'config/constants/types'
 import styled from 'styled-components'

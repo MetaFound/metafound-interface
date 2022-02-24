@@ -9,7 +9,7 @@ import {
   CheckmarkCircleIcon,
   useWalletModal,
   useModal,
-} from '@pancakeswap/uikit'
+} from '@uikit'
 import useAuth from 'hooks/useAuth'
 import { useTranslation } from 'contexts/Localization'
 import { FINISHED, OVER } from 'config/constants/trading-competition/phases'

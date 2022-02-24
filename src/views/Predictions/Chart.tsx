@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Flex } from '@pancakeswap/uikit'
+import { Flex } from '@uikit'
 import Menu from './components/Menu'
 import TradingView from './components/TradingView'
 

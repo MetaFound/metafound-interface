@@ -1,4 +1,4 @@
-import { Text, TextProps } from '@pancakeswap/uikit'
+import { Text, TextProps } from '@uikit'
 import { useTranslation } from 'contexts/Localization'
 import { MarketEvent } from '../../../../../state/nftMarket/types'
 

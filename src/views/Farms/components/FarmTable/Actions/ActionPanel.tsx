@@ -1,6 +1,6 @@
 import styled, { keyframes, css } from 'styled-components'
 import { useTranslation } from 'contexts/Localization'
-import { LinkExternal, Text } from '@pancakeswap/uikit'
+import { LinkExternal, Text } from '@uikit'
 import { FarmWithStakedValue } from 'views/Farms/components/FarmCard/FarmCard'
 import getLiquidityUrlPathParts from 'utils/getLiquidityUrlPathParts'
 import { getAddress } from 'utils/addressHelpers'

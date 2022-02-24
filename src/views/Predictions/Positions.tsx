@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import SwiperCore, { Keyboard, Mousewheel } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Box } from '@pancakeswap/uikit'
+import { Box } from '@uikit'
 import { useGetCurrentEpoch, useGetSortedRounds } from 'state/predictions/hooks'
 import 'swiper/swiper.min.css'
 import RoundCard from './components/RoundCard'

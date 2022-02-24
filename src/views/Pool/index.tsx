@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { Pair } from '@pancakeswap/sdk'
-import { Text, Flex, CardBody, CardFooter, Button, AddIcon } from '@pancakeswap/uikit'
+import { Text, Flex, CardBody, CardFooter, Button, AddIcon } from '@uikit'
 import Link from 'next/link'
 import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'

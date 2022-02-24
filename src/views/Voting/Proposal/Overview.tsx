@@ -1,4 +1,4 @@
-import { ArrowBackIcon, Box, Button, Flex, Heading } from '@pancakeswap/uikit'
+import { ArrowBackIcon, Box, Button, Flex, Heading } from '@uikit'
 import { PageMeta } from 'components/Layout/Page'
 import useSWR from 'swr'
 import { getAllVotes } from 'state/voting/helpers'

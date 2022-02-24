@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Flex } from '@pancakeswap/uikit'
+import { Flex } from '@uikit'
 import sum from 'lodash/sum'
 import Page from 'components/Layout/Page'
 import { useGetCollection } from 'state/nftMarket/hooks'

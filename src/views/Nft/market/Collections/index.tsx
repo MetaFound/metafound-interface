@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowBackIcon, ArrowForwardIcon, Flex, Grid, Heading, Text, useMatchBreakpoints } from '@pancakeswap/uikit'
+import { ArrowBackIcon, ArrowForwardIcon, Flex, Grid, Heading, Text, useMatchBreakpoints } from '@uikit'
 import styled from 'styled-components'
 import { FetchStatus } from 'config/constants/types'
 import { useGetShuffledCollections } from 'state/nftMarket/hooks'

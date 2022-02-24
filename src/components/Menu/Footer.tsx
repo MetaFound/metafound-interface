@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ButtonMenu, ButtonMenuItem, LinkExternal, Flex, Svg, Image, Button } from '@pancakeswap/uikit'
+import { ButtonMenu, ButtonMenuItem, LinkExternal, Flex, Svg, Image, Button } from '@uikit'
 import { useTranslation } from 'contexts/Localization'
 
 const Wrapper = styled.div<{ $isSide: boolean }>`

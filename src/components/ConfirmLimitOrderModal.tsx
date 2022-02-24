@@ -1,5 +1,5 @@
 import { Trade } from '@pancakeswap/sdk'
-import { ArrowDownIcon, Button, Flex, Message, MessageText, Modal, Spinner, Text } from '@pancakeswap/uikit'
+import { ArrowDownIcon, Button, Flex, Message, MessageText, Modal, Spinner, Text } from '@uikit'
 import { CurrencyLogo } from 'components/Logo'
 import { useTranslation } from 'contexts/Localization'
 import useTheme from 'hooks/useTheme'
