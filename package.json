@@ -1,10 +1,10 @@
 {
-  "name": "pancake-frontend",
+  "name": "metafound-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "analyze": "ANALYZE=true yarn build",
-    "dev": "next dev",
+    "dev": "next dev -p 18236",
     "build": "next build",
     "start": "next start",
     "test": "jest",

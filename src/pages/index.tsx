@@ -6,7 +6,7 @@ import { SWRConfig } from 'swr'
 import { DeBankTvlResponse } from 'hooks/api'
 import { bitQueryServerClient, infoServerClient } from 'utils/graphql'
 import { getBlocksFromTimestamps } from 'views/Info/hooks/useBlocksFromTimestamps'
-import Home from '../views/Home'
+import Home2 from '../views/Home2'
 
 const IndexPage = ({ totalTx30Days, addressCount30Days, tvl }) => {
   return (
@@ -19,7 +19,7 @@ const IndexPage = ({ totalTx30Days, addressCount30Days, tvl }) => {
         },
       }}
     >
-      <Home />
+      <Home2 />
     </SWRConfig>
   )
 }
