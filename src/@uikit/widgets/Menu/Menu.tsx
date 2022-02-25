@@ -4,16 +4,16 @@ import styled from 'styled-components'
 import BottomNav from '../../components/BottomNav'
 import { Box } from '../../components/Box'
 import Flex from '../../components/Box/Flex'
-import Footer from '../../components/Footer'
 import MenuItems from '../../components/MenuItems/MenuItems'
 import { SubMenuItems } from '../../components/SubMenuItems'
 import { useMatchBreakpoints } from '../../hooks'
 import CakePrice from '../../components/CakePrice/CakePrice'
 import Logo from './components/Logo'
-import { MENU_HEIGHT, MOBILE_MENU_HEIGHT, TOP_BANNER_HEIGHT, TOP_BANNER_HEIGHT_MOBILE } from './config'
+import { MENU_HEIGHT, TOP_BANNER_HEIGHT, TOP_BANNER_HEIGHT_MOBILE } from './config'
 import { NavProps } from './types'
 import LangSelector from '../../components/LangSelector/LangSelector'
 import { MenuContext } from './context'
+import Footer2 from '@uikit/components/Footer/Footer2'
 
 const Wrapper = styled.div`
   position: relative;
@@ -171,6 +171,7 @@ const Menu: React.FC<NavProps> = ({
         <BodyWrapper mt={!subLinks ? `${totalTopMenuHeight + 1}px` : '0'}>
           <Inner isPushed={false} showMenu={showMenu}>
             {children}
+            {/*
             <Footer
               items={footerLinks}
               isDark={isDark}
@@ -182,6 +183,8 @@ const Menu: React.FC<NavProps> = ({
               buyCakeLabel={buyCakeLabel}
               mb={[`${MOBILE_MENU_HEIGHT}px`, null, '0px']}
             />
+            */}
+            <Footer2 />
           </Inner>
         </BodyWrapper>
         {isMobile && <BottomNav items={links} activeItem={activeItem} activeSubItem={activeSubItem} />}
