@@ -1,27 +1,26 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState } from 'react'
+import styled from 'styled-components'
 /* eslint-disable import/no-unresolved */
-import { Meta } from "@storybook/react/types-6-0";
-import TabMenu from "./TabMenu";
-import Tab from "./Tab";
+import TabMenu from './TabMenu'
+import Tab from './Tab'
 
 export default {
-  title: "Components/Tab Menu",
+  title: 'Components/Tab Menu',
   component: TabMenu,
   argTypes: {},
-} as Meta;
+}
 
 const Row = styled.div`
   margin-bottom: 32px;
-`;
+`
 
 export const Default: React.FC = () => {
-  const [index, setIndex] = useState(0);
-  const [index2, setIndex2] = useState(0);
-  const [index3, setIndex3] = useState(0);
-  const handleClick = (newIndex) => setIndex(newIndex);
-  const handleClick2 = (newIndex) => setIndex2(newIndex);
-  const handleClick3 = (newIndex) => setIndex3(newIndex);
+  const [index, setIndex] = useState(0)
+  const [index2, setIndex2] = useState(0)
+  const [index3, setIndex3] = useState(0)
+  const handleClick = (newIndex) => setIndex(newIndex)
+  const handleClick2 = (newIndex) => setIndex2(newIndex)
+  const handleClick3 = (newIndex) => setIndex3(newIndex)
 
   return (
     <>
@@ -48,8 +47,8 @@ export const Default: React.FC = () => {
         </TabMenu>
       </Row>
     </>
-  );
-};
+  )
+}
 
 export const Tabs: React.FC = () => {
   return (
@@ -65,5 +64,5 @@ export const Tabs: React.FC = () => {
         <Tab scale="lg">Large scale (lg)</Tab>
       </Row>
     </>
-  );
-};
+  )
+}
