@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "analyze": "ANALYZE=true yarn build",
-    "dev": "next dev -p 18236",
+    "dev": "next dev -p 20236",
     "build": "next build",
     "start": "next start",
     "test": "jest",
