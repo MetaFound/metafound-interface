@@ -12,7 +12,7 @@ const FooterText = styled(Text)`
 
 const Footer2 = () => {
   return (
-    <Flex justifyContent="space-between" maxWidth="1300px" margin="0 auto" padding="0 16px">
+    <Flex justifyContent="space-between" maxWidth="1300px" margin="0 auto" padding="16px">
       <Flex style={{ gap: '12px', alignItems: 'center' }}>
         <Link
           href="https://www.google.com"

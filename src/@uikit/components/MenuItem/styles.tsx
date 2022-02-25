@@ -1,12 +1,12 @@
-import styled from "styled-components";
-import { StyledMenuItemProps } from "./types";
+import styled from 'styled-components'
+import { StyledMenuItemProps } from './types'
 
 export const StyledMenuItemContainer = styled.div<StyledMenuItemProps>`
   position: relative;
 
   ${({ $isActive, $variant, theme }) =>
     $isActive &&
-    $variant === "subMenu" &&
+    $variant === 'subMenu' &&
     `
       &:after{
         content: "";
@@ -18,16 +18,18 @@ export const StyledMenuItemContainer = styled.div<StyledMenuItemProps>`
         border-radius: 2px 2px 0 0;
       }
     `};
-`;
+`
 
 const StyledMenuItem = styled.a<StyledMenuItemProps>`
   position: relative;
   display: flex;
   align-items: center;
 
-  color: ${({ theme, $isActive }) => ($isActive ? theme.colors.secondary : theme.colors.textSubtle)};
+  // color: ${({ theme, $isActive }) => ($isActive ? theme.colors.secondary : theme.colors.textSubtle)};
+  color: ${({ theme, $isActive }) => ($isActive ? theme.colors.text : theme.colors.text)};
   font-size: 16px;
-  font-weight: ${({ $isActive }) => ($isActive ? "600" : "400")};
+  // font-weight: ${({ $isActive }) => ($isActive ? '600' : '400')};
+  font-weight: ${({ $isActive }) => ($isActive ? '600' : '600')};
 
   ${({ $statusColor, theme }) =>
     $statusColor &&
@@ -43,20 +45,36 @@ const StyledMenuItem = styled.a<StyledMenuItemProps>`
   `}
 
   ${({ $variant }) =>
-    $variant === "default"
+    $variant === 'default'
       ? `
     padding: 0 16px;
-    height: 48px;
+    height: 64px;
   `
       : `
     padding: 4px 4px 0px 4px;
     height: 42px;
   `}
-
+  
   &:hover {
-    background: ${({ theme }) => theme.colors.tertiary};
-    ${({ $variant }) => $variant === "default" && "border-radius: 16px;"};
-  }
-`;
+    // background: ${({ theme }) => theme.colors.tertiary};
+    // ${({ $variant }) => $variant === 'default' && 'border-radius: 16px;'};
 
-export default StyledMenuItem;
+    color: ${({ theme }) => theme.colors.textSubtle};
+  }
+
+  ${({ $isActive, theme }) =>
+    $isActive
+      ? `
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      border-bottom: 3px solid ${theme.colors.primary};
+    }
+  `
+      : ``}
+`
+
+export default StyledMenuItem
