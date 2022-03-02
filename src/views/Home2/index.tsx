@@ -24,7 +24,7 @@ const Text2 = styled(Text)`
   line-height: 45px;
 
   ${({theme}) => theme.mediaQueries.sm} {
-    margin-top: 35px;
+    font-size: 35px;
   }
 `
 
@@ -44,7 +44,7 @@ const Text4 = styled(Text)`
   line-height: 35px;
 
   ${({theme}) => theme.mediaQueries.sm} {
-    margin-top: 20px;
+    font-size: 20px;
   }
 `
 
