@@ -160,12 +160,13 @@ const Page2IconShadow = styled.img`
 
 const Page2Text = styled(Text)`
   font-size: 16px;
-  font-weight: 600;
   margin-top: 32px;
   max-width: 25ch;
+  font-weight: 500;
 
   ${({theme}) => theme.mediaQueries.sm} {
     font-size: 18px;
+    font-weight: 600;
   }
 `
 
