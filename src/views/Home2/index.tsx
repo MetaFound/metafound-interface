@@ -78,7 +78,7 @@ const ButtonBlock = styled(Flex)`
 `
 
 const ConnectWalletButtonStyled = styled(ConnectWalletButton)`
-  border: ${({theme}) => `1px solid ${theme.colors.primary}`};
+  color: ${({theme}) => `${theme.colors.background}`};
   border-radius: 10px;
   font-weight: 600;
   width: 150px;
@@ -129,7 +129,7 @@ const BenefitBlock = styled(Flex)`
   margin-top: 48px;
   flex-wrap: wrap;
 
-  ${({theme}) => theme.mediaQueries.sm} {
+  ${({theme}) => theme.mediaQueries.md} {
     flex-wrap: unset;
     justify-content: space-between;
     margin-top: 120px;
@@ -138,9 +138,15 @@ const BenefitBlock = styled(Flex)`
 
 const BenefitBox = styled(Flex)`
   margin-bottom: 36px;
+  flex: 100%;
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  ${({theme}) => theme.mediaQueries.sm} {
+    flex: 50%;
+    gap: 12px;
   }
 `
 
@@ -178,6 +184,10 @@ const RegisterBox = styled(Flex)`
   gap: 32px;
   align-items: center;
   border-radius: 16px;
+  flex-wrap: wrap;
+  ${({theme}) => theme.mediaQueries.md} {
+    flex-wrap: unset;
+  }
 `
 
 const RegisterText = styled(Text)`
@@ -199,9 +209,11 @@ const RegisterButton = styled(Button)`
   font-size: 22px;
   font-weight: 600;
 
-  ${({theme}) => theme.mediaQueries.sm} {
+  ${({theme}) => theme.mediaQueries.md} {
     font-size: 25px;
+    height: 70px;
   }
+
 `
 
 const Section4Text = styled(Text)`
@@ -231,9 +243,17 @@ const Section4Text2 = styled(Text)`
   padding: 16px;
   font-size: 16px;
 
-  ${({theme}) => theme.mediaQueries.md} {
-    padding: 32px 98px;
+  ${({theme}) => theme.mediaQueries.lg} {
     font-size: 20px;
+    padding: 32px 58px;
+  }
+
+  @media screen and (min-width: 1800px) {
+    padding: 32px 68px;
+  }
+  
+  @media screen and (min-width: 1920px) {
+    padding: 32px 98px;
   }
 `
 
@@ -327,7 +347,7 @@ const Home2 = () => {
             </Section2>
             {/* SECTION 3 */}
             <Section3>
-                <RegisterBox flexWrap={"wrap"}>
+                <RegisterBox>
                     <RegisterText>
                         <Trans>
                             Allows project owners to launch validated products to gain access to finance and profit from
