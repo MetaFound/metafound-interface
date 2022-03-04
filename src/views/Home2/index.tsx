@@ -255,9 +255,15 @@ const Section4Text2 = styled(Text)`
 `
 
 const Section4RowCol = styled(Flex)`
-  width: 100%;
+  display: grid;
+  grid-auto-rows: 1fr;
   margin-top: 24px;
   gap: 24px;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: flex;
+    width: 100%;
+  }
 `
 
 const MetaFound = () => {
