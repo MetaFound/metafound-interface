@@ -59,7 +59,7 @@ const StyledMenuItem = styled.a<StyledMenuItemProps>`
     // background: ${({ theme }) => theme.colors.tertiary};
     // ${({ $variant }) => $variant === 'default' && 'border-radius: 16px;'};
 
-    color: ${({ theme }) => theme.colors.textSubtle};
+    color: ${({ theme }) => theme.colors.yellow};
   }
 
   ${({ $isActive, theme }) =>

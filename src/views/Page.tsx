@@ -11,7 +11,7 @@ const StyledPage = styled.div<{ $removePadding: boolean }>`
   padding: ${({ $removePadding }) => ($removePadding ? '0' : '16px')};
   padding-bottom: 0;
   min-height: calc(100vh - 64px);
-  background: ${({ theme }) => theme.colors.gradients.bubblegum};
+  // background: ${({ theme }) => theme.colors.gradients.bubblegum};
 
   ${({ theme }) => theme.mediaQueries.xs} {
     background-size: auto;
@@ -38,7 +38,7 @@ const Page: React.FC<
       <StyledPage $removePadding={removePadding} {...props}>
         {children}
         <Flex flexGrow={1} />
-        <Box display={['block', null, null, hideFooterOnDesktop ? 'none' : 'block']} width="100%">
+        <Box display={['none', null, null, hideFooterOnDesktop ? 'none' : 'block']} width="100%">
           <Footer />
         </Box>
       </StyledPage>
