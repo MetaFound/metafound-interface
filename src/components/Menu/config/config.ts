@@ -125,19 +125,35 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
     items: [],
   },
   {
-    label: t('Swap'),
+    label: t('Trade'),
     icon: 'Swap',
     href: '/swap',
     showItemsOnMobile: false,
-    items: [],
+    items: [
+      {
+        label: t('Exchange'),
+        href: '/swap',
+      },
+      {
+        label: t('Liquidity'),
+        href: '/liquidity',
+      },
+    ],
   },
-  {
-    label: t('Liquidity'),
-    icon: 'Nft',
-    href: '/liquidity',
-    showItemsOnMobile: false,
-    items: [],
-  },
+  // {
+  //   label: t('Swap'),
+  //   icon: 'Swap',
+  //   href: '/swap',
+  //   showItemsOnMobile: false,
+  //   items: [],
+  // },
+  // {
+  //   label: t('Liquidity'),
+  //   icon: 'Nft',
+  //   href: '/liquidity',
+  //   showItemsOnMobile: false,
+  //   items: [],
+  // },
   {
     label: t('Farm'),
     icon: 'Earn',

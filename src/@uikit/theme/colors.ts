@@ -16,6 +16,8 @@ export const additionalColors = {
   gold: '#FFC700',
   silver: '#B2B2B2',
   bronze: '#E7974D',
+  white: '#ffffff',
+  yellow: '#FDB814',
 }
 
 export const lightColors: Colors = {
@@ -51,23 +53,23 @@ export const lightColors: Colors = {
 export const darkColors: Colors = {
   ...baseColors,
   ...additionalColors,
-  secondary: '#9A6AFF',
+  secondary: '#C6C6C6',
   background: '#08060B',
   backgroundDisabled: '#3c3742',
-  backgroundAlt: '#27262c',
+  backgroundAlt: '#333333',
   backgroundAlt2: 'rgba(39, 38, 44, 0.7)',
-  cardBorder: '#383241',
+  cardBorder: '#333333',
   contrast: '#FFFFFF',
   dropdown: '#1E1D20',
   dropdownDeep: '#100C18',
   invertedContrast: '#191326',
-  input: '#372F47',
+  input: '#101010',
   inputSecondary: '#262130',
   primaryDark: '#0098A1',
   tertiary: '#353547',
   text: '#FFFFFF',
   textDisabled: '#666171',
-  textSubtle: '#B8ADD2',
+  textSubtle: '#ffffff',
   disabled: '#524B63',
   gradients: {
     bubblegum: 'linear-gradient(139.73deg, #313D5C 0%, #3D2A54 100%)',

@@ -54,31 +54,31 @@ const CurrencyInputHeader: React.FC<Props> = ({
   return (
     <CurrencyInputContainer>
       <Flex width="100%" alignItems="center" justifyContent="space-between">
-        {setIsChartDisplayed && (
+        {/* {setIsChartDisplayed && (
           <ColoredIconButton onClick={toggleChartDisplayed} variant="text" scale="sm">
             {isChartDisplayed ? <ChartDisableIcon color="textSubtle" /> : <ChartIcon width="24px" color="textSubtle" />}
           </ColoredIconButton>
-        )}
-        <Flex flexDirection="column" alignItems="flex-end" width="100%" mr={18}>
+        )} */}
+        <Flex flexDirection="column" alignItems="flex-start" width="100%" mr={18}>
           <Heading as="h2">{title}</Heading>
         </Flex>
         <Flex>
           <NotificationDot show={expertMode}>
-            <GlobalSettings color="textSubtle" mr="0" />
+            <GlobalSettings color="white" mr="0" />
           </NotificationDot>
-          <IconButton onClick={onPresentTransactionsModal} variant="text" scale="sm">
+          {/* <IconButton onClick={onPresentTransactionsModal} variant="text" scale="sm">
             <HistoryIcon color="textSubtle" width="24px" />
-          </IconButton>
+          </IconButton> */}
           <IconButton variant="text" scale="sm" onClick={() => onRefreshPrice()}>
-            <RefreshIcon disabled={!hasAmount} color="textSubtle" width="27px" />
+            <RefreshIcon disabled={!hasAmount} color="white" width="27px" />
           </IconButton>
         </Flex>
       </Flex>
-      <Flex alignItems="center">
-        <Text color="textSubtle" fontSize="14px">
+      {/* <Flex alignItems="center">
+        <Text color="white" fontSize="14px">
           {subtitle}
         </Text>
-      </Flex>
+      </Flex> */}
     </CurrencyInputContainer>
   )
 }

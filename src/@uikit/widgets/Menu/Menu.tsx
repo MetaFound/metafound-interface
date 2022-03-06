@@ -135,22 +135,23 @@ const Menu: React.FC<NavProps> = ({
               {!isMobile && <MenuItems items={links} activeItem={activeItem} activeSubItem={activeSubItem} ml="24px" />}
             </Flex>
             <Flex alignItems="center" height="100%">
-              {!isMobile && (
+              {/* {!isMobile && (
                 <Box mr="12px">
                   <CakePrice cakePriceUsd={cakePriceUsd} />
                 </Box>
-              )}
-              <Box mt="4px">
+              )} */}
+              {userMenu}
+              <Box mt="8px" ml="12px">
                 <LangSelector
                   currentLang={currentLang}
                   langs={langs}
                   setLang={setLang}
                   buttonScale="xs"
-                  color="textSubtle"
+                  color="white"
                   hideLanguage
                 />
               </Box>
-              {globalMenu} {userMenu}
+              {/* {globalMenu}  */}
             </Flex>
           </StyledNav>
         </FixedContainer>

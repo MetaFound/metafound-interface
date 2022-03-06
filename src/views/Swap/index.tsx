@@ -366,7 +366,7 @@ export default function Swap() {
   }, [hasAmount, refreshBlockNumber])
 
   return (
-    <Page removePadding={isChartExpanded} hideFooterOnDesktop={isChartExpanded}>
+    <Page removePadding={isChartExpanded} hideFooterOnDesktop>
       <Flex width="100%" justifyContent="center" position="relative">
         {!isMobile && (
           <PriceChartContainer
@@ -605,18 +605,18 @@ export default function Swap() {
                   </Box>
                 </Wrapper>
               </AppBody>
-              {!swapIsUnsupported ? (
+              {/* {!swapIsUnsupported ? (
                 trade && <AdvancedSwapDetailsDropdown trade={trade} />
               ) : (
                 <UnsupportedCurrencyFooter currencies={[currencies.INPUT, currencies.OUTPUT]} />
-              )}
+              )} */}
             </StyledInputCurrencyWrapper>
           </StyledSwapContainer>
-          {isChartExpanded && (
+          {/* {isChartExpanded && (
             <Box display={['none', null, null, 'block']} width="100%" height="100%">
               <Footer variant="side" />
             </Box>
-          )}
+          )} */}
         </Flex>
       </Flex>
     </Page>

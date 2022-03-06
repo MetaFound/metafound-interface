@@ -9,9 +9,9 @@ const getTextColor = ({
   theme,
 }: StyledDropdownMenuItemProps & { theme: DefaultTheme; $isActive: boolean }) => {
   if (disabled) return theme.colors.textDisabled;
-  if ($isActive) return theme.colors.secondary;
+  if ($isActive) return theme.colors.yellow;
 
-  return theme.colors.textSubtle;
+  return theme.colors.white;
 };
 
 export const DropdownMenuItem = styled.button<StyledDropdownMenuItemProps & { $isActive: boolean }>`
@@ -31,7 +31,8 @@ export const DropdownMenuItem = styled.button<StyledDropdownMenuItemProps & { $i
   width: 100%;
 
   &:hover:not(:disabled) {
-    background-color: ${({ theme }) => theme.colors.tertiary};
+    // background-color: ${({ theme }) => theme.colors.tertiary};
+    color: ${({ theme }) => theme.colors.yellow};
   }
 
   &:active:not(:disabled) {

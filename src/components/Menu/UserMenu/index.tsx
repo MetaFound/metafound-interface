@@ -106,7 +106,6 @@ const UserMenu = () => {
       </UIKitUserMenu>
     )
   }
-
   return <ConnectWalletButton scale="sm" />
 }
 
