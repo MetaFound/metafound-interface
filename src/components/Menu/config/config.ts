@@ -131,7 +131,7 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
     showItemsOnMobile: false,
     items: [
       {
-        label: t('Exchange'),
+        label: t('Swap'),
         href: '/swap',
       },
       {
