@@ -58,4 +58,14 @@ export const styleVariants = {
     color: "textSubtle",
     boxShadow: "none",
   },
+  [variants.METAFOUND]: {
+    backgroundColor: "metafound",
+    color: "black",
+    boxShadow: "none",
+  },
+  [variants.OPACITY]: {
+    backgroundColor: "opacity",
+    color: "white",
+    boxShadow: "none",
+  },
 };

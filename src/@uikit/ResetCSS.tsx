@@ -96,7 +96,7 @@ const ResetCSS = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.textSubtle};
+    background: ${({ theme }) => theme.colors.metafound};
     border-radius: 8px;
   }
 

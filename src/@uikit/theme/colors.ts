@@ -8,6 +8,7 @@ export const baseColors = {
   secondary: '#7645D9',
   success: '#31D0AA',
   warning: '#FFB237',
+  metafound: '#FDB814',
 }
 
 export const additionalColors = {
@@ -18,6 +19,9 @@ export const additionalColors = {
   bronze: '#E7974D',
   white: '#ffffff',
   yellow: '#FDB814',
+  black: '#000000',
+  opacity: '#454545',
+  gray: '#868686',
 }
 
 export const lightColors: Colors = {
@@ -55,7 +59,7 @@ export const darkColors: Colors = {
   ...additionalColors,
   secondary: '#C6C6C6',
   background: '#08060B',
-  backgroundDisabled: '#3c3742',
+  backgroundDisabled: '#fdb81426',
   backgroundAlt: '#333333',
   backgroundAlt2: 'rgba(39, 38, 44, 0.7)',
   cardBorder: '#333333',
@@ -68,7 +72,7 @@ export const darkColors: Colors = {
   primaryDark: '#0098A1',
   tertiary: '#353547',
   text: '#FFFFFF',
-  textDisabled: '#666171',
+  textDisabled: '#a1a1a1',
   textSubtle: '#ffffff',
   disabled: '#524B63',
   gradients: {

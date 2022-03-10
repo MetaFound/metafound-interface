@@ -20,9 +20,25 @@ const SwapModalFooterContainer = styled(AutoColumn)`
   margin-top: 24px;
   padding: 16px;
   border-radius: ${({ theme }) => theme.radii.default};
-  border: 1px solid ${({ theme }) => theme.colors.cardBorder};
-  background-color: ${({ theme }) => theme.colors.background};
+  border: 1px solid #686868;
+  background-color: transparent;
 `
+const TextInfo = styled(Text)`
+  margin-bottom: 15px;
+  color: #868686;
+`
+
+const QuestionHelperInfo = styled(QuestionHelper)`
+  margin-bottom: 15px;
+  svg {
+    path {
+      fill: #868686;
+    }
+  }
+`
+
+
+
 
 export default function SwapModalFooter({
   trade,
@@ -50,9 +66,9 @@ export default function SwapModalFooter({
     <>
       <SwapModalFooterContainer>
         <RowBetween align="center">
-          <Text fontSize="14px">{t('Price')}</Text>
+          <TextInfo fontSize="15px" >{t('Price')}</TextInfo>
           <Text
-            fontSize="14px"
+            fontSize="15px"
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -60,20 +76,21 @@ export default function SwapModalFooter({
               textAlign: 'right',
               paddingLeft: '10px',
             }}
+            mb="15px"
           >
             {formatExecutionPrice(trade, showInverted)}
             <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-              <AutoRenewIcon width="14px" />
+              <AutoRenewIcon width="15px" />
             </StyledBalanceMaxMini>
           </Text>
         </RowBetween>
 
         <RowBetween>
           <RowFixed>
-            <Text fontSize="14px">
+            <TextInfo fontSize="15px">
               {trade.tradeType === TradeType.EXACT_INPUT ? t('Minimum received') : t('Maximum sold')}
-            </Text>
-            <QuestionHelper
+            </TextInfo>
+            <QuestionHelperInfo
               text={t(
                 'Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.',
               )}
@@ -81,12 +98,12 @@ export default function SwapModalFooter({
             />
           </RowFixed>
           <RowFixed>
-            <Text fontSize="14px">
+            <Text fontSize="15px" mb="15px">
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
                 : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
             </Text>
-            <Text fontSize="14px" marginLeft="4px">
+            <Text fontSize="15px" marginLeft="4px" mb="15px">
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? trade.outputAmount.currency.symbol
                 : trade.inputAmount.currency.symbol}
@@ -95,8 +112,8 @@ export default function SwapModalFooter({
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <Text fontSize="14px">{t('Price Impact')}</Text>
-            <QuestionHelper
+            <TextInfo fontSize="15px">{t('Price Impact')}</TextInfo>
+            <QuestionHelperInfo
               text={t('The difference between the market price and your price due to trade size.')}
               ml="4px"
             />
@@ -105,8 +122,8 @@ export default function SwapModalFooter({
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <Text fontSize="14px">{t('Liquidity Provider Fee')}</Text>
-            <QuestionHelper
+            <TextInfo fontSize="15px">{t('Liquidity Provider Fee')}</TextInfo>
+            <QuestionHelperInfo
               text={
                 <>
                   <Text mb="12px">{t('For each trade a %amount% fee is paid', { amount: '0.25%' })}</Text>
@@ -118,7 +135,7 @@ export default function SwapModalFooter({
               ml="4px"
             />
           </RowFixed>
-          <Text fontSize="14px">
+          <Text fontSize="15px">
             {realizedLPFee ? `${realizedLPFee?.toSignificant(6)} ${trade.inputAmount.currency.symbol}` : '-'}
           </Text>
         </RowBetween>

@@ -18,16 +18,33 @@ const Wrapper = styled.div`
   width: 100%;
   height: calc(100% - 60px);
   position: relative;
-  padding-bottom: 60px;
 `
 
 const Footer = styled.div`
-  position: absolute;
-  bottom: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 45px;
+  margin-bottom: 90px;
+`
+
+const CustomInput = styled(Input)`
+  border: 1px solid #FDB814;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 54px;
+  background: transparent;
+`
+
+const Tip = styled.div`
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  text-align: center;
+  color: #FDB814;
+  padding-top: 14px;
+  border-top: 1px solid #868686;
 `
 
 export default function ManageTokens({
@@ -95,7 +112,7 @@ export default function ManageTokens({
       <Column style={{ width: '100%', flex: '1 1' }}>
         <AutoColumn gap="14px">
           <Row>
-            <Input
+            <CustomInput
               id="token-search-input"
               scale="lg"
               placeholder="0x0000"
@@ -128,6 +145,7 @@ export default function ManageTokens({
           )}
         </Footer>
       </Column>
+      <Tip>Tip: Custom tokens are stored locally in your browser</Tip>
     </Wrapper>
   )
 }

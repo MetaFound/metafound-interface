@@ -29,13 +29,17 @@ const Wrapper = styled(Column)`
 `
 
 const RowWrapper = styled(Row)<{ active: boolean }>`
-  background-color: ${({ active, theme }) => (active ? `${theme.colors.success}19` : 'transparent')};
+  background-color: ${({ active, theme }) => (active ? `${theme.colors.metafound}` : theme.colors.opacity)};
   border: solid 1px;
-  border-color: ${({ active, theme }) => (active ? theme.colors.success : theme.colors.tertiary)};
+  border-color: ${({ active, theme }) => (active ? theme.colors.metafound : 'transparent')};
   transition: 200ms;
   align-items: center;
   padding: 1rem;
   border-radius: 20px;
+`
+
+const CustomText = styled(Text)<{ active: boolean }>`
+  color: ${({ active, theme }) => (active ? theme.colors.black : theme.colors.white)};
 `
 
 function listUrlRowHTMLId(listUrl: string) {
@@ -101,12 +105,12 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
       )}
       <Column style={{ flex: '1' }}>
         <Row>
-          <Text bold>{list.name}</Text>
+          <CustomText active={isActive} bold>{list.name}</CustomText>
         </Row>
         <RowFixed mt="4px">
-          <Text fontSize="12px" mr="6px" textTransform="lowercase">
+          <CustomText active={isActive} fontSize="12px" mr="6px" textTransform="lowercase">
             {list.tokens.length} {t('Tokens')}
-          </Text>
+          </CustomText>
           <span ref={targetRef}>
             <CogIcon color="text" width="12px" />
           </span>
@@ -114,6 +118,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
       </Column>
       <Toggle
         checked={isActive}
+        // checkedColor={isActive ? 'black' : '#9C9C9C'}
         onChange={() => {
           if (isActive) {
             handleDisableList()
@@ -131,6 +136,15 @@ const ListContainer = styled.div`
   height: 100%;
   overflow: auto;
 `
+
+const CustomInput = styled(Input)`
+  border: 1px solid #FDB814;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 54px;
+  background: transparent;
+`
+
 
 function ManageLists({
   setModalView,
@@ -239,7 +253,7 @@ function ManageLists({
     <Wrapper>
       <AutoColumn gap="14px">
         <Row>
-          <Input
+          <CustomInput
             id="list-add-input"
             scale="lg"
             placeholder={t('https:// or ipfs:// or ENS name')}

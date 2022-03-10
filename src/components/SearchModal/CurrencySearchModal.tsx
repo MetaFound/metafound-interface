@@ -3,13 +3,13 @@ import { Currency, Token } from '@pancakeswap/sdk'
 import {
   ModalContainer,
   ModalHeader,
-  ModalTitle,
   ModalBackButton,
   ModalCloseButton,
   ModalBody,
   InjectedModalProps,
   Heading,
   Button,
+  Flex,
 } from '@uikit'
 import styled from 'styled-components'
 import usePrevious from 'hooks/usePreviousValue'
@@ -23,17 +23,21 @@ import { CurrencyModalView } from './types'
 
 const Footer = styled.div`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.backgroundAlt};
   text-align: center;
+  background: #454545;
+  border-radius: 0px 0px 25px 25px;
+  padding-top: 14px;
+  padding-bottom: 22px;
 `
 
 const StyledModalContainer = styled(ModalContainer)`
-  max-width: 420px;
+  max-width: 460px;
   width: 100%;
 `
 
 const StyledModalBody = styled(ModalBody)`
-  padding: 24px;
+  padding: 30px;
+  padding-top: 0;
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -41,6 +45,12 @@ const StyledModalBody = styled(ModalBody)`
     display: none;
   }
 `
+const ModalTitle = styled(Flex)`
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+`
+
 
 interface CurrencySearchModalProps extends InjectedModalProps {
   selectedCurrency?: Currency | null
@@ -95,8 +105,8 @@ export default function CurrencySearchModal({
         <ModalTitle>
           {config[modalView].onBack && <ModalBackButton onBack={config[modalView].onBack} />}
           <Heading>{config[modalView].title}</Heading>
+          <ModalCloseButton onDismiss={onDismiss} />
         </ModalTitle>
-        <ModalCloseButton onDismiss={onDismiss} />
       </ModalHeader>
       <StyledModalBody>
         {modalView === CurrencyModalView.search ? (
@@ -122,7 +132,8 @@ export default function CurrencySearchModal({
         ) : (
           ''
         )}
-        {modalView === CurrencyModalView.search && (
+      </StyledModalBody>
+      {modalView === CurrencyModalView.search && (
           <Footer>
             <Button
               scale="sm"
@@ -134,7 +145,6 @@ export default function CurrencySearchModal({
             </Button>
           </Footer>
         )}
-      </StyledModalBody>
     </StyledModalContainer>
   )
 }

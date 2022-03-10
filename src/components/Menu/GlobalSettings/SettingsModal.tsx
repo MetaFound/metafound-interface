@@ -23,6 +23,10 @@ const ScrollableContainer = styled(Flex)`
     max-height: none;
   }
 `
+const SettingWrapper = styled(Flex)`
+  padding: 0 12px;
+`
+
 
 const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
   const [showConfirmExpertModal, setShowConfirmExpertModal] = useState(false)
@@ -60,13 +64,13 @@ const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
 
   return (
     <Modal
-      title={t('Settings')}
+      title={t('Advanced Settings')}
       headerBackground="gradients.cardHeader"
       onDismiss={onDismiss}
       style={{ maxWidth: '420px' }}
     >
       <ScrollableContainer>
-        <Flex pb="24px" flexDirection="column">
+        {/* <Flex pb="24px" flexDirection="column">
           <Text bold textTransform="uppercase" fontSize="12px" color="secondary" mb="24px">
             {t('Global')}
           </Text>
@@ -75,14 +79,14 @@ const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
             <ThemeSwitcher isDark={isDark} toggleTheme={toggleTheme} />
           </Flex>
           <GasSettings />
-        </Flex>
-        <Flex pt="24px" flexDirection="column" borderTop={`1px ${theme.colors.cardBorder} solid`}>
-          <Text bold textTransform="uppercase" fontSize="12px" color="secondary" mb="24px">
+        </Flex> */}
+        <SettingWrapper flexDirection="column" borderTop={`1px ${theme.colors.cardBorder} solid`}>
+          {/* <Text bold textTransform="uppercase" fontSize="12px" color="secondary" mb="24px">
             {t('Swaps & Liquidity')}
-          </Text>
+          </Text> */}
           <TransactionSettings />
-        </Flex>
-        <Flex justifyContent="space-between" alignItems="center" mb="24px">
+        </SettingWrapper>
+        {/* <Flex justifyContent="space-between" alignItems="center" mb="24px">
           <Flex alignItems="center">
             <Text>{t('Expert Mode')}</Text>
             <QuestionHelper
@@ -137,7 +141,7 @@ const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
             />
           </Flex>
           <PancakeToggle checked={audioPlay} onChange={toggleSetAudioMode} scale="md" />
-        </Flex>
+        </Flex> */}
       </ScrollableContainer>
     </Modal>
   )
