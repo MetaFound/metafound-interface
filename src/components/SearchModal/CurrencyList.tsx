@@ -55,6 +55,16 @@ const MenuItem = styled(RowBetween)<{ disabled: boolean; selected: boolean }>`
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
+const CustomMenuItem = styled(MenuItem)`
+  grid-gap: 16px;
+`
+
+const SmallText = styled(Text)`
+  color: #868686;
+  font-weight: normal;
+  font-size: 11px;
+`
+
 function CurrencyRow({
   currency,
   onSelect,
@@ -77,7 +87,7 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   return (
-    <MenuItem
+    <CustomMenuItem
       style={style}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
@@ -87,14 +97,14 @@ function CurrencyRow({
       <CurrencyLogo currency={currency} size="24px" />
       <Column>
         <Text bold>{currency.symbol}</Text>
-        <Text color="textSubtle" small ellipsis maxWidth="200px">
+        <SmallText color="textSubtle" small ellipsis maxWidth="200px">
           {!isOnSelectedList && customAdded && 'Added by user •'} {currency.name}
-        </Text>
+        </SmallText>
       </Column>
       <RowFixed style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} /> : account ? <CircleLoader /> : null}
       </RowFixed>
-    </MenuItem>
+    </CustomMenuItem>
   )
 }
 

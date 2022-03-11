@@ -88,6 +88,16 @@ const SwitchIconButton = styled(IconButton)`
   }
 `
 
+
+const ButtonSwap = styled(Button)`
+  color: #000;
+  border-radius: 10px;
+  height: 65px;
+  font-size: 20px;
+  margin-top: 60px;
+`
+
+
 export default function Swap() {
   const router = useRouter()
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -569,7 +579,7 @@ export default function Swap() {
                         </Button>
                       </RowBetween>
                     ) : (
-                      <Button
+                      <ButtonSwap
                         variant={isValid && priceImpactSeverity > 2 && !swapCallbackError ? 'danger' : 'primary'}
                         onClick={() => {
                           if (isExpertMode) {
@@ -594,7 +604,7 @@ export default function Swap() {
                             : priceImpactSeverity > 2
                             ? t('Swap Anyway')
                             : t('Swap'))}
-                      </Button>
+                      </ButtonSwap>
                     )}
                     {showApproveFlow && (
                       <Column style={{ marginTop: '1rem' }}>

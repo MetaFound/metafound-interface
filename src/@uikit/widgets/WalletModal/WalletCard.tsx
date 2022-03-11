@@ -16,12 +16,34 @@ interface Props {
 const WalletButton = styled(Button).attrs({ width: '100%', variant: 'text', py: '16px' })`
   align-items: center;
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   height: auto;
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
+  padding: 16px 45px;
 `
+
+const DivIcon = styled.div`
+  display: flex;
+  background: #282828;
+  border-radius: 10px 0px 0px 10px;
+  height: 66px;
+  width: 90px;
+  justify-content: center;
+  align-items: center;
+`
+
+const WalletButtonText = styled(Text)`
+  display: flex;
+  flex-grow: 1;
+  height: 66px;
+  background: #454545;
+  border-radius: 0px 10px 10px 0px;
+  align-items: center;
+  padding-left: 20px
+`
+
 
 interface MoreWalletCardProps extends ButtonProps {
   t: (key: string) => string
@@ -30,7 +52,7 @@ interface MoreWalletCardProps extends ButtonProps {
 export const MoreWalletCard: React.FC<MoreWalletCardProps> = ({ t, ...props }) => {
   return (
     <WalletButton variant="tertiary" {...props}>
-      <MoreHorizontal width="40px" mb="8px" color="textSubtle" />
+      <MoreHorizontal width="40px" color="textSubtle" />
       <Text fontSize="14px">{t('More')}</Text>
     </WalletButton>
   )
@@ -58,8 +80,8 @@ const WalletCard: React.FC<Props> = ({ login, walletConfig, onDismiss }) => {
       }}
       id={`wallet-connect-${title.toLocaleLowerCase()}`}
     >
-      <Icon width="40px" mb="8px" />
-      <Text fontSize="14px">{title}</Text>
+      <DivIcon><Icon width="36px" /></DivIcon>
+      <WalletButtonText fontSize="14px">{title}</WalletButtonText>
     </WalletButton>
   )
 }

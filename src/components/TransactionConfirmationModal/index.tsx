@@ -33,6 +33,10 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 24px 0;
 `
 
+const ModalConfirmSwap = styled(Modal)`
+  max-width: 480px;
+`
+
 function ConfirmationPendingContent({ pendingText }: { pendingText: string }) {
   const { t } = useTranslation()
   return (
@@ -172,7 +176,7 @@ const TransactionConfirmationModal: React.FC<InjectedModalProps & ConfirmationMo
   if (!chainId) return null
 
   return (
-    <Modal title={title} headerBackground="gradients.cardHeader" onDismiss={handleDismiss}>
+    <ModalConfirmSwap title={title} headerBackground="gradients.cardHeader" onDismiss={handleDismiss}>
       {attemptingTxn ? (
         <ConfirmationPendingContent pendingText={pendingText} />
       ) : hash ? (
@@ -185,7 +189,7 @@ const TransactionConfirmationModal: React.FC<InjectedModalProps & ConfirmationMo
       ) : (
         content()
       )}
-    </Modal>
+    </ModalConfirmSwap>
   )
 }
 

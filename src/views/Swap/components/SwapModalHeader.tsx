@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import styled from 'styled-components'
 import { Trade, TradeType } from '@pancakeswap/sdk'
 import { Button, Text, ErrorIcon, ArrowDownIcon } from '@uikit'
 import { Field } from 'state/swap/actions'
@@ -9,6 +10,11 @@ import { CurrencyLogo } from 'components/Logo'
 import { RowBetween, RowFixed } from 'components/Layout/Row'
 import truncateHash from 'utils/truncateHash'
 import { TruncatedText, SwapShowAcceptChanges } from './styleds'
+
+const ButtonAccpet = styled(Button)`
+  color: #000;
+`
+
 
 export default function SwapModalHeader({
   trade,
@@ -65,14 +71,14 @@ export default function SwapModalHeader({
         <RowFixed gap="0px">
           <CurrencyLogo currency={trade.inputAmount.currency} size="24px" style={{ marginRight: '12px' }} />
           <TruncatedText
-            fontSize="24px"
+            fontSize="22px"
             color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? 'primary' : 'text'}
           >
             {trade.inputAmount.toSignificant(6)}
           </TruncatedText>
         </RowFixed>
         <RowFixed gap="0px">
-          <Text fontSize="24px" ml="10px">
+          <Text fontSize="22px" ml="10px">
             {trade.inputAmount.currency.symbol}
           </Text>
         </RowFixed>
@@ -97,7 +103,7 @@ export default function SwapModalHeader({
           </TruncatedText>
         </RowFixed>
         <RowFixed gap="0px">
-          <Text fontSize="24px" ml="10px">
+          <Text fontSize="22px" ml="10px">
             {trade.outputAmount.currency.symbol}
           </Text>
         </RowFixed>
@@ -106,15 +112,14 @@ export default function SwapModalHeader({
         <SwapShowAcceptChanges justify="flex-start" gap="0px">
           <RowBetween>
             <RowFixed>
-              <ErrorIcon mr="8px" />
-              <Text bold> {t('Price Updated')}</Text>
+              <Text color="metafound" bold> {t('Price Updated')}</Text>
             </RowFixed>
-            <Button onClick={onAcceptChanges}>{t('Accept')}</Button>
+            <ButtonAccpet onClick={onAcceptChanges}>{t('Accept')}</ButtonAccpet>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '24px 0 0 0px' }}>
-        <Text small color="textSubtle" textAlign="left" style={{ width: '100%' }}>
+        <Text small color="gray" fontSize="12px" textAlign="left" style={{ width: '100%' }}>
           {estimatedText}
           <b>
             {amount} {symbol}
@@ -124,7 +129,7 @@ export default function SwapModalHeader({
       </AutoColumn>
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
-          <Text color="textSubtle">
+          <Text color="gray">
             {recipientSentToText}
             <b title={recipient}>{truncatedRecipient}</b>
             {postSentToText}

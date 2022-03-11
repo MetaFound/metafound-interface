@@ -10,6 +10,16 @@ import { CurrencyModalView } from './types'
 
 const StyledButtonMenu = styled(ButtonMenu)`
   width: 100%;
+  background: #454545;
+  border-radius: 15px;
+  height: 57px;
+  padding: 8px;
+  align-items: center;
+  color: #DCDCDC;
+`
+
+const CustomButtonMenuItem = styled(ButtonMenuItem)`
+  height: 40px
 `
 
 export default function Manage({
@@ -33,11 +43,11 @@ export default function Manage({
         activeIndex={showLists ? 0 : 1}
         onItemClick={() => setShowLists((prev) => !prev)}
         scale="sm"
-        variant="subtle"
+        variant="metafound"
         mb="32px"
       >
-        <ButtonMenuItem width="50%">{t('Lists')}</ButtonMenuItem>
-        <ButtonMenuItem width="50%">{t('Tokens')}</ButtonMenuItem>
+        <CustomButtonMenuItem width="50%">{t('Lists')}</CustomButtonMenuItem>
+        <CustomButtonMenuItem width="50%">{t('Tokens')}</CustomButtonMenuItem>
       </StyledButtonMenu>
       {showLists ? (
         <ManageLists setModalView={setModalView} setImportList={setImportList} setListUrl={setListUrl} />

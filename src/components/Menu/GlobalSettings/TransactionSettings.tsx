@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { escapeRegExp } from 'utils'
+import styled from 'styled-components'
 import { Text, Button, Input, Flex, Box } from '@uikit'
 import { useTranslation } from 'contexts/Localization'
 import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
@@ -14,6 +15,19 @@ enum SlippageError {
 enum DeadlineError {
   InvalidInput = 'InvalidInput',
 }
+
+const InputSetting = styled(Input)`
+  background: #4A4A4A;
+  border-radius: 35px;
+  width: 100px;
+  color: #B6B6B6;
+  height: 34px;
+`
+
+const CustomButton = styled(Button)`
+  height: 34px;
+  font-weight: 500;
+`
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
@@ -79,17 +93,17 @@ const SlippageTabs = () => {
     <Flex flexDirection="column">
       <Flex flexDirection="column" mb="24px">
         <Flex mb="12px">
-          <Text>{t('Slippage Tolerance')}</Text>
-          <QuestionHelper
+          <Text>{t('Max Slippage')}</Text>
+          {/* <QuestionHelper
             text={t(
               'Setting a high slippage tolerance can help transactions succeed, but you may not get such a good price. Use with caution.',
             )}
             placement="top-start"
             ml="4px"
-          />
+          /> */}
         </Flex>
         <Flex flexWrap="wrap">
-          <Button
+          <CustomButton
             mt="4px"
             mr="4px"
             scale="sm"
@@ -97,11 +111,11 @@ const SlippageTabs = () => {
               setSlippageInput('')
               setUserSlippageTolerance(10)
             }}
-            variant={userSlippageTolerance === 10 ? 'primary' : 'tertiary'}
+            variant={userSlippageTolerance === 10 ? 'metafound' : 'opacity'}
           >
             0.1%
-          </Button>
-          <Button
+          </CustomButton>
+          <CustomButton
             mt="4px"
             mr="4px"
             scale="sm"
@@ -109,11 +123,11 @@ const SlippageTabs = () => {
               setSlippageInput('')
               setUserSlippageTolerance(50)
             }}
-            variant={userSlippageTolerance === 50 ? 'primary' : 'tertiary'}
+            variant={userSlippageTolerance === 50 ? 'metafound' : 'opacity'}
           >
             0.5%
-          </Button>
-          <Button
+          </CustomButton>
+          <CustomButton
             mr="4px"
             mt="4px"
             scale="sm"
@@ -121,13 +135,13 @@ const SlippageTabs = () => {
               setSlippageInput('')
               setUserSlippageTolerance(100)
             }}
-            variant={userSlippageTolerance === 100 ? 'primary' : 'tertiary'}
+            variant={userSlippageTolerance === 100 ? 'metafound' : 'opacity'}
           >
             1.0%
-          </Button>
+          </CustomButton>
           <Flex alignItems="center">
-            <Box width="76px" mt="4px">
-              <Input
+            <Box width="105px" mt="4px">
+              <InputSetting
                 scale="sm"
                 inputMode="decimal"
                 pattern="^[0-9]*[.,]?[0-9]{0,2}$"
@@ -160,18 +174,18 @@ const SlippageTabs = () => {
           </Text>
         )}
       </Flex>
-      <Flex justifyContent="space-between" alignItems="center" mb="24px">
-        <Flex alignItems="center">
-          <Text>{t('Tx deadline (mins)')}</Text>
-          <QuestionHelper
+      <div>
+        <Flex alignItems="center" justifyContent="start">
+          <Text>{t('Transaction time limit')}</Text>
+          {/* <QuestionHelper
             text={t('Your transaction will revert if it is left confirming for longer than this time.')}
             placement="top-start"
             ml="4px"
-          />
+          /> */}
         </Flex>
-        <Flex>
-          <Box width="52px" mt="4px">
-            <Input
+        <Flex mt="10px" alignItems="center" >
+          <Box width="105px" mt="4px">
+            <InputSetting
               scale="sm"
               inputMode="numeric"
               pattern="^[0-9]+$"
@@ -188,8 +202,9 @@ const SlippageTabs = () => {
               }}
             />
           </Box>
+          <Text ml="10px" color="white">minutes</Text>
         </Flex>
-      </Flex>
+      </div>
     </Flex>
   )
 }

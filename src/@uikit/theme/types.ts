@@ -75,6 +75,10 @@ export type Colors = {
   bronze: string;
   white: string;
   yellow: string;
+  black: string;
+  metafound: string;
+  opacity: string;
+  gray: string;
 };
 
 export type ZIndices = {

@@ -3,6 +3,7 @@ import { Currency, ETHER, Token } from '@pancakeswap/sdk'
 import { Text, Input, Box } from '@uikit'
 import { useTranslation } from 'contexts/Localization'
 import { FixedSizeList } from 'react-window'
+import styled from 'styled-components'
 import { useAudioModeManager } from 'state/user/hooks'
 import useDebounce from 'hooks/useDebounce'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -18,6 +19,21 @@ import { getSwapSound } from './swapSound'
 
 import ImportRow from './ImportRow'
 
+const CustomInput = styled(Input)`
+  background: #333333;
+  border: 1px solid #FDB814;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 70px;
+`
+
+
+const TextGray = styled.div`
+  color: #868686;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 22px;
+`
 interface CurrencySearchProps {
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
@@ -123,7 +139,7 @@ function CurrencySearch({
       <div>
         <AutoColumn gap="16px">
           <Row>
-            <Input
+            <CustomInput
               id="token-search-input"
               placeholder={t('Search name or paste address')}
               scale="lg"
@@ -137,13 +153,15 @@ function CurrencySearch({
           {showCommonBases && (
             <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
           )}
+          <TextGray>Token name</TextGray>
+
         </AutoColumn>
         {searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
             <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
           </Column>
         ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-          <Box margin="24px -24px">
+          <Box margin="10px -20px">
             <CurrencyList
               height={390}
               showETH={showETH}
