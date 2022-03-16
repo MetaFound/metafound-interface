@@ -6,7 +6,7 @@ const StyledSubMenuItems = styled(Flex)<{ $isMobileOnly: boolean }>`
     ${({ $isMobileOnly }) => ($isMobileOnly ? "display:none" : "")};
   }
   flex-grow: 1;
-  background-color: ${({ theme }) => `${theme.colors.backgroundAlt2}`};
+  background-color: #ecd08f26;
   box-shadow: inset 0px -2px 0px -8px rgba(133, 133, 133, 0.1);
   overflow-x: scroll;
   scrollbar-width: none;
@@ -14,6 +14,8 @@ const StyledSubMenuItems = styled(Flex)<{ $isMobileOnly: boolean }>`
   &::-webkit-scrollbar {
     display: none;
   }
+  padding: 7px;
+  border-radius: 10px;
 `;
 
 

@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {escapeRegExp} from 'utils'
 import styled from 'styled-components'
-import {Box, Button, Flex, Input, Text} from '@uikit'
+import { Text, Button, Input, Flex, Box } from '@uikit'
 import {useTranslation} from 'contexts/Localization'
 import {useUserSlippageTolerance, useUserTransactionTTL} from 'state/user/hooks'
 

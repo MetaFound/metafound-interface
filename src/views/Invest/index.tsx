@@ -1,9 +1,9 @@
+import React from 'react'
+import styled from 'styled-components'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '../../@uikit'
-import React from 'react'
-import styled from 'styled-components'
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 70vw, 1238px);
@@ -437,7 +437,7 @@ const Invest = () => {
         </BlockCommunity>
       </Section>
       <ProjectListTextSection>
-        <LineBreak></LineBreak>
+        <LineBreak/>
         <ProjectListText>Project List</ProjectListText>
       </ProjectListTextSection>
       <ControlSection>
@@ -452,13 +452,13 @@ const Invest = () => {
           </FilterButton>
         </BlockFilterButton>
         <BlockSearch>
-          <SearchInput placeholder={'Search project’s name'} />
+          <SearchInput placeholder="Search project’s name" />
           <SearchIcon src="/images/metafound/icon_search.svg" />
         </BlockSearch>
       </ControlSection>
       <SectionInvest>
         <InvestItemBlock>
-          <InvestItemImg src="/images/metafound/invest2_img.png"></InvestItemImg>
+          <InvestItemImg src="/images/metafound/invest2_img.png" />
           <InvestItemInfomation>
             <InvestItemText1>Vinhomes</InvestItemText1>
             <InvestItemText2>Location:</InvestItemText2>
@@ -498,7 +498,7 @@ const Invest = () => {
               <ProjectInformationContent>
                 <ProjectInformationItem>
                   <ProjectInformationItemKey>Legal</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Owner's book</ProjectInformationItemValue>
+                  <ProjectInformationItemValue>: Owner&apos;s book</ProjectInformationItemValue>
                 </ProjectInformationItem>
                 <ProjectInformationItem>
                   <ProjectInformationItemKey>Land-use Pattern</ProjectInformationItemKey>
@@ -526,7 +526,7 @@ const Invest = () => {
         </InvestItemBlock>
 
         <InvestItemBlock>
-          <InvestItemImg src="/images/metafound/invest2_img.png"></InvestItemImg>
+          <InvestItemImg src="/images/metafound/invest2_img.png" />
           <InvestItemInfomation>
             <InvestItemText1>Vinhomes</InvestItemText1>
             <InvestItemText2>Location:</InvestItemText2>
@@ -566,7 +566,7 @@ const Invest = () => {
               <ProjectInformationContent>
                 <ProjectInformationItem>
                   <ProjectInformationItemKey>Legal</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Owner's book</ProjectInformationItemValue>
+                  <ProjectInformationItemValue>: Owner&apos;s book</ProjectInformationItemValue>
                 </ProjectInformationItem>
                 <ProjectInformationItem>
                   <ProjectInformationItemKey>Land-use Pattern</ProjectInformationItemKey>
@@ -593,7 +593,7 @@ const Invest = () => {
           </InvestItemInfomation>
         </InvestItemBlock>
         <InvestItemBlock>
-          <InvestItemImg src="/images/metafound/invest2_img.png"></InvestItemImg>
+          <InvestItemImg src="/images/metafound/invest2_img.png" />
           <InvestItemInfomation>
             <InvestItemText1>Vinhomes</InvestItemText1>
             <InvestItemText2>Location:</InvestItemText2>
@@ -633,7 +633,7 @@ const Invest = () => {
               <ProjectInformationContent>
                 <ProjectInformationItem>
                   <ProjectInformationItemKey>Legal</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Owner's book</ProjectInformationItemValue>
+                  <ProjectInformationItemValue>: Owner&apos;s book</ProjectInformationItemValue>
                 </ProjectInformationItem>
                 <ProjectInformationItem>
                   <ProjectInformationItemKey>Land-use Pattern</ProjectInformationItemKey>
