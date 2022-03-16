@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { escapeRegExp } from 'utils'
+import {useState} from 'react'
+import {escapeRegExp} from 'utils'
 import styled from 'styled-components'
 import { Text, Button, Input, Flex, Box } from '@uikit'
-import { useTranslation } from 'contexts/Localization'
-import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import {useTranslation} from 'contexts/Localization'
+import {useUserSlippageTolerance, useUserTransactionTTL} from 'state/user/hooks'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
