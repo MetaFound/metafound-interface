@@ -12,7 +12,7 @@ export type Scales = typeof scales[keyof typeof scales];
 export interface ToggleProps extends InputHTMLAttributes<HTMLInputElement> {
   scale?: Scales;
   checked?: boolean;
-  checkedColor?: any;
+  checkedColor?: keyof Colors;
   defaultColor?: keyof Colors;
   startIcon?: (isActive?: boolean) => ReactNode;
   endIcon?: (isActive?: boolean) => ReactNode;

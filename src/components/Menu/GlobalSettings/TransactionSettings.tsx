@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { Text, Button, Input, Flex, Box } from '@uikit'
 import { useTranslation } from 'contexts/Localization'
 import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
-import QuestionHelper from '../../QuestionHelper'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',

@@ -38,9 +38,7 @@ const Page: React.FC<
       <StyledPage $removePadding={removePadding} {...props}>
         {children}
         <Flex flexGrow={1} />
-        <Box display={['none', null, null, hideFooterOnDesktop ? 'none' : 'block']} width="100%">
-          <Footer />
-        </Box>
+        <Box display={['none', null, null, hideFooterOnDesktop ? 'none' : 'block']} width="100%" />
       </StyledPage>
     </>
   )
