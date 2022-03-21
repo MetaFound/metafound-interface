@@ -81,7 +81,16 @@ const TimelineBlockTitle = styled(Flex)`
 
 const TimelineItem = styled(Flex)`
   gap: 15px;
+
+  .last {
+    &:after {
+      content: '';
+      width: 0;
+      height: 0;
+    }
+  }
 `
+
 const TimelineStep = styled.div`
   position: relative;
   overflow: hidden;
@@ -94,15 +103,6 @@ const TimelineStep = styled.div`
     width: 2px;
     height: 100%;
     background: #4a4a4a;
-  }
-
-  &:last-child {
-    background: red;
-    &::after {
-      content: '';
-      width: 0;
-      height: 0;
-    }
   }
 `
 
@@ -214,6 +214,7 @@ const ProgressBlockStepItemNumber = styled(Flex)`
   align-items: center;
   background: #4a4a4a;
   color: #868686;
+
   :hover {
     background: #fdb814;
     color: #000;
@@ -227,6 +228,7 @@ const ProgressBlockStepItemText = styled(Flex)`
   padding: 0 15px;
   margin-top: 14px;
   border-radius: 5px;
+
   :hover {
     background: #fdb814;
     color: #000;
@@ -323,6 +325,7 @@ const ProjectInfoSectionTitle = styled.div`
   line-height: 30px;
   padding-bottom: 20px;
   position: relative;
+
   :after {
     content: '';
     position: absolute;
@@ -363,6 +366,7 @@ const ProjectInfoContentDetailGeneralContentTitle = styled.div`
   line-height: 30px;
   padding-bottom: 15px;
   position: relative;
+
   :after {
     content: '';
     position: absolute;
@@ -418,6 +422,7 @@ const ProjectInfoContentTransactionsTitle = styled.span`
   line-height: 30px;
   padding-bottom: 12px;
   position: relative;
+
   :after {
     content: '';
     position: absolute;
@@ -436,6 +441,7 @@ const ProjectInfoContentTransactionsItem = styled(Flex)`
   justify-content: space-between;
   flex-wrap: wrap;
   position: relative;
+
   :after {
     content: '';
     position: absolute;
@@ -471,9 +477,11 @@ const ProjectInfoContentTransactionsItemPaging = styled.div`
   margin-top: 32px;
   text-align: center;
   font-size: 18px;
+
   :before {
     content: '< \\00a0 ';
   }
+
   :after {
     content: '\\00a0 >';
   }
@@ -555,7 +563,7 @@ const InvestDetail = () => {
               </TimelineContent>
             </TimelineItem>
             <TimelineItem>
-              <TimelineStep>
+              <TimelineStep className="last">
                 <TimelineIcon></TimelineIcon>
               </TimelineStep>
               <TimelineContent>
