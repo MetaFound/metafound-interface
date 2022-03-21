@@ -47,7 +47,7 @@ const Logo: React.FC<Props> = ({ href }) => {
   const isAbsoluteUrl = href.startsWith('http')
   const innerLogo = (
     <>
-      <img src="images/metafound/logo-with-text.png" alt="metafound-logo-with-text.png" width="168px" />
+      <img src="/images/metafound/logo-with-text.png" alt="metafound-logo-with-text.png" width="168px" />
     </>
   )
 
