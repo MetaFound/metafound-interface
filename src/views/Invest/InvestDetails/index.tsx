@@ -515,7 +515,7 @@ const InvestDetail = () => {
     slidesToShow: 1,
     speed: 500,
     adaptiveHeight: true,
-    arrows: true,
+    arrows: false,
     dots: true,
   }
   return (
