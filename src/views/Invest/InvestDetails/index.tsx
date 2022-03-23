@@ -1,11 +1,23 @@
 import useTheme from '../../../hooks/useTheme'
 import styled from 'styled-components'
 import { Box, Flex } from '../../../@uikit'
-
+import Slider from 'react-slick'
 const Page = styled(Box)``
 
 const CarouselSection = styled.div`
-  height: 640px;
+  height: 100%;
+`
+
+const CarouselBlock = styled.div`
+  outline: none;
+`
+
+const CarouselImg = styled.img`
+  width: 100%;
+  max-width: clamp(1000px, 70vw, 1238px);
+  margin: 0 auto;
+  padding: 0 16px;
+  border-radius: 20px;
 `
 
 const PageWrapper = styled(Box)`
@@ -30,6 +42,7 @@ const LocationBlock = styled(Section)`
   gap: 18px;
   flex-direction: row;
   line-height: 1.5;
+  margin-top: 66px;
   color: ${({ theme }) => `${theme.colors.text}`};
 `
 
@@ -93,7 +106,7 @@ const TimelineItem = styled(Flex)`
 
 const TimelineStep = styled.div`
   position: relative;
-  overflow: hidden;
+  //overflow: hidden;
 
   &:after {
     content: '';
@@ -414,6 +427,7 @@ const ProjectInfoContentTransactions = styled.div`
   border-radius: 10px;
   padding: 30px 34px;
   text-align: start;
+  height: 100%;
 `
 
 const ProjectInfoContentTransactionsTitle = styled.span`
@@ -493,9 +507,32 @@ const ProjectInfoContentTransactionsItemPagingText1 = styled.span`
 
 const InvestDetail = () => {
   const { theme } = useTheme()
+  const settings = {
+    className: 'center',
+    centerMode: true,
+    infinite: true,
+    centerPadding: '340px',
+    slidesToShow: 1,
+    speed: 500,
+    adaptiveHeight: true,
+    arrows: true,
+    dots: true,
+  }
   return (
     <Page>
-      <CarouselSection></CarouselSection>
+      <CarouselSection>
+        <Slider {...settings}>
+          <CarouselBlock>
+            <CarouselImg src="/images/metafound/beautiful-city-chongqing.png" />
+          </CarouselBlock>
+          <CarouselBlock>
+            <CarouselImg src="/images/metafound/beautiful-city-chongqing.png" />
+          </CarouselBlock>
+          <CarouselBlock>
+            <CarouselImg src="/images/metafound/beautiful-city-chongqing.png" />
+          </CarouselBlock>
+        </Slider>
+      </CarouselSection>
       <PageWrapper>
         <LocationBlock>
           <LocationImg></LocationImg>
