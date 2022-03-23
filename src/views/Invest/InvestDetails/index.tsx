@@ -1,7 +1,8 @@
-import useTheme from '../../../hooks/useTheme'
 import styled from 'styled-components'
-import { Box, Flex } from '../../../@uikit'
 import Slider from 'react-slick'
+import useTheme from '../../../hooks/useTheme'
+import { Box, Flex } from '../../../@uikit'
+
 const Page = styled(Box)``
 
 const CarouselSection = styled.div`
@@ -535,7 +536,7 @@ const InvestDetail = () => {
       </CarouselSection>
       <PageWrapper>
         <LocationBlock>
-          <LocationImg></LocationImg>
+          <LocationImg />
           <LocationInfo>
             <LocationInfoCity>Hồ Chí Minh City</LocationInfoCity>
             <LocationInfoText>Location: </LocationInfoText>
@@ -547,7 +548,7 @@ const InvestDetail = () => {
             <TimelineBlockTitle>Timeline</TimelineBlockTitle>
             <TimelineItem>
               <TimelineStep>
-                <TimelineIcon></TimelineIcon>
+                <TimelineIcon />
               </TimelineStep>
               <TimelineContent>
                 <TimelineContentTitle>Capital mobilization time</TimelineContentTitle>
@@ -585,7 +586,7 @@ const InvestDetail = () => {
             </TimelineItem>
             <TimelineItem>
               <TimelineStep>
-                <TimelineIcon></TimelineIcon>
+                <TimelineIcon />
               </TimelineStep>
               <TimelineContent>
                 <TimelineContentTitle>Investment Time</TimelineContentTitle>
@@ -593,7 +594,7 @@ const InvestDetail = () => {
             </TimelineItem>
             <TimelineItem>
               <TimelineStep>
-                <TimelineIcon></TimelineIcon>
+                <TimelineIcon />
               </TimelineStep>
               <TimelineContent>
                 <TimelineContentTitle>Withdraw Profit</TimelineContentTitle>
@@ -601,7 +602,7 @@ const InvestDetail = () => {
             </TimelineItem>
             <TimelineItem>
               <TimelineStep className="last">
-                <TimelineIcon></TimelineIcon>
+                <TimelineIcon />
               </TimelineStep>
               <TimelineContent>
                 <TimelineContentTitle>End</TimelineContentTitle>
