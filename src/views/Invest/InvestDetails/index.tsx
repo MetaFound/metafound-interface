@@ -42,8 +42,11 @@ const LocationBlock = styled(Section)`
   gap: 18px;
   flex-direction: row;
   line-height: 1.5;
-  margin-top: 66px;
+  margin-top: 36px;
   color: ${({ theme }) => `${theme.colors.text}`};
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-top: 66px;
+  }
 `
 
 const LocationImg = styled.div`
@@ -88,9 +91,12 @@ const LocationInfoAddress = styled.div`
 `
 
 const TimelineProgressSection = styled(Flex)`
-  margin-top: 86px;
+  margin-top: 36px;
   gap: 41px;
   flex-wrap: wrap;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-top: 86px;
+  }
 `
 
 const TimelineBlock = styled(Flex)`
