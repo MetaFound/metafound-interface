@@ -616,7 +616,57 @@ const InvestDetail = () => {
     adaptiveHeight: true,
     arrows: false,
     dots: true,
-    responsive: [],
+    responsive: [
+      {
+        breakpoint: 1800,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '200px',
+        },
+      },
+      {
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '160px',
+        },
+      },
+      {
+        breakpoint: 1338,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '120px',
+        },
+      },
+      {
+        breakpoint: 1250,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '100px',
+        },
+      },
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '80px',
+        },
+      },
+      {
+        breakpoint: 1150,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '30px',
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '20px',
+        },
+      },
+    ],
   }
   return (
     <Page>
