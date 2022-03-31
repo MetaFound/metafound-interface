@@ -43,39 +43,61 @@ const LocationBlock = styled(Section)`
   gap: 18px;
   flex-direction: row;
   line-height: 1.5;
-  margin-top: 66px;
+  margin-top: 36px;
   color: ${({ theme }) => `${theme.colors.text}`};
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-top: 66px;
+  }
 `
 
 const LocationImg = styled.div`
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
   background: #333333;
   border-radius: 10px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 120px;
+    height: 120px;
+  }
 `
 
-const LocationInfo = styled.div``
+const LocationInfo = styled.div`
+  flex: 1;
+`
 
 const LocationInfoCity = styled.div`
   margin-bottom: 6px;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 22px;
+  }
 `
 
 const LocationInfoText = styled.div`
   color: #868686;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+  }
 `
 
 const LocationInfoAddress = styled.div`
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 18px;
+  }
 `
 
 const TimelineProgressSection = styled(Flex)`
-  margin-top: 86px;
+  margin-top: 36px;
   gap: 41px;
+  flex-wrap: wrap;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-top: 86px;
+  }
 `
 
 const TimelineBlock = styled(Flex)`
@@ -83,8 +105,12 @@ const TimelineBlock = styled(Flex)`
   background: #333333;
   border: 0.5px solid #fdb814;
   border-radius: 10px;
-  padding: 30px 65px;
+  padding: 30px;
   flex-direction: column;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    padding: 30px 65px;
+  }
 `
 const TimelineBlockTitle = styled(Flex)`
   font-weight: 600;
@@ -134,8 +160,11 @@ const TimelineContent = styled.div`
 
 const TimelineContentTitle = styled.div`
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 30px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 20px;
+  }
 `
 
 const TimelineContentFromTo = styled(Flex)`
@@ -197,14 +226,21 @@ const ProgressBlock = styled(Flex)`
   background: #333333;
   border: 0.5px solid #fdb814;
   border-radius: 10px;
-  padding: 60px 100px;
   flex-direction: column;
+  padding: 30px;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    padding: 60px 100px;
+  }
 `
 
 const ProgressBlockTitle = styled(Flex)`
   justify-content: center;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 20px;
+  }
 `
 
 const ProgressBlockStep = styled(Flex)`
@@ -214,15 +250,18 @@ const ProgressBlockStep = styled(Flex)`
 
 const ProgressBlockStepItem = styled(Flex)`
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  flex: 0 0 25%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    flex: unset;
+  }
 `
 
 const ProgressBlockStepItemNumber = styled(Flex)`
   font-weight: 600;
-  font-size: 20px;
-  height: 35px;
-  width: 35px;
+  height: 25px;
+  width: 25px;
+  font-size: 16px;
   border-radius: 50%;
   justify-content: center;
   align-items: center;
@@ -233,19 +272,35 @@ const ProgressBlockStepItemNumber = styled(Flex)`
     background: #fdb814;
     color: #000;
   }
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    height: 35px;
+    width: 35px;
+    font-size: 20px;
+  }
 `
 
 const ProgressBlockStepItemText = styled(Flex)`
   font-weight: 500;
-  font-size: 16px;
-  line-height: 35px;
-  padding: 0 15px;
-  margin-top: 14px;
+  font-size: 12px;
+  line-height: 20px;
+  gap: 5px;
+  margin-top: 10px;
   border-radius: 5px;
-
+  padding: 0 5px;
+  text-align: center;
   :hover {
     background: #fdb814;
     color: #000;
+  }
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+    line-height: 35px;
+    padding: 0 15px;
+    gap: unset;
+    margin-top: 14px;
+    line-height: 25px;
   }
 `
 
@@ -253,12 +308,20 @@ const ProgressBlockStepInfo = styled.div`
   border: 1px solid #fdb814;
   box-sizing: border-box;
   border-radius: 8px;
-  margin-top: 46px;
-  padding: 28px 35px;
+  padding: 20px;
+  margin-top: 26px;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    padding: 28px 35px;
+    margin-top: 46px;
+  }
 `
 
 const TextStyle2 = styled.div`
-  font-size: 16px;
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+  }
 `
 
 const ProgressBlockStepInfoText1 = styled(TextStyle2)`
@@ -272,18 +335,27 @@ const ProgressBlockStepInfoText2 = styled(TextStyle2)`
 `
 
 const ProgressBlockStepInfoTier = styled(Flex)`
-  margin-top: 30px;
+  justify-content: space-between;
+  margin: 15px 0;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-top: 30px;
+    justify-content: unset;
+  }
 `
 
 const ProgressBlockStepInfoTier1 = styled(Flex)`
-  height: 40px;
   padding: 0 15px;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
   border: 1px solid #fdb814;
-  min-width: 150px;
-  margin-right: 120px;
+  min-width: 125px;
+  flex-wrap: wrap;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    height: 40px;
+    margin-right: 120px;
+    min-width: 150px;
+  }
 `
 
 const ProgressBlockStepInfoTier1Text1 = styled(TextStyle2)`
@@ -308,23 +380,30 @@ const ProgressBlockStepInfoTier2 = styled(Flex)`
 
 const ProgressBlockStepInfoText3Block = styled(Flex)`
   justify-content: space-between;
+  gap: 10px;
 `
 
 const ProgressBlockStepInfoText3 = styled(TextStyle2)`
   color: #868686;
   font-weight: 400;
-  margin-top: 7px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-top: 7px;
+  }
 `
 
 const ProgressBlockStepInfoText3Question = styled(Flex)`
-  width: 27px;
-  height: 27px;
+  width: 25px;
+  height: 25px;
   color: #000;
   font-size: 20px;
   justify-content: center;
   align-items: center;
   background: #fdb814;
   border-radius: 50%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    height: 27px;
+    width: 27px;
+  }
 `
 
 const ProjectInfoSection = styled(Section)`
@@ -355,13 +434,18 @@ const ProjectInfoSectionContent = styled(Flex)`
   gap: 48px;
   width: 100%;
   margin: 44px 0;
+  flex-wrap: wrap;
+  padding-bottom: 30px;
 `
 
 const ProjectInfoContentDetailGeneral = styled(Flex)`
   flex-direction: column;
   gap: 40px;
   width: 100%;
-  flex: 3;
+  flex: 0 0 100%;
+  ${({ theme }) => theme.mediaQueries.md} {
+    flex: 3;
+  }
 `
 
 const ProjectInfoContentDetailGeneralContent = styled(Flex)`
@@ -371,12 +455,17 @@ const ProjectInfoContentDetailGeneralContent = styled(Flex)`
   border-radius: 10px;
   flex-direction: column;
   text-align: left;
+  padding: 30px;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    padding: 20px 56px;
+  }
 `
 
 const ProjectInfoContentDetailGeneralContentTitle = styled.div`
   text-align: start;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 30px;
   padding-bottom: 15px;
   position: relative;
@@ -390,6 +479,9 @@ const ProjectInfoContentDetailGeneralContentTitle = styled.div`
     left: 0;
     background: #fdb814;
   }
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 20px;
+  }
 `
 
 const ProjectInfoContentDetailContent = styled(Flex)`
@@ -399,7 +491,10 @@ const ProjectInfoContentDetailContent = styled(Flex)`
 `
 
 const ProjectInfoContentDetailContentItem = styled.div`
-  flex: 0 0 50%;
+  flex: 0 0 100%;
+  ${({ theme }) => theme.mediaQueries.xxl} {
+    flex: 0 0 50%;
+  }
 `
 
 const ProjectInfoContentDetailContentText1 = styled(TextStyle2)`
@@ -415,10 +510,13 @@ const ProjectInfoContentDetailContentText2 = styled(TextStyle2)`
 `
 
 const ProjectInfoContentGeneralContent = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   line-height: 30px;
   font-weight: 400;
   margin: 20px 0;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+  }
 `
 
 const ProjectInfoContentTransactions = styled.div`
@@ -426,14 +524,17 @@ const ProjectInfoContentTransactions = styled.div`
   background: #333333;
   border: 1px solid #fdb814;
   border-radius: 10px;
-  padding: 30px 34px;
+  padding: 30px;
   text-align: start;
   height: 100%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    padding: 30px 34px;
+  }
 `
 
 const ProjectInfoContentTransactionsTitle = styled.span`
   font-weight: 600;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 30px;
   padding-bottom: 12px;
   position: relative;
@@ -446,6 +547,10 @@ const ProjectInfoContentTransactionsTitle = styled.span`
     bottom: 0;
     left: 0;
     background: #fdb814;
+  }
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 22px;
   }
 `
 
@@ -518,6 +623,57 @@ const InvestDetail = () => {
     adaptiveHeight: true,
     arrows: false,
     dots: true,
+    responsive: [
+      {
+        breakpoint: 1800,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '200px',
+        },
+      },
+      {
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '160px',
+        },
+      },
+      {
+        breakpoint: 1338,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '120px',
+        },
+      },
+      {
+        breakpoint: 1250,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '100px',
+        },
+      },
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '80px',
+        },
+      },
+      {
+        breakpoint: 1150,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '30px',
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: '20px',
+        },
+      },
+    ],
   }
   return (
     <Page>
