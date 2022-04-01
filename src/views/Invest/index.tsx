@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '../../@uikit'
+import { Token } from '@pancakeswap/sdk'
+import { log } from 'util'
+const axios = require('axios')
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 70vw, 1238px);
@@ -158,7 +161,7 @@ const FilterButton = styled.div`
   }
 `
 
-const FilterButtonItem = styled.div`
+const FilterButtonItem = styled.div<{ status: boolean }>`
   border-radius: 10px;
   padding: 8px 10px;
   font-weight: 600;
@@ -168,10 +171,7 @@ const FilterButtonItem = styled.div`
   color: ${({ theme }) => `${theme.colors.text}`};
   cursor: pointer;
   text-align: center;
-
-  :hover {
-    background: ${({ theme }) => `${theme.colors.primary}`};
-  }
+  background: ${({ status }) => `${status ? '#FDB814' : 'none'}`};
 
   ${({ theme }) => theme.mediaQueries.lg} {
     width: unset;
@@ -378,10 +378,10 @@ const PercentBlock = styled.div`
   position: relative;
 `
 
-const ActivePercent = styled.div`
+const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
-  width: 68%;
+  width: ${({ width }) => `${width <= 8 ? 8 : width}%`};
   border-radius: 10px;
   position: absolute;
   background: ${({ theme }) => `${theme.colors.primary}`};
@@ -408,6 +408,43 @@ const MetaFound = () => {
 
 const Invest = () => {
   const { theme } = useTheme()
+  const [listDetail, setDataDetail] = useState([])
+  const [status, setStatus] = useState(1)
+  const [searchParam, setSearchParam] = useState('')
+
+  const handleStatus = (status: 1 | 0) => {
+    setStatus(status)
+    getData()
+  }
+
+  const onSearch = () => {
+    getData()
+  }
+
+  const handleChangeSearch = (event) => {
+    setSearchParam(event.target.value)
+  }
+
+  const getData = () => {
+    axios
+      .get('http://116.118.49.31:8003/api/v1/invest-pools', {
+        params: {
+          limit: 10,
+          page: 1,
+          status: status.toString(),
+          name: searchParam ?? '',
+        },
+      })
+      .then(function (response) {
+        setDataDetail(response?.data?.data?.investPools)
+      })
+      .catch(function (error) {
+        throw error
+      })
+  }
+  useEffect(() => {
+    getData()
+  }, [])
   return (
     <PageWrapper>
       <Section marginTop="12vh">
@@ -437,228 +474,75 @@ const Invest = () => {
         </BlockCommunity>
       </Section>
       <ProjectListTextSection>
-        <LineBreak/>
+        <LineBreak />
         <ProjectListText>Project List</ProjectListText>
       </ProjectListTextSection>
       <ControlSection>
         <BlockFilterButton>
+          {/* <FilterButton> */}
+          {/*   <FilterButtonItem>Real Estate for Sale</FilterButtonItem> */}
+          {/*   <FilterButtonItem>Rental Real Estate</FilterButtonItem> */}
+          {/* </FilterButton> */}
           <FilterButton>
-            <FilterButtonItem>Real Estate for Sale</FilterButtonItem>
-            <FilterButtonItem>Rental Real Estate</FilterButtonItem>
-          </FilterButton>
-          <FilterButton>
-            <FilterButtonItem>Live</FilterButtonItem>
-            <FilterButtonItem>Completed</FilterButtonItem>
+            <FilterButtonItem status={status === 1} onClick={() => handleStatus(1)}>
+              Live
+            </FilterButtonItem>
+            <FilterButtonItem status={status === 0} onClick={() => handleStatus(0)}>
+              Completed
+            </FilterButtonItem>
           </FilterButton>
         </BlockFilterButton>
         <BlockSearch>
-          <SearchInput placeholder="Search project’s name" />
-          <SearchIcon src="/images/metafound/icon_search.svg" />
+          <SearchInput
+            onChange={handleChangeSearch}
+            onKeyPress={() => onSearch()}
+            value={searchParam}
+            placeholder="Search project’s name"
+          />
+          <SearchIcon src="/images/metafound/icon_search.svg" onClick={() => onSearch()} />
         </BlockSearch>
       </ControlSection>
       <SectionInvest>
-        <InvestItemBlock>
-          <InvestItemImg src="/images/metafound/invest2_img.png" />
-          <InvestItemInfomation>
-            <InvestItemText1>Vinhomes</InvestItemText1>
-            <InvestItemText2>Location:</InvestItemText2>
-            <InvestItemText3>105 Nguyen Van Linh. district 8, Hồ Chí Minh City</InvestItemText3>
-            <ProjectInformationBlock>
-              <ProjectInformationText1>Project Information:</ProjectInformationText1>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Land Area</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 68 m2</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Time Invested</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 2 Years</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Construction Area</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 86 m2</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Expected profit</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 15%</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Uses</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Urban land</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Ownership period </ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Until 2024</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Legal</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Owner&apos;s book</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Land-use Pattern</ProjectInformationItemKey>
-                  <ProjectInformationItemValue> : personal use</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-            </ProjectInformationBlock>
-            <TotalBlock>
-              <div>
-                <TotalText1>Total capital to be mobilized: </TotalText1>
-                <TotalText2 marginLeft="6px"> 100 MTF</TotalText2>
-              </div>
-              <div>
-                <TotalText1>Total:</TotalText1>
-                <TotalText2 marginLeft="6px"> 68</TotalText2>
-                <TotalText1>/100 MTF</TotalText1>
-              </div>
-            </TotalBlock>
-            <PercentBlock>
-              <ActivePercent>
-                <NumberPercent>68%</NumberPercent>
-              </ActivePercent>
-            </PercentBlock>
-          </InvestItemInfomation>
-        </InvestItemBlock>
-
-        <InvestItemBlock>
-          <InvestItemImg src="/images/metafound/invest2_img.png" />
-          <InvestItemInfomation>
-            <InvestItemText1>Vinhomes</InvestItemText1>
-            <InvestItemText2>Location:</InvestItemText2>
-            <InvestItemText3>105 Nguyen Van Linh. district 8, Hồ Chí Minh City</InvestItemText3>
-            <ProjectInformationBlock>
-              <ProjectInformationText1>Project Information:</ProjectInformationText1>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Land Area</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 68 m2</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Time Invested</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 2 Years</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Construction Area</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 86 m2</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Expected profit</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 15%</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Uses</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Urban land</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Ownership period </ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Until 2024</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Legal</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Owner&apos;s book</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Land-use Pattern</ProjectInformationItemKey>
-                  <ProjectInformationItemValue> : personal use</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-            </ProjectInformationBlock>
-            <TotalBlock>
-              <div>
-                <TotalText1>Total capital to be mobilized: </TotalText1>
-                <TotalText2 marginLeft="6px"> 100 MTF</TotalText2>
-              </div>
-              <div>
-                <TotalText1>Total:</TotalText1>
-                <TotalText2 marginLeft="6px"> 68</TotalText2>
-                <TotalText1>/100 MTF</TotalText1>
-              </div>
-            </TotalBlock>
-            <PercentBlock>
-              <ActivePercent>
-                <NumberPercent>68%</NumberPercent>
-              </ActivePercent>
-            </PercentBlock>
-          </InvestItemInfomation>
-        </InvestItemBlock>
-        <InvestItemBlock>
-          <InvestItemImg src="/images/metafound/invest2_img.png" />
-          <InvestItemInfomation>
-            <InvestItemText1>Vinhomes</InvestItemText1>
-            <InvestItemText2>Location:</InvestItemText2>
-            <InvestItemText3>105 Nguyen Van Linh. district 8, Hồ Chí Minh City</InvestItemText3>
-            <ProjectInformationBlock>
-              <ProjectInformationText1>Project Information:</ProjectInformationText1>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Land Area</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 68 m2</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Time Invested</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 2 Years</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Construction Area</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 86 m2</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Expected profit</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: 15%</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Uses</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Urban land</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Ownership period </ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Until 2024</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-              <ProjectInformationContent>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Legal</ProjectInformationItemKey>
-                  <ProjectInformationItemValue>: Owner&apos;s book</ProjectInformationItemValue>
-                </ProjectInformationItem>
-                <ProjectInformationItem>
-                  <ProjectInformationItemKey>Land-use Pattern</ProjectInformationItemKey>
-                  <ProjectInformationItemValue> : personal use</ProjectInformationItemValue>
-                </ProjectInformationItem>
-              </ProjectInformationContent>
-            </ProjectInformationBlock>
-            <TotalBlock>
-              <div>
-                <TotalText1>Total capital to be mobilized: </TotalText1>
-                <TotalText2 marginLeft="6px"> 100 MTF</TotalText2>
-              </div>
-              <div>
-                <TotalText1>Total:</TotalText1>
-                <TotalText2 marginLeft="6px"> 68</TotalText2>
-                <TotalText1>/100 MTF</TotalText1>
-              </div>
-            </TotalBlock>
-            <PercentBlock>
-              <ActivePercent>
-                <NumberPercent>68%</NumberPercent>
-              </ActivePercent>
-            </PercentBlock>
-          </InvestItemInfomation>
-        </InvestItemBlock>
+        {listDetail.length > 0 &&
+          listDetail.map((item) => {
+            return (
+              <InvestItemBlock key={item?.id}>
+                <InvestItemImg src={item?.imgUrl} />
+                <InvestItemInfomation>
+                  <InvestItemText1>{item.name}</InvestItemText1>
+                  <InvestItemText2>Location:</InvestItemText2>
+                  <InvestItemText3>105 Nguyen Van Linh. district 8, Hồ Chí Minh City</InvestItemText3>
+                  <ProjectInformationBlock>
+                    <ProjectInformationText1>Project Information:</ProjectInformationText1>
+                    <ProjectInformationContent>
+                      {Object.entries(item?.detail).map(([key, value], i) => (
+                        <ProjectInformationItem key={i}>
+                          <ProjectInformationItemKey>{key}</ProjectInformationItemKey>
+                          <ProjectInformationItemValue>: {value}</ProjectInformationItemValue>
+                        </ProjectInformationItem>
+                      ))}
+                    </ProjectInformationContent>
+                  </ProjectInformationBlock>
+                  <TotalBlock>
+                    <div>
+                      <TotalText1>Total capital to be mobilized: </TotalText1>
+                      <TotalText2 marginLeft="6px"> {item?.totalCtbMax} MTF</TotalText2>
+                    </div>
+                    <div>
+                      <TotalText1>Total:</TotalText1>
+                      <TotalText2 marginLeft="6px"> {item?.totalCtb}</TotalText2>
+                      <TotalText1>/{item?.totalCtbMax} MTF</TotalText1>
+                    </div>
+                  </TotalBlock>
+                  <PercentBlock>
+                    <ActivePercent width={Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}>
+                      <NumberPercent>{Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}%</NumberPercent>
+                    </ActivePercent>
+                  </PercentBlock>
+                </InvestItemInfomation>
+              </InvestItemBlock>
+            )
+          })}
       </SectionInvest>
     </PageWrapper>
   )

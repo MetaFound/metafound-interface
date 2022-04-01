@@ -2060,6 +2060,14 @@ export const testnetTokens = defineTokens({
     'Bakeryswap Token',
     'https://www.bakeryswap.org/',
   ),
+  mtf: new Token(
+    TESTNET,
+    '0x230e23f0744fE767aa628Fcbb6F079087DF23C1C',
+    18,
+    'BTCST',
+    'StandardBTCHashrate Token',
+    'https://www.1-b.tc/',
+  ),
 } as const)
 
 const tokens = () => {

@@ -675,6 +675,7 @@ const InvestDetail = () => {
       },
     ],
   }
+
   return (
     <Page>
       <CarouselSection>
