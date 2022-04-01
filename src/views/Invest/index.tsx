@@ -378,7 +378,7 @@ const PercentBlock = styled.div`
   position: relative;
 `
 
-const ActivePercent = styled.div<{ width: string }>`
+const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
   width: ${({ width }) => `${width <= 8 ? 8 : width}%`};
@@ -540,8 +540,8 @@ const Invest = () => {
                     </div>
                   </TotalBlock>
                   <PercentBlock>
-                    <ActivePercent width={Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}>
-                      <NumberPercent>{Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}%</NumberPercent>
+                    <ActivePercent width={+Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}>
+                      <NumberPercent>{+Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}%</NumberPercent>
                     </ActivePercent>
                   </PercentBlock>
                 </InvestItemInfomation>
