@@ -378,7 +378,7 @@ const PercentBlock = styled.div`
   position: relative;
 `
 
-const ActivePercent = styled.div<{ width: number }>`
+const ActivePercent = styled.div<{ width: string }>`
   background: #101010;
   height: 20px;
   width: ${({ width }) => `${width <= 8 ? 8 : width}%`};
@@ -425,6 +425,11 @@ const Invest = () => {
     setSearchParam(event.target.value)
   }
 
+  const onEnterKeySearch = (event) => {
+    if (event.charCode === 13) {
+      getData()
+    }
+  }
   const getData = () => {
     axios
       .get('http://116.118.49.31:8003/api/v1/invest-pools', {
@@ -495,7 +500,7 @@ const Invest = () => {
         <BlockSearch>
           <SearchInput
             onChange={handleChangeSearch}
-            onKeyPress={() => onSearch()}
+            onKeyPress={onEnterKeySearch}
             value={searchParam}
             placeholder="Search project’s name"
           />
@@ -515,7 +520,7 @@ const Invest = () => {
                   <ProjectInformationBlock>
                     <ProjectInformationText1>Project Information:</ProjectInformationText1>
                     <ProjectInformationContent>
-                      {Object.entries(item?.detail).map(([key, value], i) => (
+                      {Object.entries(item?.detail ?? {}).map(([key, value], i) => (
                         <ProjectInformationItem key={i}>
                           <ProjectInformationItemKey>{key}</ProjectInformationItemKey>
                           <ProjectInformationItemValue>: {value}</ProjectInformationItemValue>

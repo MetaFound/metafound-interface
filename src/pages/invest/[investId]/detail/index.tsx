@@ -1,4 +1,4 @@
-import InvestDetail from '../../../views/Invest/InvestDetails'
+import InvestDetail from '../../../../views/Invest/InvestDetails'
 
 const InvestDetailPage = () => {
   return <InvestDetail />

@@ -2,6 +2,8 @@ import useTheme from '../../../hooks/useTheme'
 import styled from 'styled-components'
 import { Box, Flex } from '../../../@uikit'
 import Slider from 'react-slick'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 const Page = styled(Box)``
 
 const CarouselSection = styled.div`
@@ -612,6 +614,12 @@ const ProjectInfoContentTransactionsItemPagingText1 = styled.span`
 
 const InvestDetail = () => {
   const { theme } = useTheme()
+  const router = useRouter()
+  const { investId } = router.query
+
+  useEffect(() => {
+    console.log(123123, investId)
+  }, [investId])
   const settings = {
     className: 'center',
     centerMode: true,
