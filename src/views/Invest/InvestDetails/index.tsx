@@ -866,9 +866,29 @@ const InvestDetail = () => {
               </ProjectInfoContentDetailGeneralContent>
               <ProjectInfoContentDetailGeneralContent>
                 <ProjectInfoContentDetailGeneralContentTitle>Video</ProjectInfoContentDetailGeneralContentTitle>
+                <iframe
+                  width="560"
+                  height="450px"
+                  style={{ width: '100%', border: '0', padding: '35px 0', borderRadius: '10px' }}
+                  src="https://www.youtube.com/embed/HwVCeUNUIEE"
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </ProjectInfoContentDetailGeneralContent>
               <ProjectInfoContentDetailGeneralContent>
                 <ProjectInfoContentDetailGeneralContentTitle>Map</ProjectInfoContentDetailGeneralContentTitle>
+                <iframe
+                  width="600"
+                  height="450"
+                  style={{ width: '100%', border: '0', padding: '35px 0', borderRadius: '10px' }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDeiGZPUHDjXPRE5qwQzxChQY1IZTS5gWk
+    &q=Space+Needle,Seattle+WA"
+                />
               </ProjectInfoContentDetailGeneralContent>
             </ProjectInfoContentDetailGeneral>
             <ProjectInfoContentTransactions>
