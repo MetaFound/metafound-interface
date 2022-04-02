@@ -4,7 +4,6 @@ import { useExpertModeManager } from 'state/user/hooks'
 import GlobalSettings from 'components/Menu/GlobalSettings'
 import Link from 'next/link'
 import Transactions from './Transactions'
-import QuestionHelper from '../QuestionHelper'
 
 interface Props {
   title: string
