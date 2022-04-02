@@ -52,6 +52,6 @@ export default function useAxiosCallback() {
         params,
       })
     },
-    [accessToken]
+    []
   )
 }
