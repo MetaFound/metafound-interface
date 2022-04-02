@@ -1,7 +1,7 @@
-import Invest from 'views/MyAccount'
+import MyAccount from 'views/MyAccount'
 
-const InvestPage = () => {
-  return <Invest />
+const MyAccountPage = () => {
+  return <MyAccount />
 }
 
-export default InvestPage
+export default MyAccountPage

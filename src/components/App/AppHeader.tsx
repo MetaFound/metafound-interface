@@ -4,7 +4,6 @@ import { useExpertModeManager } from 'state/user/hooks'
 import GlobalSettings from 'components/Menu/GlobalSettings'
 import Link from 'next/link'
 import Transactions from './Transactions'
-import QuestionHelper from '../QuestionHelper'
 
 interface Props {
   title: string
@@ -22,7 +21,7 @@ const AppHeaderContainer = styled(Flex)`
   border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
 `
 
-const AppHeader: React.FC<Props> = ({ title, subtitle, helper, backTo, noConfig = false }) => {
+const AppHeader: React.FC<Props> = ({ title, subtitle, backTo, noConfig = false }) => {
   const [expertMode] = useExpertModeManager()
 
   return (

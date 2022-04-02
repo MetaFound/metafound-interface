@@ -32,8 +32,9 @@ import {
   getPancakeSquadContract,
   getErc721CollectionContract,
   getBunnySpecialXmasContract,
+  getMetafoundContract,
 } from 'utils/contractHelpers'
-import { getMulticallAddress } from 'utils/addressHelpers'
+import { getMetafoundAddress, getMulticallAddress } from 'utils/addressHelpers'
 import { VaultKey } from 'state/types'
 import {
   CakeVault,
@@ -310,4 +311,9 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 
 export function useMulticallContract() {
   return useContract<Multicall>(getMulticallAddress(), multiCallAbi, false)
+}
+
+export const useMetafoundContract = () => {
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getMetafoundContract(library.getSigner(), getMetafoundAddress()), [library])
 }

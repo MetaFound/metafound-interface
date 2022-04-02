@@ -72,6 +72,7 @@ import nftMarketAbi from 'config/abi/nftMarket.json'
 import nftSaleAbi from 'config/abi/nftSale.json'
 import pancakeSquadAbi from 'config/abi/pancakeSquad.json'
 import erc721CollectionAbi from 'config/abi/erc721collection.json'
+import metafoundAbi from 'config/abi/metafound.json'
 
 // Types
 import type {
@@ -223,4 +224,7 @@ export const getPancakeSquadContract = (signer?: Signer | Provider) => {
 }
 export const getErc721CollectionContract = (signer?: Signer | Provider, address?: string) => {
   return getContract(erc721CollectionAbi, address, signer) as Erc721collection
+}
+export const getMetafoundContract = (signer?: Signer | Provider, address?: string) => {
+  return getContract(metafoundAbi, address, signer)
 }
