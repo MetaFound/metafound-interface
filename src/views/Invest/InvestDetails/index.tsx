@@ -562,9 +562,13 @@ const InvestDetail = () => {
 
   const [progressStep, setProgressStep] = useState(1)
   const [timelineStep, setTimelineStep] = useState(1)
+  const [transactionPage, setTransactionPage] = useState(1)
 
   useEffect(() => {
-    if (investId) getData()
+    if (investId) {
+      getTransactions()
+      getData()
+    }
   }, [investId])
 
   useEffect(() => {
@@ -599,6 +603,27 @@ const InvestDetail = () => {
       })
   }
 
+  const getTransactions = () => {
+    axios
+      .get('http://116.118.49.31:8003/api/v1/my-invest/1/history', {
+        params: {
+          limit: 10,
+          page: transactionPage,
+        },
+        headers: {
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg3ZWQwODU1MmE3OTdiNThjY2MyZDI5N2ZiNjQzOTEwM2IzYTczZGI1IiwiaWF0IjoxNjQ4OTg1ODE4LCJleHAiOjE2NDkwNzIyMTh9.TOBLk4PVLEl2p7mEdB2z_qAzhFR8IjUdl76wVxAPEdE',
+        },
+      })
+      .then(function (response) {
+        // setDataDetail(response?.data?.data?.investPools)
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+        throw error
+      })
+  }
   const settings = {
     className: 'center',
     centerMode: true,

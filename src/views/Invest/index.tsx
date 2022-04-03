@@ -447,9 +447,11 @@ const Invest = () => {
         throw error
       })
   }
+
   useEffect(() => {
     getData()
   }, [])
+
   return (
     <PageWrapper>
       <Section marginTop="12vh">
