@@ -97,9 +97,12 @@ const UserMenu: React.FC<UserMenuProps> = ({
       }
     }
     if (account) {
-        if (!localStorage.getItem('FETCH_TIME_ACCESS_TOKEN') && (new Date().getTime() - parseFloat(localStorage.getItem('FETCH_TIME_ACCESS_TOKEN')) > 1000 * 60 * 60 *24)) {
-          getAccessToken()
-        }
+      if (
+        !localStorage.getItem('FETCH_TIME_ACCESS_TOKEN') ||
+        new Date().getTime() - parseFloat(localStorage.getItem('FETCH_TIME_ACCESS_TOKEN')) > 1000 * 60 * 60 * 24
+      ) {
+        getAccessToken()
+      }
     }
   }, [account])
 

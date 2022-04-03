@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useTheme from '../../hooks/useTheme'
-import Trans from '../../components/Trans'
-import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '../../@uikit'
-import { Token } from '@pancakeswap/sdk'
-import { log } from 'util'
+
+import unserializedTokens from 'config/constants/tokens'
+import calculate from '../../@uikit/components/Svg/Icons/Calculate'
+import BigNumber from 'bignumber.js'
 const axios = require('axios')
 
 const PageWrapper = styled(Box)`
@@ -419,6 +419,18 @@ const Invest = () => {
     setStatus(status)
   }
 
+  const findInfoToken = (address, takeSymbol = true) => {
+    const token = Object.entries(unserializedTokens).find(([, value]) => value.address === address)[1]
+    return takeSymbol ? token.symbol : token.decimals
+  }
+
+  const calculateCtb = (number, decimal) => {
+    if (number === 0) {
+      return number
+    }
+    return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
+  }
+
   const onSearch = () => {
     getData()
   }
@@ -547,12 +559,20 @@ const Invest = () => {
                   <TotalBlock>
                     <div>
                       <TotalText1>Total capital to be mobilized: </TotalText1>
-                      <TotalText2 marginLeft="6px"> {item?.totalCtbMax} MTF</TotalText2>
+                      <TotalText2 marginLeft="6px">
+                        {calculateCtb(+item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
+                        {findInfoToken(item?.token)}
+                      </TotalText2>
                     </div>
                     <div>
                       <TotalText1>Total:</TotalText1>
-                      <TotalText2 marginLeft="6px"> {item?.totalCtb}</TotalText2>
-                      <TotalText1>/{item?.totalCtbMax} MTF</TotalText1>
+                      <TotalText2 marginLeft="6px">
+                        {calculateCtb(+item?.totalCtb, findInfoToken(item?.token, false))}
+                      </TotalText2>
+                      <TotalText1>
+                        /{calculateCtb(+item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
+                        {findInfoToken(item?.token, true)}
+                      </TotalText1>
                     </div>
                   </TotalBlock>
                   <PercentBlock>
