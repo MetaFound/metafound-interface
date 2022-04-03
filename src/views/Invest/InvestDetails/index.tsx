@@ -566,7 +566,7 @@ const InvestDetail = () => {
 
   useEffect(() => {
     if (investId) {
-      getTransactions()
+      // getTransactions()
       getData()
     }
   }, [investId])
@@ -611,8 +611,7 @@ const InvestDetail = () => {
           page: transactionPage,
         },
         headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg3ZWQwODU1MmE3OTdiNThjY2MyZDI5N2ZiNjQzOTEwM2IzYTczZGI1IiwiaWF0IjoxNjQ4OTg1ODE4LCJleHAiOjE2NDkwNzIyMTh9.TOBLk4PVLEl2p7mEdB2z_qAzhFR8IjUdl76wVxAPEdE',
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
         },
       })
       .then(function (response) {
@@ -624,6 +623,19 @@ const InvestDetail = () => {
         throw error
       })
   }
+
+  const snakeToPascal = (string) => {
+    return string
+      .split('/')
+      .map((snake) =>
+        snake
+          .split('_')
+          .map((substr) => substr.charAt(0).toUpperCase() + substr.slice(1))
+          .join(' '),
+      )
+      .join('/')
+  }
+
   const settings = {
     className: 'center',
     centerMode: true,
@@ -806,7 +818,7 @@ const InvestDetail = () => {
                 <ProjectInfoContentDetailContent>
                   {Object.entries(detailItem?.detail ?? {}).map(([key, value], i) => (
                     <ProjectInfoContentDetailContentItem key={i}>
-                      <ProjectInfoContentDetailContentText1>{key}</ProjectInfoContentDetailContentText1>
+                      <ProjectInfoContentDetailContentText1>{snakeToPascal(key)}</ProjectInfoContentDetailContentText1>
                       <ProjectInfoContentDetailContentText2> : {value}</ProjectInfoContentDetailContentText2>
                     </ProjectInfoContentDetailContentItem>
                   ))}

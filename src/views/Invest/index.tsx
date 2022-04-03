@@ -254,6 +254,7 @@ const InvestItemImg = styled.img`
   ${({ theme }) => theme.mediaQueries.md} {
     width: 366px;
   }
+  object-fit: cover;
 `
 const InvestItemInfomation = styled.div`
   text-align: left;
@@ -414,7 +415,6 @@ const Invest = () => {
 
   const handleStatus = (status: 1 | 0) => {
     setStatus(status)
-    getData()
   }
 
   const onSearch = () => {
@@ -427,7 +427,7 @@ const Invest = () => {
 
   const onEnterKeySearch = (event) => {
     if (event.charCode === 13) {
-      getData()
+      onSearch()
     }
   }
   const getData = () => {
@@ -450,7 +450,19 @@ const Invest = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [status])
+
+  const snakeToPascal = (string) => {
+    return string
+      .split('/')
+      .map((snake) =>
+        snake
+          .split('_')
+          .map((substr) => substr.charAt(0).toUpperCase() + substr.slice(1))
+          .join(' '),
+      )
+      .join('/')
+  }
 
   return (
     <PageWrapper>
@@ -514,17 +526,17 @@ const Invest = () => {
           listDetail.map((item) => {
             return (
               <InvestItemBlock key={item?.id}>
-                <InvestItemImg src={item?.imgUrl} />
+                <InvestItemImg src={item?.thumbnail} />
                 <InvestItemInfomation>
-                  <InvestItemText1>{item.name}</InvestItemText1>
+                  <InvestItemText1>{item?.name}</InvestItemText1>
                   <InvestItemText2>Location:</InvestItemText2>
-                  <InvestItemText3>105 Nguyen Van Linh. district 8, Hồ Chí Minh City</InvestItemText3>
+                  <InvestItemText3>{item?.location}</InvestItemText3>
                   <ProjectInformationBlock>
                     <ProjectInformationText1>Project Information:</ProjectInformationText1>
                     <ProjectInformationContent>
                       {Object.entries(item?.detail ?? {}).map(([key, value], i) => (
                         <ProjectInformationItem key={i}>
-                          <ProjectInformationItemKey>{key}</ProjectInformationItemKey>
+                          <ProjectInformationItemKey>{snakeToPascal(key)}</ProjectInformationItemKey>
                           <ProjectInformationItemValue>: {value}</ProjectInformationItemValue>
                         </ProjectInformationItem>
                       ))}
