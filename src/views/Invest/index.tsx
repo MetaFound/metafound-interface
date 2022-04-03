@@ -382,7 +382,9 @@ const PercentBlock = styled.div`
 const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
-  width: ${({ width }) => `${width <= 8 ? 8 : width}%`};
+  width: ${({ width }) => `${width}%`};
+  min-width: 35px;
+  max-width: 100%;
   border-radius: 10px;
   position: absolute;
   background: ${({ theme }) => `${theme.colors.primary}`};
