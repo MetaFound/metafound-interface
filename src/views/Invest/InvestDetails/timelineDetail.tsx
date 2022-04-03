@@ -97,20 +97,17 @@ const TimelineDetail = (props: TimelineDetailProps) => {
       switch (step) {
         case 1:
           if (moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.startTime)) {
-            console.log('current before startTime')
             diffTime = moment(+detailItem?.stage?.startTime).diff(moment().unix() * 1000)
           }
           if (
             moment(+detailItem?.stage?.startTime).isBefore(moment().unix() * 1000) &&
-            moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.endCtb)
+            moment(moment().unix() * 1000).isSameOrBefore(+detailItem?.stage?.endCtb)
           ) {
-            console.log('1 case 2')
             diffTime = moment(+detailItem?.stage?.endCtb).diff(moment(moment().unix() * 1000))
           }
           break
         case 2:
           diffTime = moment(+detailItem?.stage?.closeTime).diff(moment().unix() * 1000)
-          console.log(' 2 dsa ')
           break
         default:
           diffTime = null
@@ -122,10 +119,10 @@ const TimelineDetail = (props: TimelineDetailProps) => {
           return
         }
         setCloseTime(
-          moment.duration(duration).days(),
-          moment.duration(duration).hours(),
-          moment.duration(duration).minutes(),
-          moment.duration(duration).seconds(),
+          correctSmallTime(moment.duration(duration).days()),
+          correctSmallTime(moment.duration(duration).hours()),
+          correctSmallTime(moment.duration(duration).minutes()),
+          correctSmallTime(moment.duration(duration).seconds()),
         )
       } else {
         setCloseTime('00', '00', '00', '00')
@@ -137,7 +134,7 @@ const TimelineDetail = (props: TimelineDetailProps) => {
     return () => {
       clearInterval(itv)
     }
-  }, [detailItem])
+  }, [detailItem, step])
 
   const setCloseTime = (day, hour, minute, second) => {
     setCountDay(day)
@@ -146,17 +143,51 @@ const TimelineDetail = (props: TimelineDetailProps) => {
     setCountSecond(second)
   }
 
+  const correctSmallTime = (time: number) => {
+    return time < 10 ? `0${time}` : time
+  }
+
+  const renderFromTime = () => {
+    let fromTime = ''
+    switch (step) {
+      case 1:
+        fromTime = moment(+detailItem?.stage?.startTime).format('h:mm, D MMM  YYYY')
+        break
+      case 2:
+        fromTime = moment(+detailItem?.stage?.endCtb).format('h:mm, D MMM  YYYY')
+        break
+      default:
+        fromTime = moment(+detailItem?.stage?.closeTime).format('h:mm, D MMM  YYYY')
+    }
+    return fromTime
+  }
+
+  const renderToTime = () => {
+    let toTime = ''
+    switch (step) {
+      case 1:
+        toTime = moment(+detailItem?.stage?.endCtb).format('h:mm, D MMM  YYYY')
+        break
+      case 2:
+        toTime = moment(+detailItem?.stage?.closeTime).format('h:mm, D MMM  YYYY')
+        break
+      default:
+        toTime = ''
+    }
+    return toTime
+  }
+
   return (
     <TimelineContent>
       <TimelineContentTitle>{title}</TimelineContentTitle>
       <TimelineContentBody visible={visible}>
         <TimelineContentFromTo visible>
           <TimelineContentFromToTitle>From</TimelineContentFromToTitle>
-          <TextStyle1>{moment(+detailItem?.stage?.startTime).format('h:mm, D MMM  YYYY')}</TextStyle1>
+          <TextStyle1>{renderFromTime()}</TextStyle1>
         </TimelineContentFromTo>
         <TimelineContentFromTo visible={step !== 3}>
           <TimelineContentFromToTitle>To</TimelineContentFromToTitle>
-          <TextStyle1>{moment(+detailItem?.stage?.endCtb).format('h:mm, D MMM  YYYY')}</TextStyle1>
+          <TextStyle1>{renderToTime()}</TextStyle1>
         </TimelineContentFromTo>
         <TimelineContentStartIn visible={step !== 3}>
           {step === 2 ||

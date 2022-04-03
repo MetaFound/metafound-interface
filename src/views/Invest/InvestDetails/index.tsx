@@ -559,10 +559,6 @@ const InvestDetail = () => {
   const { investId } = router.query
 
   const [detailItem, setDetailItem] = useState(null)
-  const [countDay, setCountDay] = useState('00')
-  const [countHour, setCountHour] = useState('00')
-  const [countMinute, setCountMinute] = useState('00')
-  const [countSecond, setCountSecond] = useState('00')
 
   const [progressStep, setProgressStep] = useState(1)
   const [timelineStep, setTimelineStep] = useState(1)
@@ -570,13 +566,6 @@ const InvestDetail = () => {
   useEffect(() => {
     if (investId) getData()
   }, [investId])
-
-  const setCloseTime = (day, hour, minute, second) => {
-    setCountDay(day)
-    setCountHour(hour)
-    setCountMinute(minute)
-    setCountSecond(second)
-  }
 
   useEffect(() => {
     if (detailItem?.stage) {
