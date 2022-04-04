@@ -400,6 +400,14 @@ const NumberPercent = styled.div`
   font-size: 13px;
 `
 
+const NoData = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 30px;
+  color: ${({ theme }) => `${theme.colors.primary}`};
+`
+
 const MetaFound = () => {
   const { theme } = useTheme()
   return (
@@ -458,7 +466,7 @@ const Invest = () => {
         setDataDetail(response?.data?.data?.investPools)
       })
       .catch(function (error) {
-        throw error
+        console.log(123123, error)
       })
   }
 
@@ -584,6 +592,7 @@ const Invest = () => {
               </InvestItemBlock>
             )
           })}
+        {listDetail.length <= 0 && <NoData>No data</NoData>}
       </SectionInvest>
     </PageWrapper>
   )

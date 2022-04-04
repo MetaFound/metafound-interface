@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import useTheme from '../../../hooks/useTheme'
-import { Box, Flex } from '../../../@uikit'
+import { Box, Flex, Heading, Skeleton } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
 
 const Page = styled(Box)``
@@ -474,7 +474,7 @@ const ProjectInfoContentTransactions = styled.div`
   }
 `
 
-const ProjectInfoContentTransactionsTitle = styled.span`
+const ProjectInfoContentTransactionsTitle = styled.div`
   font-weight: 600;
   font-size: 18px;
   line-height: 30px;
@@ -517,7 +517,7 @@ const ProjectInfoContentTransactionsItem = styled(Flex)`
 
 const ProjectInfoContentTransactionsItemText1 = styled(TextStyle2)`
   font-weight: 500;
-  flex: 0 0 50%;
+  flex: 0 0 100%;
 `
 const ProjectInfoContentTransactionsItemText2 = styled(TextStyle2)`
   font-weight: 600;
@@ -535,22 +535,32 @@ const ProjectInfoContentTransactionsItemText4 = styled(TextStyle2)`
   flex: 0 0 50%;
   text-align: right;
 `
-const ProjectInfoContentTransactionsItemPaging = styled.div`
+const ProjectInfoContentTransactionsItemPaging = styled(Flex)`
   margin-top: 32px;
   text-align: center;
   font-size: 18px;
+  justify-content: center;
+  align-items: center;
+`
 
-  :before {
-    content: '< \\00a0 ';
-  }
-
-  :after {
-    content: '\\00a0 >';
-  }
+const ProjectInfoContentTransactionsItemPagingButton = styled.button`
+  background: transparent;
+  outline: none;
+  border-color: transparent;
+  font-size: 18px;
+  color: white;
 `
 
 const ProjectInfoContentTransactionsItemPagingText1 = styled.span`
   color: #868686;
+`
+
+const NoData = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 22px;
+  color: ${({ theme }) => `${theme.colors.primary}`};
 `
 
 const InvestDetail = () => {
@@ -562,11 +572,12 @@ const InvestDetail = () => {
 
   const [progressStep, setProgressStep] = useState(1)
   const [timelineStep, setTimelineStep] = useState(1)
-  const [transactionPage, setTransactionPage] = useState(1)
+  const [transactionPageNumber, setTransactionPageNumber] = useState(1)
+  const [transactionTotalPage, setTransactionTotalPage] = useState(0)
+  const [listTransaction, setListTransaction] = useState([])
 
   useEffect(() => {
     if (investId) {
-      // getTransactions()
       getData()
     }
   }, [investId])
@@ -603,24 +614,30 @@ const InvestDetail = () => {
       })
   }
 
+  useEffect(() => {
+    if (investId) {
+      getTransactions()
+    }
+  }, [transactionPageNumber, investId])
+
   const getTransactions = () => {
     axios
-      .get('http://116.118.49.31:8003/api/v1/my-invest/1/history', {
+      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
         params: {
           limit: 10,
-          page: transactionPage,
+          page: transactionPageNumber,
         },
         headers: {
           Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg1YWQxYzU3ZmVhYTRiYWRjNDBhODk3ZTkyMTI2NDliNWM4ZmU1ZjlkIiwiaWF0IjoxNjQ5MDcyMzY3LCJleHAiOjE2NDkxNTg3Njd9.uvqvfGkQI1_1_zqdDprDYZkear72_tcpUm63S2wOMyM`,
         },
       })
       .then(function (response) {
-        // setDataDetail(response?.data?.data?.investPools)
-        console.log(response)
+        setListTransaction(response?.data?.data?.transactions ?? [])
+        setTransactionTotalPage(response?.data?.totalCount ? Math.ceil(response?.data?.totalCount / 10) : 0)
       })
-      .catch(function (error) {
-        console.log(error)
-        throw error
+      .catch((error) => {
+        console.error('error:', error.response)
       })
   }
 
@@ -634,6 +651,38 @@ const InvestDetail = () => {
           .join(' '),
       )
       .join('/')
+  }
+
+  const prevPageTransaction = () => {
+    if (transactionPageNumber > 1) {
+      setTransactionPageNumber(+transactionPageNumber - 1)
+    }
+  }
+
+  const nextPageTransaction = () => {
+    if (transactionPageNumber < transactionTotalPage) {
+      setTransactionPageNumber(+transactionPageNumber + 1)
+    }
+  }
+
+  const renderTransactionsPaging = () => {
+    if (listTransaction.length > 0) {
+      return (
+        <ProjectInfoContentTransactionsItemPaging>
+          <ProjectInfoContentTransactionsItemPagingButton onClick={() => prevPageTransaction()}>
+            &lt;
+          </ProjectInfoContentTransactionsItemPagingButton>
+          {transactionPageNumber}
+          <ProjectInfoContentTransactionsItemPagingText1>
+            /{transactionTotalPage}
+          </ProjectInfoContentTransactionsItemPagingText1>
+          <ProjectInfoContentTransactionsItemPagingButton onClick={() => nextPageTransaction()}>
+            &gt;
+          </ProjectInfoContentTransactionsItemPagingButton>
+        </ProjectInfoContentTransactionsItemPaging>
+      )
+    }
+    return <></>
   }
 
   const settings = {
@@ -858,45 +907,21 @@ const InvestDetail = () => {
             </ProjectInfoContentDetailGeneral>
             <ProjectInfoContentTransactions>
               <ProjectInfoContentTransactionsTitle>Transactions</ProjectInfoContentTransactionsTitle>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItemPaging>
-                1<ProjectInfoContentTransactionsItemPagingText1>/3</ProjectInfoContentTransactionsItemPagingText1>
-              </ProjectInfoContentTransactionsItemPaging>
+              {listTransaction.length > 0 &&
+                listTransaction.map((item, index) => {
+                  return (
+                    <ProjectInfoContentTransactionsItem key={index}>
+                      <ProjectInfoContentTransactionsItemText1>{item?.type}</ProjectInfoContentTransactionsItemText1>
+                      {/* <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2> */}
+                      <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
+                      <ProjectInfoContentTransactionsItemText4>
+                        {item?.value} $MTF
+                      </ProjectInfoContentTransactionsItemText4>
+                    </ProjectInfoContentTransactionsItem>
+                  )
+                })}
+              {listTransaction.length <= 0 && <NoData paddingTop="20px">No data</NoData>}
+              {renderTransactionsPaging()}
             </ProjectInfoContentTransactions>
           </ProjectInfoSectionContent>
         </ProjectInfoSection>
