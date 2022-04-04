@@ -571,7 +571,7 @@ const Invest = () => {
                       </TotalText2>
                       <TotalText1>
                         /{calculateCtb(+item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
-                        {findInfoToken(item?.token, true)}
+                        {findInfoToken(item?.token)}
                       </TotalText1>
                     </div>
                   </TotalBlock>
