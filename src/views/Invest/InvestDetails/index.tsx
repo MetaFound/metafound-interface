@@ -1,9 +1,12 @@
 import styled from 'styled-components'
 import Slider from 'react-slick'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import moment from 'moment'
 import useTheme from '../../../hooks/useTheme'
-import { Box, Flex } from '../../../@uikit'
+import { Box, Flex, Heading, Skeleton } from '../../../@uikit'
+import TimelineDetail from './timelineDetail'
 
 const Page = styled(Box)``
 
@@ -21,6 +24,7 @@ const CarouselImg = styled.img`
   margin: 0 auto;
   padding: 0 16px;
   border-radius: 20px;
+  max-height: 500px;
 `
 
 const PageWrapper = styled(Box)`
@@ -52,10 +56,9 @@ const LocationBlock = styled(Section)`
   }
 `
 
-const LocationImg = styled.div`
+const LocationImg = styled.img`
   width: 90px;
   height: 90px;
-  background: #333333;
   border-radius: 10px;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 120px;
@@ -169,60 +172,6 @@ const TimelineContentTitle = styled.div`
   }
 `
 
-const TimelineContentFromTo = styled(Flex)`
-  justify-content: space-between;
-`
-
-const TextStyle1 = styled.div`
-  justify-content: space-between;
-  font-size: 16px;
-  line-height: 30px;
-  font-weight: 400;
-`
-
-const TimelineContentFromToTitle = styled(TextStyle1)`
-  color: #868686;
-`
-
-const TimelineContentStartIn = styled(TextStyle1)`
-  margin-top: 10px;
-`
-
-const TimelineContentStartInBlock = styled(Flex)`
-  justify-content: space-between;
-  margin-top: 6px;
-`
-
-const TimelineContentStartInTime = styled(Flex)`
-  flex-direction: column;
-`
-
-const TimelineContentStartInColon = styled(Flex)`
-  font-weight: 500;
-  font-size: 16px;
-  align-items: center;
-  height: 40px;
-`
-
-const TimelineContentStartInTimeBox = styled(Flex)`
-  background: #4a4a4a;
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  font-size: 18px;
-  font-weight: 400;
-  justify-content: center;
-  align-items: center;
-`
-
-const TimelineContentStartInTimeText = styled(Flex)`
-  font-size: 11px;
-  color: #868686;
-  justify-content: center;
-`
-
-const TimelineTimeBlock = styled.div``
-
 const ProgressBlock = styled(Flex)`
   flex: 7;
   background: #333333;
@@ -259,7 +208,7 @@ const ProgressBlockStepItem = styled(Flex)`
   }
 `
 
-const ProgressBlockStepItemNumber = styled(Flex)`
+const ProgressBlockStepItemNumber = styled(Flex)<{ active: boolean }>`
   font-weight: 600;
   height: 25px;
   width: 25px;
@@ -267,13 +216,8 @@ const ProgressBlockStepItemNumber = styled(Flex)`
   border-radius: 50%;
   justify-content: center;
   align-items: center;
-  background: #4a4a4a;
-  color: #868686;
-
-  :hover {
-    background: #fdb814;
-    color: #000;
-  }
+  background: ${({ active }) => `${active ? '#fdb814' : '#4a4a4a'}`};
+  color: ${({ active }) => `${active ? '#000' : '#868686'}`};
 
   ${({ theme }) => theme.mediaQueries.sm} {
     height: 35px;
@@ -282,7 +226,7 @@ const ProgressBlockStepItemNumber = styled(Flex)`
   }
 `
 
-const ProgressBlockStepItemText = styled(Flex)`
+const ProgressBlockStepItemText = styled(Flex)<{ active: boolean }>`
   font-weight: 500;
   font-size: 12px;
   line-height: 20px;
@@ -291,14 +235,11 @@ const ProgressBlockStepItemText = styled(Flex)`
   border-radius: 5px;
   padding: 0 5px;
   text-align: center;
-  :hover {
-    background: #fdb814;
-    color: #000;
-  }
+  background: ${({ active }) => `${active ? '#fdb814' : 'unset'}`};
+  color: ${({ active }) => `${active ? '#000' : 'unset'}`};
 
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 16px;
-    line-height: 35px;
     padding: 0 15px;
     gap: unset;
     margin-top: 14px;
@@ -451,7 +392,6 @@ const ProjectInfoContentDetailGeneral = styled(Flex)`
 `
 
 const ProjectInfoContentDetailGeneralContent = styled(Flex)`
-  padding: 20px 56px;
   background: #333333;
   border: 1px solid #fdb814;
   border-radius: 10px;
@@ -534,7 +474,7 @@ const ProjectInfoContentTransactions = styled.div`
   }
 `
 
-const ProjectInfoContentTransactionsTitle = styled.span`
+const ProjectInfoContentTransactionsTitle = styled.div`
   font-weight: 600;
   font-size: 18px;
   line-height: 30px;
@@ -577,7 +517,7 @@ const ProjectInfoContentTransactionsItem = styled(Flex)`
 
 const ProjectInfoContentTransactionsItemText1 = styled(TextStyle2)`
   font-weight: 500;
-  flex: 0 0 50%;
+  flex: 0 0 100%;
 `
 const ProjectInfoContentTransactionsItemText2 = styled(TextStyle2)`
   font-weight: 600;
@@ -595,22 +535,32 @@ const ProjectInfoContentTransactionsItemText4 = styled(TextStyle2)`
   flex: 0 0 50%;
   text-align: right;
 `
-const ProjectInfoContentTransactionsItemPaging = styled.div`
+const ProjectInfoContentTransactionsItemPaging = styled(Flex)`
   margin-top: 32px;
   text-align: center;
   font-size: 18px;
+  justify-content: center;
+  align-items: center;
+`
 
-  :before {
-    content: '< \\00a0 ';
-  }
-
-  :after {
-    content: '\\00a0 >';
-  }
+const ProjectInfoContentTransactionsItemPagingButton = styled.button`
+  background: transparent;
+  outline: none;
+  border-color: transparent;
+  font-size: 18px;
+  color: white;
 `
 
 const ProjectInfoContentTransactionsItemPagingText1 = styled.span`
   color: #868686;
+`
+
+const NoData = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 22px;
+  color: ${({ theme }) => `${theme.colors.primary}`};
 `
 
 const InvestDetail = () => {
@@ -618,19 +568,136 @@ const InvestDetail = () => {
   const router = useRouter()
   const { investId } = router.query
 
+  const [detailItem, setDetailItem] = useState(null)
+
+  const [progressStep, setProgressStep] = useState(1)
+  const [timelineStep, setTimelineStep] = useState(1)
+  const [transactionPageNumber, setTransactionPageNumber] = useState(1)
+  const [transactionTotalPage, setTransactionTotalPage] = useState(0)
+  const [listTransaction, setListTransaction] = useState([])
+
   useEffect(() => {
-    console.log(123123, investId)
+    if (investId) {
+      getData()
+    }
   }, [investId])
+
+  useEffect(() => {
+    if (detailItem?.stage) {
+      switch (true) {
+        case moment(+detailItem?.stage?.endCtb).isBefore(moment().unix() * 1000) &&
+          moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.closeTime):
+          setTimelineStep(2)
+          break
+        case moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.startTime) ||
+          (moment(+detailItem?.stage?.startTime).isBefore(moment().unix() * 1000) &&
+            moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.endCtb)):
+          setTimelineStep(1)
+          break
+        case moment(+detailItem?.stage?.closeTime).isBefore(moment().unix() * 1000):
+          setTimelineStep(3)
+          break
+        default:
+          setTimelineStep(1)
+      }
+    }
+  }, [detailItem])
+
+  const getData = () => {
+    axios
+      .get(`http://116.118.49.31:8003/api/v1/invest-pools/${investId}`)
+      .then(function (response) {
+        setDetailItem(response?.data?.data ?? {})
+      })
+      .catch(function (error) {
+        throw error
+      })
+  }
+
+  useEffect(() => {
+    if (investId) {
+      getTransactions()
+    }
+  }, [transactionPageNumber, investId])
+
+  const getTransactions = () => {
+    axios
+      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
+        params: {
+          limit: 10,
+          page: transactionPageNumber,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg1YWQxYzU3ZmVhYTRiYWRjNDBhODk3ZTkyMTI2NDliNWM4ZmU1ZjlkIiwiaWF0IjoxNjQ5MDcyMzY3LCJleHAiOjE2NDkxNTg3Njd9.uvqvfGkQI1_1_zqdDprDYZkear72_tcpUm63S2wOMyM`,
+        },
+      })
+      .then(function (response) {
+        setListTransaction(response?.data?.data?.transactions ?? [])
+        setTransactionTotalPage(response?.data?.totalCount ? Math.ceil(response?.data?.totalCount / 10) : 0)
+      })
+      .catch((error) => {
+        console.error('error:', error.response)
+      })
+  }
+
+  const snakeToPascal = (string) => {
+    return string
+      .split('/')
+      .map((snake) =>
+        snake
+          .split('_')
+          .map((substr) => substr.charAt(0).toUpperCase() + substr.slice(1))
+          .join(' '),
+      )
+      .join('/')
+  }
+
+  const prevPageTransaction = () => {
+    if (transactionPageNumber > 1) {
+      setTransactionPageNumber(+transactionPageNumber - 1)
+    }
+  }
+
+  const nextPageTransaction = () => {
+    if (transactionPageNumber < transactionTotalPage) {
+      setTransactionPageNumber(+transactionPageNumber + 1)
+    }
+  }
+
+  const renderTransactionsPaging = () => {
+    if (listTransaction.length > 0) {
+      return (
+        <ProjectInfoContentTransactionsItemPaging>
+          <ProjectInfoContentTransactionsItemPagingButton onClick={() => prevPageTransaction()}>
+            &lt;
+          </ProjectInfoContentTransactionsItemPagingButton>
+          {transactionPageNumber}
+          <ProjectInfoContentTransactionsItemPagingText1>
+            /{transactionTotalPage}
+          </ProjectInfoContentTransactionsItemPagingText1>
+          <ProjectInfoContentTransactionsItemPagingButton onClick={() => nextPageTransaction()}>
+            &gt;
+          </ProjectInfoContentTransactionsItemPagingButton>
+        </ProjectInfoContentTransactionsItemPaging>
+      )
+    }
+    return <></>
+  }
+
   const settings = {
     className: 'center',
     centerMode: true,
     infinite: true,
     centerPadding: '340px',
     slidesToShow: 1,
-    speed: 500,
+    speed: 600,
     adaptiveHeight: true,
     arrows: false,
     dots: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    cssEase: 'linear',
     responsive: [
       {
         breakpoint: 1800,
@@ -684,28 +751,29 @@ const InvestDetail = () => {
     ],
   }
 
+  // @ts-ignore
   return (
     <Page>
       <CarouselSection>
         <Slider {...settings}>
           <CarouselBlock>
-            <CarouselImg src="/images/metafound/beautiful-city-chongqing.png" />
+            <CarouselImg src={detailItem?.thumbnail} />
           </CarouselBlock>
           <CarouselBlock>
-            <CarouselImg src="/images/metafound/beautiful-city-chongqing.png" />
+            <CarouselImg src={detailItem?.thumbnail} />
           </CarouselBlock>
           <CarouselBlock>
-            <CarouselImg src="/images/metafound/beautiful-city-chongqing.png" />
+            <CarouselImg src={detailItem?.thumbnail} />
           </CarouselBlock>
         </Slider>
       </CarouselSection>
       <PageWrapper>
         <LocationBlock>
-          <LocationImg />
+          <LocationImg src={detailItem?.imgUrl} />
           <LocationInfo>
-            <LocationInfoCity>Hồ Chí Minh City</LocationInfoCity>
+            <LocationInfoCity>{detailItem?.name}</LocationInfoCity>
             <LocationInfoText>Location: </LocationInfoText>
-            <LocationInfoAddress>105 Nguyen Van Linh. district 8, Hồ Chí Minh City</LocationInfoAddress>
+            <LocationInfoAddress>{detailItem?.location}</LocationInfoAddress>
           </LocationInfo>
         </LocationBlock>
         <TimelineProgressSection>
@@ -715,83 +783,62 @@ const InvestDetail = () => {
               <TimelineStep>
                 <TimelineIcon />
               </TimelineStep>
-              <TimelineContent>
-                <TimelineContentTitle>Capital mobilization time</TimelineContentTitle>
-                <TimelineContentFromTo>
-                  <TimelineContentFromToTitle>From</TimelineContentFromToTitle>
-                  <TextStyle1>8:00, 13 May 2022</TextStyle1>
-                </TimelineContentFromTo>
-                <TimelineContentFromTo>
-                  <TimelineContentFromToTitle>To</TimelineContentFromToTitle>
-                  <TextStyle1>8:00, 13 May 2022</TextStyle1>
-                </TimelineContentFromTo>
-                <TimelineContentStartIn>Start in</TimelineContentStartIn>
-                <TimelineContentStartInBlock>
-                  <TimelineContentStartInTime>
-                    <TimelineContentStartInTimeBox>00</TimelineContentStartInTimeBox>
-                    <TimelineContentStartInTimeText>Day</TimelineContentStartInTimeText>
-                  </TimelineContentStartInTime>
-                  <TimelineContentStartInColon>:</TimelineContentStartInColon>
-                  <TimelineContentStartInTime>
-                    <TimelineContentStartInTimeBox>00</TimelineContentStartInTimeBox>
-                    <TimelineContentStartInTimeText>Hours</TimelineContentStartInTimeText>
-                  </TimelineContentStartInTime>
-                  <TimelineContentStartInColon>:</TimelineContentStartInColon>
-                  <TimelineContentStartInTime>
-                    <TimelineContentStartInTimeBox>00</TimelineContentStartInTimeBox>
-                    <TimelineContentStartInTimeText>Minutes</TimelineContentStartInTimeText>
-                  </TimelineContentStartInTime>
-                  <TimelineContentStartInColon>:</TimelineContentStartInColon>
-                  <TimelineContentStartInTime>
-                    <TimelineContentStartInTimeBox>00</TimelineContentStartInTimeBox>
-                    <TimelineContentStartInTimeText>Second</TimelineContentStartInTimeText>
-                  </TimelineContentStartInTime>
-                </TimelineContentStartInBlock>
-              </TimelineContent>
+              <TimelineDetail
+                visible={timelineStep === 1}
+                step={timelineStep}
+                detailItem={detailItem}
+                title="Capital mobilization time"
+              />
             </TimelineItem>
             <TimelineItem>
               <TimelineStep>
                 <TimelineIcon />
               </TimelineStep>
-              <TimelineContent>
-                <TimelineContentTitle>Investment Time</TimelineContentTitle>
-              </TimelineContent>
-            </TimelineItem>
-            <TimelineItem>
-              <TimelineStep>
-                <TimelineIcon />
-              </TimelineStep>
-              <TimelineContent>
-                <TimelineContentTitle>Withdraw Profit</TimelineContentTitle>
-              </TimelineContent>
+              <TimelineDetail
+                visible={timelineStep === 2}
+                step={timelineStep}
+                detailItem={detailItem}
+                title="Investment Time"
+              />
             </TimelineItem>
             <TimelineItem>
               <TimelineStep className="last">
                 <TimelineIcon />
               </TimelineStep>
-              <TimelineContent>
-                <TimelineContentTitle>End</TimelineContentTitle>
-              </TimelineContent>
+              <TimelineDetail
+                visible={timelineStep === 3}
+                step={timelineStep}
+                detailItem={detailItem}
+                title="Withdraw Profit"
+              />
             </TimelineItem>
+            {/* <TimelineItem> */}
+            {/*   <TimelineStep className="last"> */}
+            {/*     <TimelineIcon /> */}
+            {/*   </TimelineStep> */}
+            {/*   <TimelineContent> */}
+            {/*     <TimelineContentTitle>End</TimelineContentTitle> */}
+            {/*   </TimelineContent> */}
+            {/* </TimelineItem> */}
           </TimelineBlock>
           <ProgressBlock>
             <ProgressBlockTitle>Investment Progress</ProgressBlockTitle>
             <ProgressBlockStep>
               <ProgressBlockStepItem>
-                <ProgressBlockStepItemNumber>1</ProgressBlockStepItemNumber>
-                <ProgressBlockStepItemText>Stake MTF</ProgressBlockStepItemText>
+                <ProgressBlockStepItemNumber active={progressStep === 1}>1</ProgressBlockStepItemNumber>
+                <ProgressBlockStepItemText active={progressStep === 1}>Stake MTF</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
               <ProgressBlockStepItem>
-                <ProgressBlockStepItemNumber>2</ProgressBlockStepItemNumber>
-                <ProgressBlockStepItemText>Invest</ProgressBlockStepItemText>
+                <ProgressBlockStepItemNumber active={progressStep === 2}>2</ProgressBlockStepItemNumber>
+                <ProgressBlockStepItemText active={progressStep === 2}>Invest</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
               <ProgressBlockStepItem>
-                <ProgressBlockStepItemNumber>3</ProgressBlockStepItemNumber>
-                <ProgressBlockStepItemText>Investing</ProgressBlockStepItemText>
+                <ProgressBlockStepItemNumber active={progressStep === 3}>3</ProgressBlockStepItemNumber>
+                <ProgressBlockStepItemText active={progressStep === 3}>Investing</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
               <ProgressBlockStepItem>
-                <ProgressBlockStepItemNumber>4</ProgressBlockStepItemNumber>
-                <ProgressBlockStepItemText>Withdraw Profit</ProgressBlockStepItemText>
+                <ProgressBlockStepItemNumber active={progressStep === 4}>4</ProgressBlockStepItemNumber>
+                <ProgressBlockStepItemText active={progressStep === 4}>Withdraw Profit</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
             </ProgressBlockStep>
             <ProgressBlockStepInfo>
@@ -818,52 +865,19 @@ const InvestDetail = () => {
               <ProjectInfoContentDetailGeneralContent>
                 <ProjectInfoContentDetailGeneralContentTitle>Detail</ProjectInfoContentDetailGeneralContentTitle>
                 <ProjectInfoContentDetailContent>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>Land acreage</ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : 68 m2</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>Investment time </ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : 2 Years</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>construction area</ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : 86 m2</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>Expected profit</ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : 15%</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>Uses</ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : Urban land</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>Ownership period</ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : Until 2024</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>Juridical</ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : Owner's book</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
-                  <ProjectInfoContentDetailContentItem>
-                    <ProjectInfoContentDetailContentText1>Formality use</ProjectInfoContentDetailContentText1>
-                    <ProjectInfoContentDetailContentText2> : personal use</ProjectInfoContentDetailContentText2>
-                  </ProjectInfoContentDetailContentItem>
+                  {Object.entries(detailItem?.detail ?? {}).map(([key, value], i) => (
+                    <ProjectInfoContentDetailContentItem key={i}>
+                      <ProjectInfoContentDetailContentText1>{snakeToPascal(key)}</ProjectInfoContentDetailContentText1>
+                      <ProjectInfoContentDetailContentText2> : {value}</ProjectInfoContentDetailContentText2>
+                    </ProjectInfoContentDetailContentItem>
+                  ))}
                 </ProjectInfoContentDetailContent>
               </ProjectInfoContentDetailGeneralContent>
               <ProjectInfoContentDetailGeneralContent>
                 <ProjectInfoContentDetailGeneralContentTitle>
                   General Description
                 </ProjectInfoContentDetailGeneralContentTitle>
-                <ProjectInfoContentGeneralContent>
-                  Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-                  ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-                  ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-                  ipsum lorem ipsum lorem ipsum{' '}
-                </ProjectInfoContentGeneralContent>
+                <ProjectInfoContentGeneralContent>{detailItem?.generalDescription}</ProjectInfoContentGeneralContent>
               </ProjectInfoContentDetailGeneralContent>
               <ProjectInfoContentDetailGeneralContent>
                 <ProjectInfoContentDetailGeneralContentTitle>Video</ProjectInfoContentDetailGeneralContentTitle>
@@ -871,7 +885,7 @@ const InvestDetail = () => {
                   width="560"
                   height="450px"
                   style={{ width: '100%', border: '0', padding: '35px 0', borderRadius: '10px' }}
-                  src="https://www.youtube.com/embed/HwVCeUNUIEE"
+                  src={detailItem?.video}
                   title="YouTube video player"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -887,52 +901,27 @@ const InvestDetail = () => {
                   loading="lazy"
                   allowFullScreen
                   referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDeiGZPUHDjXPRE5qwQzxChQY1IZTS5gWk
-    &q=Space+Needle,Seattle+WA"
+                  src={detailItem?.map}
                 />
               </ProjectInfoContentDetailGeneralContent>
             </ProjectInfoContentDetailGeneral>
             <ProjectInfoContentTransactions>
               <ProjectInfoContentTransactionsTitle>Transactions</ProjectInfoContentTransactionsTitle>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItem>
-                <ProjectInfoContentTransactionsItemText1>Quoc Bao</ProjectInfoContentTransactionsItemText1>
-                <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2>
-                <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
-                <ProjectInfoContentTransactionsItemText4>800 $MTF</ProjectInfoContentTransactionsItemText4>
-              </ProjectInfoContentTransactionsItem>
-              <ProjectInfoContentTransactionsItemPaging>
-                1<ProjectInfoContentTransactionsItemPagingText1>/3</ProjectInfoContentTransactionsItemPagingText1>
-              </ProjectInfoContentTransactionsItemPaging>
+              {listTransaction.length > 0 &&
+                listTransaction.map((item, index) => {
+                  return (
+                    <ProjectInfoContentTransactionsItem key={index}>
+                      <ProjectInfoContentTransactionsItemText1>{item?.type}</ProjectInfoContentTransactionsItemText1>
+                      {/* <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2> */}
+                      <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
+                      <ProjectInfoContentTransactionsItemText4>
+                        {item?.value} $MTF
+                      </ProjectInfoContentTransactionsItemText4>
+                    </ProjectInfoContentTransactionsItem>
+                  )
+                })}
+              {listTransaction.length <= 0 && <NoData paddingTop="20px">No data</NoData>}
+              {renderTransactionsPaging()}
             </ProjectInfoContentTransactions>
           </ProjectInfoSectionContent>
         </ProjectInfoSection>

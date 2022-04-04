@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useTheme from '../../hooks/useTheme'
-import Trans from '../../components/Trans'
-import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '../../@uikit'
-import { Token } from '@pancakeswap/sdk'
-import { log } from 'util'
+
+import unserializedTokens from 'config/constants/tokens'
+import calculate from '../../@uikit/components/Svg/Icons/Calculate'
+import BigNumber from 'bignumber.js'
 const axios = require('axios')
 
 const PageWrapper = styled(Box)`
@@ -254,6 +254,7 @@ const InvestItemImg = styled.img`
   ${({ theme }) => theme.mediaQueries.md} {
     width: 366px;
   }
+  object-fit: cover;
 `
 const InvestItemInfomation = styled.div`
   text-align: left;
@@ -381,7 +382,9 @@ const PercentBlock = styled.div`
 const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
-  width: ${({ width }) => `${width <= 8 ? 8 : width}%`};
+  width: ${({ width }) => `${width}%`};
+  min-width: 35px;
+  max-width: 100%;
   border-radius: 10px;
   position: absolute;
   background: ${({ theme }) => `${theme.colors.primary}`};
@@ -395,6 +398,14 @@ const NumberPercent = styled.div`
   right: 8px;
   font-weight: 600;
   font-size: 13px;
+`
+
+const NoData = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 30px;
+  color: ${({ theme }) => `${theme.colors.primary}`};
 `
 
 const MetaFound = () => {
@@ -414,7 +425,18 @@ const Invest = () => {
 
   const handleStatus = (status: 1 | 0) => {
     setStatus(status)
-    getData()
+  }
+
+  const findInfoToken = (address, takeSymbol = true) => {
+    const token = Object.entries(unserializedTokens).find(([, value]) => value.address === address)[1]
+    return takeSymbol ? token.symbol : token.decimals
+  }
+
+  const calculateCtb = (number, decimal) => {
+    if (number === 0) {
+      return number
+    }
+    return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
   }
 
   const onSearch = () => {
@@ -427,7 +449,7 @@ const Invest = () => {
 
   const onEnterKeySearch = (event) => {
     if (event.charCode === 13) {
-      getData()
+      onSearch()
     }
   }
   const getData = () => {
@@ -444,12 +466,26 @@ const Invest = () => {
         setDataDetail(response?.data?.data?.investPools)
       })
       .catch(function (error) {
-        throw error
+        console.log(123123, error)
       })
   }
+
   useEffect(() => {
     getData()
-  }, [])
+  }, [status])
+
+  const snakeToPascal = (string) => {
+    return string
+      .split('/')
+      .map((snake) =>
+        snake
+          .split('_')
+          .map((substr) => substr.charAt(0).toUpperCase() + substr.slice(1))
+          .join(' '),
+      )
+      .join('/')
+  }
+
   return (
     <PageWrapper>
       <Section marginTop="12vh">
@@ -512,17 +548,17 @@ const Invest = () => {
           listDetail.map((item) => {
             return (
               <InvestItemBlock key={item?.id}>
-                <InvestItemImg src={item?.imgUrl} />
+                <InvestItemImg src={item?.thumbnail} />
                 <InvestItemInfomation>
-                  <InvestItemText1>{item.name}</InvestItemText1>
+                  <InvestItemText1>{item?.name}</InvestItemText1>
                   <InvestItemText2>Location:</InvestItemText2>
-                  <InvestItemText3>105 Nguyen Van Linh. district 8, Hồ Chí Minh City</InvestItemText3>
+                  <InvestItemText3>{item?.location}</InvestItemText3>
                   <ProjectInformationBlock>
                     <ProjectInformationText1>Project Information:</ProjectInformationText1>
                     <ProjectInformationContent>
                       {Object.entries(item?.detail ?? {}).map(([key, value], i) => (
                         <ProjectInformationItem key={i}>
-                          <ProjectInformationItemKey>{key}</ProjectInformationItemKey>
+                          <ProjectInformationItemKey>{snakeToPascal(key)}</ProjectInformationItemKey>
                           <ProjectInformationItemValue>: {value}</ProjectInformationItemValue>
                         </ProjectInformationItem>
                       ))}
@@ -531,12 +567,20 @@ const Invest = () => {
                   <TotalBlock>
                     <div>
                       <TotalText1>Total capital to be mobilized: </TotalText1>
-                      <TotalText2 marginLeft="6px"> {item?.totalCtbMax} MTF</TotalText2>
+                      <TotalText2 marginLeft="6px">
+                        {calculateCtb(+item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
+                        {findInfoToken(item?.token)}
+                      </TotalText2>
                     </div>
                     <div>
                       <TotalText1>Total:</TotalText1>
-                      <TotalText2 marginLeft="6px"> {item?.totalCtb}</TotalText2>
-                      <TotalText1>/{item?.totalCtbMax} MTF</TotalText1>
+                      <TotalText2 marginLeft="6px">
+                        {calculateCtb(+item?.totalCtb, findInfoToken(item?.token, false))}
+                      </TotalText2>
+                      <TotalText1>
+                        /{calculateCtb(+item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
+                        {findInfoToken(item?.token)}
+                      </TotalText1>
                     </div>
                   </TotalBlock>
                   <PercentBlock>
@@ -548,6 +592,7 @@ const Invest = () => {
               </InvestItemBlock>
             )
           })}
+        {listDetail.length <= 0 && <NoData>No data</NoData>}
       </SectionInvest>
     </PageWrapper>
   )
