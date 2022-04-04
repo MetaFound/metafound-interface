@@ -391,7 +391,6 @@ const ActivePercent = styled.div<{ width: number }>`
 `
 
 const NumberPercent = styled.div`
-  position: absolute;
   line-height: 20px;
   border-radius: 10px;
   position: absolute;

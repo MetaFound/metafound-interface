@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import useTheme from '../../../hooks/useTheme'
-import { Box, Flex, Heading, Skeleton } from '../../../@uikit'
+import { Box, Flex, Heading, Input, Skeleton, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
 
 const Page = styled(Box)``
@@ -104,6 +104,14 @@ const TimelineProgressSection = styled(Flex)`
     margin-top: 86px;
   }
 `
+const ProgressPercentBlock = styled(Flex)`
+  justify-content: flex-end;
+  flex: 0 0 100%;
+  order: 1;
+  @media screen and (min-width: 1477px) {
+    order: unset;
+  }
+`
 
 const TimelineBlock = styled(Flex)`
   flex: 4;
@@ -182,6 +190,10 @@ const ProgressBlock = styled(Flex)`
 
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 60px 100px;
+  }
+  order: 2;
+  @media screen and (min-width: 1477px) {
+    order: unset;
   }
 `
 
@@ -275,13 +287,13 @@ const ProgressBlockStepInfoText1 = styled(TextStyle2)`
 const ProgressBlockStepInfoText2 = styled(TextStyle2)`
   font-weight: 300;
   margin-top: 8px;
+  margin-bottom: 15px;
 `
 
 const ProgressBlockStepInfoTier = styled(Flex)`
   justify-content: space-between;
-  margin: 15px 0;
+  margin-bottom: 15px;
   ${({ theme }) => theme.mediaQueries.sm} {
-    margin-top: 30px;
     justify-content: unset;
   }
 `
@@ -329,9 +341,10 @@ const ProgressBlockStepInfoText3Block = styled(Flex)`
 const ProgressBlockStepInfoText3 = styled(TextStyle2)`
   color: #868686;
   font-weight: 400;
-  ${({ theme }) => theme.mediaQueries.sm} {
-    margin-top: 7px;
-  }
+  line-height: 30px;
+  // ${({ theme }) => theme.mediaQueries.sm} {
+  //   margin-top: 7px;
+  // }
 `
 
 const ProgressBlockStepInfoText3Question = styled(Flex)`
@@ -534,6 +547,9 @@ const ProjectInfoContentTransactionsItemText4 = styled(TextStyle2)`
   color: #fdb814;
   flex: 0 0 50%;
   text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 const ProjectInfoContentTransactionsItemPaging = styled(Flex)`
   margin-top: 32px;
@@ -561,6 +577,158 @@ const NoData = styled(Flex)`
   font-weight: 600;
   font-size: 22px;
   color: ${({ theme }) => `${theme.colors.primary}`};
+`
+const ProgressPercent = styled(Flex)`
+  justify-content: flex-end;
+  text-align: center;
+  flex: 0 0 100%;
+  flex-wrap: wrap;
+  @media screen and (min-width: 1477px) {
+    flex: 0 0 60%;
+    order: unset;
+  }
+`
+const TotalContributedCapital = styled.div`
+  flex: 0 0 100%;
+  text-align: center;
+  font-size: 18px;
+  line-height: 30px;
+  margin-bottom: 20px;
+`
+
+const TotalBlock = styled.div`
+  text-align: right;
+  flex: 0 0 100%;
+`
+const TotalLayout = styled.div`
+  margin: 0 auto;
+  width: 100%;
+  @media screen and (min-width: 1477px) {
+    width: 80%;
+  }
+`
+
+const TotalText1 = styled(Text)`
+  font-size: 14px;
+  display: inline-block;
+  color: #959595;
+  font-weight: 400;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+  }
+`
+
+const TotalText2 = styled(Text)`
+  display: inline-block;
+  font-weight: 600;
+  font-size: 14px;
+  color: ${({ theme }) => `${theme.colors.text}`};
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+  }
+`
+
+const PercentBlock = styled.div`
+  background: #4a4a4a;
+  height: 20px;
+  width: 100%;
+  border-radius: 10px;
+  align-items: center;
+  position: relative;
+  margin: 0 auto 8px;
+  @media screen and (min-width: 1477px) {
+    width: 80%;
+  }
+`
+
+const ActivePercent = styled.div<{ width: number }>`
+  background: #101010;
+  height: 20px;
+  width: ${({ width }) => `${width}%`};
+  min-width: 35px;
+  max-width: 100%;
+  border-radius: 10px;
+  position: absolute;
+  background: ${({ theme }) => `${theme.colors.primary}`};
+`
+
+const NumberPercent = styled.div`
+  line-height: 20px;
+  border-radius: 10px;
+  position: absolute;
+  right: 8px;
+  font-weight: 600;
+  font-size: 13px;
+`
+
+const BlockSearchWithButton = styled(Flex)`
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+`
+
+const ButtonInvestSearch = styled.button`
+  background: #fdb814;
+  border-radius: 8px;
+  outline: none;
+  border-color: transparent;
+  color: black;
+  padding: 0 15px;
+  height: 32px;
+  font-weight: 600;
+  font-size: 16px;
+`
+
+const CurrencyIcon = styled.img`
+  width: 25px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  ${({ theme }) => theme.mediaQueries.lg} {
+    width: 25px;
+  }
+`
+
+const BlockSearchInvest = styled.div`
+  height: 40px;
+  width: 250px;
+  max-width: 100%;
+  position: relative;
+`
+
+const SearchInput = styled(Input)`
+  width: 100%;
+  height: 100%;
+  padding: 0 48px;
+  font-size: 14px;
+  background: #4a4a4a;
+  border-radius: 8px;
+
+  ::placeholder,
+  ::-webkit-input-placeholder {
+    color: #868686;
+  }
+
+  ${({ theme }) => theme.mediaQueries.lg} {
+    font-size: 18px;
+  }
+`
+
+const SearchIcon = styled.button`
+  position: absolute;
+  background: #fdb814;
+  border-radius: 8px;
+  outline: none;
+  border-color: transparent;
+  color: black;
+  padding: 0 8px;
+  height: 25px;
+  right: 8px;
+  top: 8px;
+  line-height: 20px;
+  font-weight: 600;
+  font-size: 14px;
 `
 
 const InvestDetail = () => {
@@ -628,13 +796,13 @@ const InvestDetail = () => {
           page: transactionPageNumber,
         },
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-          // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg1YWQxYzU3ZmVhYTRiYWRjNDBhODk3ZTkyMTI2NDliNWM4ZmU1ZjlkIiwiaWF0IjoxNjQ5MDcyMzY3LCJleHAiOjE2NDkxNTg3Njd9.uvqvfGkQI1_1_zqdDprDYZkear72_tcpUm63S2wOMyM`,
+          // Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg3ZWQwODU1MmE3OTdiNThjY2MyZDI5N2ZiNjQzOTEwM2IzYTczZGI1IiwiaWF0IjoxNjQ5MDg1NTU0LCJleHAiOjE2NDkxNzE5NTR9.LY6BC4g1P_oRCiwRJG1Y5d6o_zFujvrIALOg4xA-qZU`,
         },
       })
       .then(function (response) {
         setListTransaction(response?.data?.data?.transactions ?? [])
-        setTransactionTotalPage(response?.data?.totalCount ? Math.ceil(response?.data?.totalCount / 10) : 0)
+        setTransactionTotalPage(response?.data?.data?.totalCount ? Math.ceil(response?.data?.data?.totalCount / 10) : 0)
       })
       .catch((error) => {
         console.error('error:', error.response)
@@ -777,6 +945,24 @@ const InvestDetail = () => {
           </LocationInfo>
         </LocationBlock>
         <TimelineProgressSection>
+          <ProgressPercentBlock>
+            <ProgressPercent>
+              <TotalContributedCapital>Total Contributed Capital</TotalContributedCapital>
+              <PercentBlock>
+                <ActivePercent width={68}>
+                  <NumberPercent>68%</NumberPercent>
+                </ActivePercent>
+              </PercentBlock>
+
+              <TotalBlock>
+                <TotalLayout>
+                  <TotalText1>Total:</TotalText1>
+                  <TotalText2 marginLeft="6px">123</TotalText2>
+                  <TotalText1>/123 MTF</TotalText1>
+                </TotalLayout>
+              </TotalBlock>
+            </ProgressPercent>
+          </ProgressPercentBlock>
           <TimelineBlock>
             <TimelineBlockTitle>Timeline</TimelineBlockTitle>
             <TimelineItem>
@@ -841,20 +1027,34 @@ const InvestDetail = () => {
                 <ProgressBlockStepItemText active={progressStep === 4}>Withdraw Profit</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
             </ProgressBlockStep>
+            {/* <ProgressBlockStepInfo> */}
+            {/*   <ProgressBlockStepInfoText1>Stake to achive MetaFound Tier</ProgressBlockStepInfoText1> */}
+            {/*   <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Dimond)</ProgressBlockStepInfoText2> */}
+            {/*   <ProgressBlockStepInfoTier> */}
+            {/*     <ProgressBlockStepInfoTier1> */}
+            {/*       <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1> */}
+            {/*       <ProgressBlockStepInfoTier1Text2>Gold</ProgressBlockStepInfoTier1Text2> */}
+            {/*     </ProgressBlockStepInfoTier1> */}
+            {/*     <ProgressBlockStepInfoTier2>Stake now</ProgressBlockStepInfoTier2> */}
+            {/*   </ProgressBlockStepInfoTier> */}
+            {/*   <ProgressBlockStepInfoText3Block> */}
+            {/*     <ProgressBlockStepInfoText3>You have staked, you can invest now</ProgressBlockStepInfoText3> */}
+            {/*     <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
+            {/*   </ProgressBlockStepInfoText3Block> */}
+            {/* </ProgressBlockStepInfo> */}
+
             <ProgressBlockStepInfo>
-              <ProgressBlockStepInfoText1>Stake to achive MetaFound Tier</ProgressBlockStepInfoText1>
-              <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Dimond)</ProgressBlockStepInfoText2>
-              <ProgressBlockStepInfoTier>
-                <ProgressBlockStepInfoTier1>
-                  <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1>
-                  <ProgressBlockStepInfoTier1Text2>Gold</ProgressBlockStepInfoTier1Text2>
-                </ProgressBlockStepInfoTier1>
-                <ProgressBlockStepInfoTier2>Stake now</ProgressBlockStepInfoTier2>
-              </ProgressBlockStepInfoTier>
-              <ProgressBlockStepInfoText3Block>
-                <ProgressBlockStepInfoText3>You have staked, you can invest now</ProgressBlockStepInfoText3>
-                <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
-              </ProgressBlockStepInfoText3Block>
+              <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1>
+              <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2>
+              <ProgressBlockStepInfoText3>Balance: 0.000 USDT</ProgressBlockStepInfoText3>
+              <BlockSearchWithButton>
+                <BlockSearchInvest>
+                  <SearchInput placeholder="0.00" />
+                  <SearchIcon>Max</SearchIcon>
+                  <CurrencyIcon src="./images/" />
+                </BlockSearchInvest>
+                <ButtonInvestSearch>Invest</ButtonInvestSearch>
+              </BlockSearchWithButton>
             </ProgressBlockStepInfo>
           </ProgressBlock>
         </TimelineProgressSection>
@@ -913,7 +1113,9 @@ const InvestDetail = () => {
                     <ProjectInfoContentTransactionsItem key={index}>
                       <ProjectInfoContentTransactionsItemText1>{item?.type}</ProjectInfoContentTransactionsItemText1>
                       {/* <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2> */}
-                      <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
+                      <ProjectInfoContentTransactionsItemText3>
+                        {moment().diff(item?.created_at, 'days')} Day ago
+                      </ProjectInfoContentTransactionsItemText3>
                       <ProjectInfoContentTransactionsItemText4>
                         {item?.value} $MTF
                       </ProjectInfoContentTransactionsItemText4>
