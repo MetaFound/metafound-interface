@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import useTheme from '../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../@uikit'
 
-import unserializedTokens from 'config/constants/tokens'
+import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
 import calculate from '../../@uikit/components/Svg/Icons/Calculate'
 import BigNumber from 'bignumber.js'
 const axios = require('axios')
@@ -427,8 +427,21 @@ const Invest = () => {
   }
 
   const findInfoToken = (address, takeSymbol = true) => {
-    const token = Object.entries(unserializedTokens).find(([, value]) => value.address === address)[1]
-    return takeSymbol ? token.symbol : token.decimals
+    if (address) {
+      let token = null
+      switch (true) {
+        case Object.entries(unserializedTokens).some(([, value]) => value.address === address):
+          token = Object.entries(testnetTokens).find(([, value]) => value.address === address)[1]
+          break
+        case Object.entries(testnetTokens).some(([, value]) => value.address === address):
+          token = Object.entries(testnetTokens).find(([, value]) => value.address === address)[1]
+          break
+        default:
+          token = null
+      }
+      return takeSymbol ? token.symbol : token.decimals
+    }
+    return null
   }
 
   const calculateCtb = (number, decimal) => {

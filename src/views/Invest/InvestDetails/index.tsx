@@ -7,6 +7,8 @@ import moment from 'moment'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Heading, Input, Skeleton, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
+import unserializedTokens, { testnetTokens } from '../../../config/constants/tokens'
+import BigNumber from 'bignumber.js'
 
 const Page = styled(Box)``
 
@@ -20,7 +22,7 @@ const CarouselBlock = styled.div`
 
 const CarouselImg = styled.img`
   width: 100%;
-  max-width: clamp(1000px, 70vw, 1238px);
+  max-width: clamp(1000px, 70vw, 8px);
   margin: 0 auto;
   padding: 0 16px;
   border-radius: 20px;
@@ -737,6 +739,9 @@ const InvestDetail = () => {
   const { investId } = router.query
 
   const [detailItem, setDetailItem] = useState(null)
+  const [investData, setInvestData] = useState(null)
+
+  const [ctbToken, setCtbToken] = useState(null)
 
   const [progressStep, setProgressStep] = useState(1)
   const [timelineStep, setTimelineStep] = useState(1)
@@ -747,6 +752,7 @@ const InvestDetail = () => {
   useEffect(() => {
     if (investId) {
       getData()
+      getInvest()
     }
   }, [investId])
 
@@ -779,6 +785,24 @@ const InvestDetail = () => {
       })
       .catch(function (error) {
         throw error
+      })
+  }
+
+  const getInvest = () => {
+    axios
+      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}`, {
+        headers: {
+          // Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg3ZWQwODU1MmE3OTdiNThjY2MyZDI5N2ZiNjQzOTEwM2IzYTczZGI1IiwiaWF0IjoxNjQ5MDg1NTU0LCJleHAiOjE2NDkxNzE5NTR9.LY6BC4g1P_oRCiwRJG1Y5d6o_zFujvrIALOg4xA-qZU`,
+        },
+      })
+      .then(function (response) {
+        setInvestData(response?.data?.data ?? {})
+        console.log(123123, response?.data?.data?.ctbToken)
+        setCtbToken(response?.data?.data?.ctbToken)
+      })
+      .catch(function (error) {
+        console.error(error)
       })
   }
 
@@ -851,6 +875,31 @@ const InvestDetail = () => {
       )
     }
     return <></>
+  }
+
+  const findInfoToken = (takeSymbol = true) => {
+    if (ctbToken) {
+      let token = null
+      switch (true) {
+        case Object.entries(unserializedTokens).some(([, value]) => value.address === ctbToken):
+          token = Object.entries(testnetTokens).find(([, value]) => value.address === ctbToken)[1]
+          break
+        case Object.entries(testnetTokens).some(([, value]) => value.address === ctbToken):
+          token = Object.entries(testnetTokens).find(([, value]) => value.address === ctbToken)[1]
+          break
+        default:
+          token = null
+      }
+      return takeSymbol ? token.symbol : token.decimals
+    }
+    return null
+  }
+
+  const calculateCtb = (number, decimal) => {
+    if (number === 0) {
+      return number
+    }
+    return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
   }
 
   const settings = {
@@ -949,16 +998,20 @@ const InvestDetail = () => {
             <ProgressPercent>
               <TotalContributedCapital>Total Contributed Capital</TotalContributedCapital>
               <PercentBlock>
-                <ActivePercent width={68}>
-                  <NumberPercent>68%</NumberPercent>
+                <ActivePercent width={+Math.round(+investData?.totalCtb / +investData?.totalCtbMax).toFixed(2)}>
+                  <NumberPercent>
+                    {+Math.round(+investData?.totalCtb / +investData?.totalCtbMax).toFixed(2)}%
+                  </NumberPercent>
                 </ActivePercent>
               </PercentBlock>
 
               <TotalBlock>
                 <TotalLayout>
                   <TotalText1>Total:</TotalText1>
-                  <TotalText2 marginLeft="6px">123</TotalText2>
-                  <TotalText1>/123 MTF</TotalText1>
+                  <TotalText2 marginLeft="6px">{calculateCtb(+investData?.totalCtb, findInfoToken(false))} </TotalText2>
+                  <TotalText1>
+                    /{calculateCtb(+investData?.totalCtbMax, findInfoToken(false))} {findInfoToken()}{' '}
+                  </TotalText1>
                 </TotalLayout>
               </TotalBlock>
             </ProgressPercent>
@@ -1043,6 +1096,23 @@ const InvestDetail = () => {
             {/*   </ProgressBlockStepInfoText3Block> */}
             {/* </ProgressBlockStepInfo> */}
 
+            {/* <ProgressBlockStepInfo> */}
+            {/*   <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1> */}
+            {/*   <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2> */}
+            {/*   <ProgressBlockStepInfoText3>Balance: 0.000 USDT</ProgressBlockStepInfoText3> */}
+            {/*   <BlockSearchWithButton> */}
+            {/*     <BlockSearchInvest> */}
+            {/*       <SearchInput placeholder="0.00" /> */}
+            {/*       <SearchIcon>Max</SearchIcon> */}
+            {/*       <CurrencyIcon src="./images/" /> */}
+            {/*     </BlockSearchInvest> */}
+            {/*     <ButtonInvestSearch>Invest</ButtonInvestSearch> */}
+            {/*   </BlockSearchWithButton> */}
+            {/*   <ProgressBlockStepInfoText3Block> */}
+            {/*     <ProgressBlockStepInfoText3>1 USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
+            {/*     <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
+            {/*   </ProgressBlockStepInfoText3Block> */}
+            {/* </ProgressBlockStepInfo> */}
             <ProgressBlockStepInfo>
               <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1>
               <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2>
@@ -1053,8 +1123,12 @@ const InvestDetail = () => {
                   <SearchIcon>Max</SearchIcon>
                   <CurrencyIcon src="./images/" />
                 </BlockSearchInvest>
-                <ButtonInvestSearch>Invest</ButtonInvestSearch>
+                <ButtonInvestSearch>Withdraw Profit</ButtonInvestSearch>
               </BlockSearchWithButton>
+              <ProgressBlockStepInfoText3Block>
+                <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3>
+                <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
+              </ProgressBlockStepInfoText3Block>
             </ProgressBlockStepInfo>
           </ProgressBlock>
         </TimelineProgressSection>
@@ -1117,7 +1191,7 @@ const InvestDetail = () => {
                         {moment().diff(item?.created_at, 'days')} Day ago
                       </ProjectInfoContentTransactionsItemText3>
                       <ProjectInfoContentTransactionsItemText4>
-                        {item?.value} $MTF
+                        {calculateCtb(+item?.value, findInfoToken(false))} {findInfoToken()}
                       </ProjectInfoContentTransactionsItemText4>
                     </ProjectInfoContentTransactionsItem>
                   )
