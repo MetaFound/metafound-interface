@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
+import BigNumber from 'bignumber.js'
+import { useRouter } from 'next/router'
 import useTheme from '../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../@uikit'
 
-import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
 import calculate from '../../@uikit/components/Svg/Icons/Calculate'
-import BigNumber from 'bignumber.js'
-import { useRouter } from 'next/router'
+
 const axios = require('axios')
 
 const PageWrapper = styled(Box)`
@@ -448,11 +449,16 @@ const Invest = () => {
     return null
   }
 
+  const numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
   const calculateCtb = (number, decimal) => {
     if (number === 0) {
       return number
     }
-    return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
+    return numberWithCommas(new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString())
+
   }
 
   const onSearch = () => {
