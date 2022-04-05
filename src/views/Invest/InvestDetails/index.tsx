@@ -267,6 +267,7 @@ const ProgressBlockStepInfo = styled.div`
   border-radius: 8px;
   padding: 20px;
   margin-top: 26px;
+  min-height: 215px;
 
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 28px 35px;
@@ -286,6 +287,20 @@ const ProgressBlockStepInfoText1 = styled(TextStyle2)`
   font-weight: 500;
 `
 
+const ProgressBlockText1Step3 = styled(ProgressBlockStepInfoText1)`
+  line-height: 30px;
+`
+
+const ProgressBlockText2Step3 = styled.span`
+  line-height: 30px;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+`
+const ProgressBlockText2PrimaryStep3 = styled(ProgressBlockText2Step3)`
+  color: #fdb814;
+`
+
 const ProgressBlockStepInfoText2 = styled(TextStyle2)`
   font-weight: 300;
   margin-top: 8px;
@@ -301,7 +316,7 @@ const ProgressBlockStepInfoTier = styled(Flex)`
 `
 
 const ProgressBlockStepInfoTier1 = styled(Flex)`
-  padding: 0 15px;
+  padding: 0 12px;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
@@ -312,6 +327,7 @@ const ProgressBlockStepInfoTier1 = styled(Flex)`
     height: 40px;
     margin-right: 120px;
     min-width: 150px;
+    padding: 0 15px;
   }
 `
 
@@ -322,6 +338,7 @@ const ProgressBlockStepInfoTier1Text1 = styled(TextStyle2)`
 const ProgressBlockStepInfoTier1Text2 = styled(TextStyle2)`
   color: #fdb814;
   font-weight: 600;
+  padding-left: 5px;
 `
 
 const ProgressBlockStepInfoTier2 = styled(Flex)`
@@ -333,11 +350,15 @@ const ProgressBlockStepInfoTier2 = styled(Flex)`
   align-items: center;
   padding: 0 15px;
   height: 30px;
+  outline: none;
 `
 
 const ProgressBlockStepInfoText3Block = styled(Flex)`
   justify-content: space-between;
   gap: 10px;
+`
+const ProgressBlockStep3ImgArrow = styled.img`
+  margin-left: 10px;
 `
 
 const ProgressBlockStepInfoText3 = styled(TextStyle2)`
@@ -681,28 +702,53 @@ const ButtonInvestSearch = styled.button`
   font-size: 16px;
 `
 
+const GoAccountBtnStep3 = styled(ButtonInvestSearch)`
+  font-weight: 500;
+  font-size: 15px;
+`
+
+const ButtonInvestSearchStep4 = styled(ButtonInvestSearch)`
+  font-weight: 500;
+  font-size: 14px;
+  padding: 0 8px;
+`
+
+const BlockWithdrawnStep4 = styled(Flex)`
+  justify-content: flex-start;
+  flex-wrap: wrap;
+`
+
+const TextWithdrawnStep4 = styled.span`
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 30px;
+`
+
+const TextBlackWithdrawnStep4 = styled(TextWithdrawnStep4)`
+  color: #868686;
+  padding-right: 10px;
+`
+
 const CurrencyIcon = styled.img`
   width: 25px;
   position: absolute;
-  top: 0;
-  left: 0;
-
-  ${({ theme }) => theme.mediaQueries.lg} {
-    width: 25px;
-  }
+  top: 7px;
+  left: 7px;
 `
 
 const BlockSearchInvest = styled.div`
   height: 40px;
-  width: 250px;
   max-width: 100%;
   position: relative;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 270px;
+  }
 `
 
 const SearchInput = styled(Input)`
   width: 100%;
   height: 100%;
-  padding: 0 48px;
+  padding: 0 59px 0 40px;
   font-size: 14px;
   background: #4a4a4a;
   border-radius: 8px;
@@ -798,7 +844,6 @@ const InvestDetail = () => {
       })
       .then(function (response) {
         setInvestData(response?.data?.data ?? {})
-        console.log(123123, response?.data?.data?.ctbToken)
         setCtbToken(response?.data?.data?.ctbToken)
       })
       .catch(function (error) {
@@ -875,6 +920,103 @@ const InvestDetail = () => {
       )
     }
     return <></>
+  }
+
+  const handleInvestingProgress = (step) => {
+    setProgressStep(step)
+  }
+
+  const renderInvestingProgress = () => {
+    let investProgress = <></>
+    switch (progressStep) {
+      case 1:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockStepInfoText1>Stake to achive MetaFound Tier</ProgressBlockStepInfoText1>
+            <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Dimond)</ProgressBlockStepInfoText2>
+            <ProgressBlockStepInfoTier>
+              <ProgressBlockStepInfoTier1>
+                <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1>
+                <ProgressBlockStepInfoTier1Text2>{investData?.myTier}</ProgressBlockStepInfoTier1Text2>
+              </ProgressBlockStepInfoTier1>
+              <ProgressBlockStepInfoTier2>Stake now</ProgressBlockStepInfoTier2>
+            </ProgressBlockStepInfoTier>
+            <ProgressBlockStepInfoText3Block>
+              <ProgressBlockStepInfoText3>You have staked, you can invest now</ProgressBlockStepInfoText3>
+              <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
+            </ProgressBlockStepInfoText3Block>
+          </ProgressBlockStepInfo>
+        )
+        break
+      case 2:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1>
+            <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2>
+            <ProgressBlockStepInfoText3>Balance: 0.000 {findInfoToken()}</ProgressBlockStepInfoText3>
+            <BlockSearchWithButton>
+              <BlockSearchInvest>
+                <SearchInput type="number" placeholder="0.00" />
+                <SearchIcon>Max</SearchIcon>
+                <CurrencyIcon src="/images/metafound/USDT.svg" />
+              </BlockSearchInvest>
+              <ButtonInvestSearch>Invest</ButtonInvestSearch>
+            </BlockSearchWithButton>
+            {/* <ProgressBlockStepInfoText3Block> */}
+            {/*   <ProgressBlockStepInfoText3>1 USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
+            {/*   <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
+            {/* </ProgressBlockStepInfoText3Block> */}
+          </ProgressBlockStepInfo>
+        )
+        break
+      case 3:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockText1Step3>Total tokens you have contributed</ProgressBlockText1Step3>
+            <BlockWithdrawnStep4 style={{ paddingBottom: '15px' }}>
+              <ProgressBlockText2PrimaryStep3 style={{ paddingRight: '5px' }}>
+                My Invest{' '}
+              </ProgressBlockText2PrimaryStep3>
+              <ProgressBlockText2Step3>: 0.0000 {findInfoToken()}</ProgressBlockText2Step3>
+            </BlockWithdrawnStep4>
+            <ProgressBlockText1Step3>Transactions history</ProgressBlockText1Step3>
+
+            <ProgressBlockStepInfoText3Block>
+              <GoAccountBtnStep3>
+                Go to my account <ProgressBlockStep3ImgArrow src="/images/metafound/arrow1.svg" />
+              </GoAccountBtnStep3>
+              <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
+            </ProgressBlockStepInfoText3Block>
+          </ProgressBlockStepInfo>
+        )
+        break
+      default:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockStepInfoText2>Enter the amount of tokens you want to withdraw</ProgressBlockStepInfoText2>
+            <BlockWithdrawnStep4>
+              <TextBlackWithdrawnStep4>withdrawable</TextBlackWithdrawnStep4>
+              <TextWithdrawnStep4> : 0.000 {findInfoToken()}</TextWithdrawnStep4>
+              <TextWithdrawnStep4 style={{ padding: '0 10px' }}> | </TextWithdrawnStep4>
+              <TextBlackWithdrawnStep4>Profit withdrawn</TextBlackWithdrawnStep4>
+              <TextWithdrawnStep4> : 0.000 {findInfoToken()}</TextWithdrawnStep4>
+            </BlockWithdrawnStep4>
+            <BlockSearchWithButton>
+              <BlockSearchInvest>
+                <SearchInput type="number" placeholder="0.00" />
+                <SearchIcon>Max</SearchIcon>
+                <CurrencyIcon src="/images/metafound/USDT.svg" />
+              </BlockSearchInvest>
+              <ButtonInvestSearchStep4>Withdraw Profit</ButtonInvestSearchStep4>
+            </BlockSearchWithButton>
+            {/* <ProgressBlockStepInfoText3Block> */}
+            {/*   <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
+            {/*   <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
+            {/* </ProgressBlockStepInfoText3Block> */}
+          </ProgressBlockStepInfo>
+        )
+    }
+    return investProgress
   }
 
   const findInfoToken = (takeSymbol = true) => {
@@ -1063,73 +1205,24 @@ const InvestDetail = () => {
           <ProgressBlock>
             <ProgressBlockTitle>Investment Progress</ProgressBlockTitle>
             <ProgressBlockStep>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(1)}>
                 <ProgressBlockStepItemNumber active={progressStep === 1}>1</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 1}>Stake MTF</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(2)}>
                 <ProgressBlockStepItemNumber active={progressStep === 2}>2</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 2}>Invest</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(3)}>
                 <ProgressBlockStepItemNumber active={progressStep === 3}>3</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 3}>Investing</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(4)}>
                 <ProgressBlockStepItemNumber active={progressStep === 4}>4</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 4}>Withdraw Profit</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
             </ProgressBlockStep>
-            {/* <ProgressBlockStepInfo> */}
-            {/*   <ProgressBlockStepInfoText1>Stake to achive MetaFound Tier</ProgressBlockStepInfoText1> */}
-            {/*   <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Dimond)</ProgressBlockStepInfoText2> */}
-            {/*   <ProgressBlockStepInfoTier> */}
-            {/*     <ProgressBlockStepInfoTier1> */}
-            {/*       <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1> */}
-            {/*       <ProgressBlockStepInfoTier1Text2>Gold</ProgressBlockStepInfoTier1Text2> */}
-            {/*     </ProgressBlockStepInfoTier1> */}
-            {/*     <ProgressBlockStepInfoTier2>Stake now</ProgressBlockStepInfoTier2> */}
-            {/*   </ProgressBlockStepInfoTier> */}
-            {/*   <ProgressBlockStepInfoText3Block> */}
-            {/*     <ProgressBlockStepInfoText3>You have staked, you can invest now</ProgressBlockStepInfoText3> */}
-            {/*     <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
-            {/*   </ProgressBlockStepInfoText3Block> */}
-            {/* </ProgressBlockStepInfo> */}
-
-            {/* <ProgressBlockStepInfo> */}
-            {/*   <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1> */}
-            {/*   <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2> */}
-            {/*   <ProgressBlockStepInfoText3>Balance: 0.000 USDT</ProgressBlockStepInfoText3> */}
-            {/*   <BlockSearchWithButton> */}
-            {/*     <BlockSearchInvest> */}
-            {/*       <SearchInput placeholder="0.00" /> */}
-            {/*       <SearchIcon>Max</SearchIcon> */}
-            {/*       <CurrencyIcon src="./images/" /> */}
-            {/*     </BlockSearchInvest> */}
-            {/*     <ButtonInvestSearch>Invest</ButtonInvestSearch> */}
-            {/*   </BlockSearchWithButton> */}
-            {/*   <ProgressBlockStepInfoText3Block> */}
-            {/*     <ProgressBlockStepInfoText3>1 USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
-            {/*     <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
-            {/*   </ProgressBlockStepInfoText3Block> */}
-            {/* </ProgressBlockStepInfo> */}
-            <ProgressBlockStepInfo>
-              <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1>
-              <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2>
-              <ProgressBlockStepInfoText3>Balance: 0.000 USDT</ProgressBlockStepInfoText3>
-              <BlockSearchWithButton>
-                <BlockSearchInvest>
-                  <SearchInput placeholder="0.00" />
-                  <SearchIcon>Max</SearchIcon>
-                  <CurrencyIcon src="./images/" />
-                </BlockSearchInvest>
-                <ButtonInvestSearch>Withdraw Profit</ButtonInvestSearch>
-              </BlockSearchWithButton>
-              <ProgressBlockStepInfoText3Block>
-                <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3>
-                <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
-              </ProgressBlockStepInfoText3Block>
-            </ProgressBlockStepInfo>
+            {renderInvestingProgress()}
           </ProgressBlock>
         </TimelineProgressSection>
         <ProjectInfoSection>
