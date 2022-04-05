@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import axios, { Method } from 'axios'
 import Swal from 'sweetalert2'
+import useAccessToken from './useAccessToken'
 
 // import { useAccessTokenManager } from '../state/application/hooks'
 
@@ -24,13 +25,13 @@ axios.interceptors.response.use(
 )
 
 export default function useAxiosCallback() {
-
+  const [accessToken] = useAccessToken()
+  console.log(1, accessToken)
   return useCallback(
     ({
       endpoint,
       method = 'GET',
       body,
-      accessToken,
       params,
       headers,
     }: {
@@ -52,6 +53,6 @@ export default function useAxiosCallback() {
         params,
       })
     },
-    []
+    [accessToken]
   )
 }

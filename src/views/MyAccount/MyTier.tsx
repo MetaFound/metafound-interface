@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import BigNumber from 'bignumber.js'
+import {testnetTokens} from 'config/constants/tokens'
+import axios from 'axios'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
@@ -41,6 +44,7 @@ const BtnStake = styled(Button)`
   border-radius: 5px;
   margin-top: 18px;
   padding: 0;
+  cursor: pointer;
 `
 
 const DivTablePoint =  styled.div`
@@ -80,9 +84,46 @@ margin-top: 16px;
 `
 
 
-const MyTier = () => {
-  const { theme } = useTheme()
+const MyTier = ({accessToken}) => {
   const [tab, setTab] = useState('Reputation Point')
+  const [myPoint, setMyPoint] = useState('')
+  const [tier, setTier] = useState(null)
+  const [pointToRankUp, setPointToRankUp] = useState('')
+
+  useEffect(() => {
+    async function getTier() {
+      const result = await axios({
+        method: 'get',
+        url: 'http://116.118.49.31:8003/api/v1/users/my-tier',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
+      const convertedMyPoint = new BigNumber(result.data.data.myPoint).div(decimals)
+      setMyPoint(`${convertedMyPoint}`)
+      const silver = new BigNumber(result.data.data.tier.silver).div(decimals)
+      const gold = new BigNumber(result.data.data.tier.gold).div(decimals)
+      const diamond = new BigNumber(result.data.data.tier.diamond).div(decimals)
+      const convertedTier = {
+        silver: `${silver}`,
+        gold: `${gold}`,
+        diamond: `${diamond}`,
+      }
+      setTier(convertedTier)
+      if (convertedMyPoint < silver) {
+        setPointToRankUp(`${new BigNumber(silver).div(convertedMyPoint)}`)
+      } else if (convertedMyPoint < gold) {
+        setPointToRankUp(`${new BigNumber(gold).div(convertedMyPoint)}`)
+      } else if (convertedMyPoint < diamond) {
+        setPointToRankUp(`${new BigNumber(diamond).div(convertedMyPoint)}`)
+      }
+    }
+
+    if (accessToken) {
+      getTier()
+    }
+  }, [accessToken])
 
   return (
     <MyProfileWrapper>
@@ -98,7 +139,7 @@ const MyTier = () => {
       {
         tab === 'Reputation Point' ?
         <>
-{false ? (
+        {!myPoint ? (
         <>
           <TextSpan color="#868686">
             You currently have <TextSpan color="#FDB814">0 points</TextSpan> earned. You must stake to earn Reputation
@@ -114,11 +155,15 @@ const MyTier = () => {
           </Flex>
           <Flex>
             <Text width="100px">My Point</Text>
-            <Text>3000</Text>
+            <Text>{myPoint}</Text>
           </Flex>
-          <TextSpan color="#868686" fontSize='13px' mt="4px">
-            you need to get <TextSpan color="#fff" fontSize='13px'>2000 points</TextSpan> to be able to rank up
+          {
+            parseFloat(pointToRankUp) >= 0 &&
+            <TextSpan color="#868686" fontSize='13px' mt="4px">
+            you need to get <TextSpan color="#fff" fontSize='13px'>{`${pointToRankUp} points`}</TextSpan> to be able to rank up
           </TextSpan>
+          }
+          
           <BtnStake>Stake Now</BtnStake>
           <DivTablePoint>
           <TablePoint>
@@ -130,9 +175,9 @@ const MyTier = () => {
             </tr>
             <tr>
               <td><Text color="#868686" fontSize="14px">Point</Text></td>
-              <td><Text color="#fff" fontSize="14px" >1000</Text></td>
-              <td><Text color="#fff" fontSize="14px" >2000</Text></td>
-              <td><Text color="#fff" fontSize="14px" >5000</Text></td>
+              <td><Text color="#fff" fontSize="14px" >{tier ? tier.silver : ''}</Text></td>
+              <td><Text color="#fff" fontSize="14px" >{tier ? tier.gold : ''}</Text></td>
+              <td><Text color="#fff" fontSize="14px" >{tier ? tier.diamond : ''}</Text></td>
             </tr>
           </TablePoint>
           </DivTablePoint>

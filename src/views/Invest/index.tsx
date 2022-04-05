@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import useTheme from '../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../@uikit'
 
-import unserializedTokens from 'config/constants/tokens'
+import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
 import calculate from '../../@uikit/components/Svg/Icons/Calculate'
 import BigNumber from 'bignumber.js'
+import { useRouter } from 'next/router'
 const axios = require('axios')
 
 const PageWrapper = styled(Box)`
@@ -236,6 +237,7 @@ const InvestItemBlock = styled(Flex)`
   gap: 24px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+  cursor: pointer;
 
   :last-child {
     margin-bottom: 0px;
@@ -250,6 +252,7 @@ const InvestItemBlock = styled(Flex)`
 
 const InvestItemImg = styled.img`
   max-width: 100%;
+  max-height: 360px;
   border-radius: 20px;
   ${({ theme }) => theme.mediaQueries.md} {
     width: 366px;
@@ -391,7 +394,6 @@ const ActivePercent = styled.div<{ width: number }>`
 `
 
 const NumberPercent = styled.div`
-  position: absolute;
   line-height: 20px;
   border-radius: 10px;
   position: absolute;
@@ -419,6 +421,7 @@ const MetaFound = () => {
 
 const Invest = () => {
   const { theme } = useTheme()
+  const router = useRouter()
   const [listDetail, setDataDetail] = useState([])
   const [status, setStatus] = useState(1)
   const [searchParam, setSearchParam] = useState('')
@@ -428,8 +431,21 @@ const Invest = () => {
   }
 
   const findInfoToken = (address, takeSymbol = true) => {
-    const token = Object.entries(unserializedTokens).find(([, value]) => value.address === address)[1]
-    return takeSymbol ? token.symbol : token.decimals
+    if (address) {
+      let token = null
+      switch (true) {
+        case Object.entries(unserializedTokens).some(([, value]) => value.address === address):
+          token = Object.entries(unserializedTokens).find(([, value]) => value.address === address)[1]
+          break
+        case Object.entries(testnetTokens).some(([, value]) => value.address === address):
+          token = Object.entries(testnetTokens).find(([, value]) => value.address === address)[1]
+          break
+        default:
+          token = null
+      }
+      return takeSymbol ? token.symbol : token.decimals
+    }
+    return null
   }
 
   const calculateCtb = (number, decimal) => {
@@ -547,7 +563,15 @@ const Invest = () => {
         {listDetail.length > 0 &&
           listDetail.map((item) => {
             return (
-              <InvestItemBlock key={item?.id}>
+              <InvestItemBlock
+                key={item?.id}
+                onClick={() => {
+                  router.push({
+                    pathname: '/invest/[investId]/detail',
+                    query: { investId: item?.id },
+                  })
+                }}
+              >
                 <InvestItemImg src={item?.thumbnail} />
                 <InvestItemInfomation>
                   <InvestItemText1>{item?.name}</InvestItemText1>

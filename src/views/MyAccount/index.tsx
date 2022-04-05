@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import axios from 'axios'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
@@ -67,8 +69,26 @@ const RightPanel = styled.div`
 `
 
 const MyAccount = () => {
-  const { theme } = useTheme()
   const [tab, setTab] = useState('my-profile')
+  const { account } = useActiveWeb3React()
+  const [accessToken, setAccessToken] = useState('')
+
+  useEffect(() => {
+    async function getAccessToken() {
+      const result = await axios({
+        method: 'post',
+        url: 'http://116.118.49.31:8003/api/v1/login',
+        data: {
+          walletAddress: account
+        }
+      })
+      setAccessToken(result.data.data.accessToken)
+    }
+    if (account) {
+      getAccessToken()
+    }
+  }, [account])
+
   return (
     <PageWrapper>
       <PageContainer>
@@ -76,14 +96,11 @@ const MyAccount = () => {
           <MyAccountItem active={tab === 'my-profile'} onClick={() => setTab('my-profile')}>
             My Profile
           </MyAccountItem>
-          <MyAccountItem active={tab === 'my-invest'} onClick={() => setTab('my-invest')}>
+          <MyAccountItem  active={tab === 'my-invest'} onClick={() => setTab('my-invest')}>
             My Invest
           </MyAccountItem>
-          <MyAccountItem active={tab === 'my-tier'} onClick={() => setTab('my-tier')}>
+          <MyAccountItem  active={tab === 'my-tier'} onClick={() => setTab('my-tier')}>
             My Tier{' '}
-          </MyAccountItem>
-          <MyAccountItem active={tab === 'kyc'} onClick={() => setTab('kyc')}>
-            KYC
           </MyAccountItem>
           <MyAccountItem active={tab === 'need-help'} onClick={() => setTab('need-help')}>
             Need Help
@@ -93,11 +110,9 @@ const MyAccount = () => {
           {tab === 'my-profile' ? (
             <MyProfile />
           ) : tab === 'my-invest' ? (
-            <MyInvest />
+            <MyInvest accessToken={accessToken}/>
           ) : tab === 'my-tier' ? (
-            <MyTier />
-          ) : tab === 'kyc' ? (
-            <KYC />
+            <MyTier accessToken={accessToken}/>
           ) : (
             <NeedHelp />
           )}

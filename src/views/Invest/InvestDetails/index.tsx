@@ -1,15 +1,21 @@
 import styled from 'styled-components'
 import Slider from 'react-slick'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
+import BigNumber from 'bignumber.js'
+import io from 'socket.io-client'
+import Swal from 'sweetalert2'
 import useTheme from '../../../hooks/useTheme'
-import { Box, Flex, Heading, Skeleton } from '../../../@uikit'
+import { Box, Flex, Heading, Input, Skeleton, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
+import unserializedTokens, { testnetTokens } from '../../../config/constants/tokens'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const Page = styled(Box)``
 
+const WS_URL = '116.118.49.31:8003'
 const CarouselSection = styled.div`
   height: 100%;
 `
@@ -20,7 +26,7 @@ const CarouselBlock = styled.div`
 
 const CarouselImg = styled.img`
   width: 100%;
-  max-width: clamp(1000px, 70vw, 1238px);
+  max-width: clamp(1000px, 70vw, 8px);
   margin: 0 auto;
   padding: 0 16px;
   border-radius: 20px;
@@ -104,6 +110,14 @@ const TimelineProgressSection = styled(Flex)`
     margin-top: 86px;
   }
 `
+const ProgressPercentBlock = styled(Flex)`
+  justify-content: flex-end;
+  flex: 0 0 100%;
+  order: 1;
+  @media screen and (min-width: 1477px) {
+    order: unset;
+  }
+`
 
 const TimelineBlock = styled(Flex)`
   flex: 4;
@@ -183,6 +197,10 @@ const ProgressBlock = styled(Flex)`
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 60px 100px;
   }
+  order: 2;
+  @media screen and (min-width: 1477px) {
+    order: unset;
+  }
 `
 
 const ProgressBlockTitle = styled(Flex)`
@@ -253,6 +271,7 @@ const ProgressBlockStepInfo = styled.div`
   border-radius: 8px;
   padding: 20px;
   margin-top: 26px;
+  min-height: 215px;
 
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 28px 35px;
@@ -272,22 +291,36 @@ const ProgressBlockStepInfoText1 = styled(TextStyle2)`
   font-weight: 500;
 `
 
+const ProgressBlockText1Step3 = styled(ProgressBlockStepInfoText1)`
+  line-height: 30px;
+`
+
+const ProgressBlockText2Step3 = styled.span`
+  line-height: 30px;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+`
+const ProgressBlockText2PrimaryStep3 = styled(ProgressBlockText2Step3)`
+  color: #fdb814;
+`
+
 const ProgressBlockStepInfoText2 = styled(TextStyle2)`
   font-weight: 300;
   margin-top: 8px;
+  margin-bottom: 15px;
 `
 
 const ProgressBlockStepInfoTier = styled(Flex)`
   justify-content: space-between;
-  margin: 15px 0;
+  margin-bottom: 15px;
   ${({ theme }) => theme.mediaQueries.sm} {
-    margin-top: 30px;
     justify-content: unset;
   }
 `
 
 const ProgressBlockStepInfoTier1 = styled(Flex)`
-  padding: 0 15px;
+  padding: 0 12px;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
@@ -298,6 +331,7 @@ const ProgressBlockStepInfoTier1 = styled(Flex)`
     height: 40px;
     margin-right: 120px;
     min-width: 150px;
+    padding: 0 15px;
   }
 `
 
@@ -308,6 +342,7 @@ const ProgressBlockStepInfoTier1Text1 = styled(TextStyle2)`
 const ProgressBlockStepInfoTier1Text2 = styled(TextStyle2)`
   color: #fdb814;
   font-weight: 600;
+  padding-left: 5px;
 `
 
 const ProgressBlockStepInfoTier2 = styled(Flex)`
@@ -319,19 +354,24 @@ const ProgressBlockStepInfoTier2 = styled(Flex)`
   align-items: center;
   padding: 0 15px;
   height: 30px;
+  outline: none;
 `
 
 const ProgressBlockStepInfoText3Block = styled(Flex)`
   justify-content: space-between;
   gap: 10px;
 `
+const ProgressBlockStep3ImgArrow = styled.img`
+  margin-left: 10px;
+`
 
 const ProgressBlockStepInfoText3 = styled(TextStyle2)`
   color: #868686;
   font-weight: 400;
-  ${({ theme }) => theme.mediaQueries.sm} {
-    margin-top: 7px;
-  }
+  line-height: 30px;
+  // ${({ theme }) => theme.mediaQueries.sm} {
+  //   margin-top: 7px;
+  // }
 `
 
 const ProgressBlockStepInfoText3Question = styled(Flex)`
@@ -534,6 +574,9 @@ const ProjectInfoContentTransactionsItemText4 = styled(TextStyle2)`
   color: #fdb814;
   flex: 0 0 50%;
   text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 const ProjectInfoContentTransactionsItemPaging = styled(Flex)`
   margin-top: 32px;
@@ -559,16 +602,204 @@ const NoData = styled(Flex)`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 18px;
   color: ${({ theme }) => `${theme.colors.primary}`};
 `
+const ProgressPercent = styled(Flex)`
+  justify-content: flex-end;
+  text-align: center;
+  flex: 0 0 100%;
+  flex-wrap: wrap;
+  @media screen and (min-width: 1477px) {
+    flex: 0 0 60%;
+    order: unset;
+  }
+`
+const TotalContributedCapital = styled.div`
+  flex: 0 0 100%;
+  text-align: center;
+  font-size: 18px;
+  line-height: 30px;
+  margin-bottom: 20px;
+`
+
+const TotalBlock = styled.div`
+  text-align: right;
+  flex: 0 0 100%;
+`
+const TotalLayout = styled.div`
+  margin: 0 auto;
+  width: 100%;
+  @media screen and (min-width: 1477px) {
+    width: 80%;
+  }
+`
+
+const TotalText1 = styled(Text)`
+  font-size: 14px;
+  display: inline-block;
+  color: #959595;
+  font-weight: 400;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+  }
+`
+
+const TotalText2 = styled(Text)`
+  display: inline-block;
+  font-weight: 600;
+  font-size: 14px;
+  color: ${({ theme }) => `${theme.colors.text}`};
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 16px;
+  }
+`
+
+const PercentBlock = styled.div`
+  background: #4a4a4a;
+  height: 20px;
+  width: 100%;
+  border-radius: 10px;
+  align-items: center;
+  position: relative;
+  margin: 0 auto 8px;
+  @media screen and (min-width: 1477px) {
+    width: 80%;
+  }
+`
+
+const ActivePercent = styled.div<{ width: number }>`
+  background: #101010;
+  height: 20px;
+  width: ${({ width }) => `${width}%`};
+  min-width: 35px;
+  max-width: 100%;
+  border-radius: 10px;
+  position: absolute;
+  background: ${({ theme }) => `${theme.colors.primary}`};
+`
+
+const NumberPercent = styled.div`
+  line-height: 20px;
+  border-radius: 10px;
+  position: absolute;
+  right: 8px;
+  font-weight: 600;
+  font-size: 13px;
+`
+
+const BlockSearchWithButton = styled(Flex)`
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+`
+
+const ButtonInvestSearch = styled.button`
+  background: #fdb814;
+  border-radius: 8px;
+  outline: none;
+  border-color: transparent;
+  color: black;
+  padding: 0 15px;
+  height: 32px;
+  font-weight: 600;
+  font-size: 16px;
+`
+
+const GoAccountBtnStep3 = styled(ButtonInvestSearch)`
+  font-weight: 500;
+  font-size: 15px;
+`
+
+const ButtonInvestSearchStep4 = styled(ButtonInvestSearch)`
+  font-weight: 500;
+  font-size: 14px;
+  padding: 0 8px;
+`
+
+const BlockWithdrawnStep4 = styled(Flex)`
+  justify-content: flex-start;
+  flex-wrap: wrap;
+`
+
+const TextWithdrawnStep4 = styled.span`
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 30px;
+`
+
+const TextBlackWithdrawnStep4 = styled(TextWithdrawnStep4)`
+  color: #868686;
+  padding-right: 10px;
+`
+
+const CurrencyIcon = styled.img`
+  width: 25px;
+  position: absolute;
+  top: 7px;
+  left: 7px;
+`
+
+const BlockSearchInvest = styled.div`
+  height: 40px;
+  max-width: 100%;
+  position: relative;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 270px;
+  }
+`
+
+const SearchInput = styled(Input)`
+  width: 100%;
+  height: 100%;
+  padding: 0 59px 0 40px;
+  font-size: 14px;
+  background: #4a4a4a;
+  border-radius: 8px;
+
+  ::placeholder,
+  ::-webkit-input-placeholder {
+    color: #868686;
+  }
+
+  ${({ theme }) => theme.mediaQueries.lg} {
+    font-size: 18px;
+  }
+`
+
+const SearchIcon = styled.button`
+  position: absolute;
+  background: #fdb814;
+  border-radius: 8px;
+  outline: none;
+  border-color: transparent;
+  color: black;
+  padding: 0 8px;
+  height: 25px;
+  right: 8px;
+  top: 8px;
+  line-height: 20px;
+  font-weight: 600;
+  font-size: 14px;
+`
+
+const socket = io(WS_URL, { transports: ['websocket'] })
+socket.on('connect', () => {
+  console.log('Connected')
+})
 
 const InvestDetail = () => {
   const { theme } = useTheme()
   const router = useRouter()
+  const { account } = useActiveWeb3React()
   const { investId } = router.query
 
   const [detailItem, setDetailItem] = useState(null)
+  const [investData, setInvestData] = useState(null)
+  const [ownerAccount, setOwner] = useState('')
+  const [accessToken, setAccessToken] = useState('')
+
+  const [ctbToken, setCtbToken] = useState(null)
 
   const [progressStep, setProgressStep] = useState(1)
   const [timelineStep, setTimelineStep] = useState(1)
@@ -576,11 +807,96 @@ const InvestDetail = () => {
   const [transactionTotalPage, setTransactionTotalPage] = useState(0)
   const [listTransaction, setListTransaction] = useState([])
 
+  const getOwner = async () => {
+    const getOwnerRes = await axios({
+      method: 'get',
+      url: 'http://116.118.49.31:8003/api/v1/invest-pools/get-owner',
+    })
+    const owner = getOwnerRes.data.data
+    return owner
+  }
+
   useEffect(() => {
-    if (investId) {
-      getData()
+    async function getAccessToken() {
+      const result = await axios({
+        method: 'post',
+        url: 'http://116.118.49.31:8003/api/v1/login',
+        data: {
+          walletAddress: account,
+        },
+      })
+      setAccessToken(result.data.data.accessToken)
     }
+
+    if (account) {
+      getAccessToken()
+    }
+  }, [account])
+
+  useEffect(() => {
+    let owner = ''
+
+    function handleTransaction(data) {
+      if (data) {
+        getTransactions()
+        getData()
+        getInvest()
+        // console.log('data', data)
+      }
+    }
+    async function initData() {
+      owner = await getOwner()
+      setOwner(owner)
+      socket.on(`Client-${owner.toLowerCase()}`, handleTransaction)
+    }
+
+    initData()
+
+    return () => {
+      if (socket) {
+        socket.off(`Client-${owner.toLowerCase()}`)
+      }
+    }
+  }, [router, account, investId, getTransactions])
+
+  const getData = useCallback(() => {
+    axios
+      .get(`http://116.118.49.31:8003/api/v1/invest-pools/${investId}`)
+      .then(function (response) {
+        setDetailItem(response?.data?.data ?? {})
+      })
+      .catch(function (error) {
+        throw error
+      })
   }, [investId])
+
+  const getInvest = useCallback(async () => {
+    if (!account) {
+      return
+    }
+    axios
+      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then(function (response) {
+        console.log('list invest: ', response?.data?.data)
+        setInvestData(response?.data?.data ?? {})
+        setCtbToken(response?.data?.data?.ctbToken)
+      })
+      .catch(function (error) {
+        // router.push(`/${error.response.status}`)
+        console.error(error)
+      })
+  }, [accessToken, account, investId])
+
+  useEffect(() => {
+    if (investId && accessToken) {
+      getData()
+      getInvest()
+    }
+  }, [investId, accessToken, getData, getInvest])
 
   useEffect(() => {
     if (detailItem?.stage) {
@@ -603,43 +919,82 @@ const InvestDetail = () => {
     }
   }, [detailItem])
 
-  const getData = () => {
-    axios
-      .get(`http://116.118.49.31:8003/api/v1/invest-pools/${investId}`)
-      .then(function (response) {
-        setDetailItem(response?.data?.data ?? {})
-      })
-      .catch(function (error) {
-        throw error
-      })
-  }
+  const getTransactions = useCallback(async () => {
+    if (!account) {
+      return
+    }
+    const result = await axios({
+      method: 'post',
+      url: 'http://116.118.49.31:8003/api/v1/login',
+      data: {
+        walletAddress: account,
+      },
+    })
+    if (result.data.data.accessToken) {
+      axios
+        .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
+          params: {
+            limit: 10,
+            page: transactionPageNumber,
+          },
+          headers: {
+            Authorization: `Bearer ${result.data.data.accessToken}`,
+          },
+        })
+        .then(function (response) {
+          setListTransaction(response?.data?.data?.transactions ?? [])
+          console.log('data transaction: ', response?.data?.data?.transactions)
+          setTransactionTotalPage(
+            response?.data?.data?.totalCount ? Math.ceil(response?.data?.data?.totalCount / 10) : 0,
+          )
+        })
+        .catch((error) => {
+          console.error('error:', error.response)
+        })
+    }
+  }, [account, investId, transactionPageNumber])
 
   useEffect(() => {
     if (investId) {
       getTransactions()
     }
-  }, [transactionPageNumber, investId])
+  }, [investId, getTransactions])
 
-  const getTransactions = () => {
-    axios
-      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
-        params: {
-          limit: 10,
-          page: transactionPageNumber,
-        },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-          // Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg1YWQxYzU3ZmVhYTRiYWRjNDBhODk3ZTkyMTI2NDliNWM4ZmU1ZjlkIiwiaWF0IjoxNjQ5MDcyMzY3LCJleHAiOjE2NDkxNTg3Njd9.uvqvfGkQI1_1_zqdDprDYZkear72_tcpUm63S2wOMyM`,
-        },
-      })
-      .then(function (response) {
-        setListTransaction(response?.data?.data?.transactions ?? [])
-        setTransactionTotalPage(response?.data?.totalCount ? Math.ceil(response?.data?.totalCount / 10) : 0)
-      })
-      .catch((error) => {
-        console.error('error:', error.response)
-      })
-  }
+  //
+  // const getTransactions = async () => {
+  //   if (!account) {
+  //     return
+  //   }
+  //   const result = await axios({
+  //     method: 'post',
+  //     url: 'http://116.118.49.31:8003/api/v1/login',
+  //     data: {
+  //       walletAddress: account,
+  //     },
+  //   })
+  //   if (result.data.data.accessToken) {
+  //     axios
+  //       .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
+  //         params: {
+  //           limit: 10,
+  //           page: transactionPageNumber,
+  //         },
+  //         headers: {
+  //           Authorization: `Bearer ${result.data.data.accessToken}`,
+  //         },
+  //       })
+  //       .then(function (response) {
+  //         setListTransaction(response?.data?.data?.transactions ?? [])
+  //         console.log('data transaction: ', response?.data?.data?.transactions)
+  //         setTransactionTotalPage(
+  //           response?.data?.data?.totalCount ? Math.ceil(response?.data?.data?.totalCount / 10) : 0,
+  //         )
+  //       })
+  //       .catch((error) => {
+  //         console.error('error:', error.response)
+  //       })
+  //   }
+  // }
 
   const snakeToPascal = (string) => {
     return string
@@ -683,6 +1038,128 @@ const InvestDetail = () => {
       )
     }
     return <></>
+  }
+
+  const handleInvestingProgress = (step) => {
+    setProgressStep(step)
+  }
+
+  const renderInvestingProgress = () => {
+    let investProgress = <></>
+    switch (progressStep) {
+      case 1:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockStepInfoText1>Stake to achive MetaFound Tier</ProgressBlockStepInfoText1>
+            <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Dimond)</ProgressBlockStepInfoText2>
+            <ProgressBlockStepInfoTier>
+              <ProgressBlockStepInfoTier1>
+                <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1>
+                <ProgressBlockStepInfoTier1Text2>{investData?.myTier}</ProgressBlockStepInfoTier1Text2>
+              </ProgressBlockStepInfoTier1>
+              <ProgressBlockStepInfoTier2>Stake now</ProgressBlockStepInfoTier2>
+            </ProgressBlockStepInfoTier>
+            <ProgressBlockStepInfoText3Block>
+              <ProgressBlockStepInfoText3>You have staked, you can invest now</ProgressBlockStepInfoText3>
+              <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
+            </ProgressBlockStepInfoText3Block>
+          </ProgressBlockStepInfo>
+        )
+        break
+      case 2:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1>
+            <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2>
+            <ProgressBlockStepInfoText3>Balance: 0.000 {findInfoToken()}</ProgressBlockStepInfoText3>
+            <BlockSearchWithButton>
+              <BlockSearchInvest>
+                <SearchInput type="number" placeholder="0.00" />
+                <SearchIcon>Max</SearchIcon>
+                <CurrencyIcon src="/images/metafound/USDT.svg" />
+              </BlockSearchInvest>
+              <ButtonInvestSearch>Invest</ButtonInvestSearch>
+            </BlockSearchWithButton>
+            {/* <ProgressBlockStepInfoText3Block> */}
+            {/*   <ProgressBlockStepInfoText3>1 USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
+            {/*   <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
+            {/* </ProgressBlockStepInfoText3Block> */}
+          </ProgressBlockStepInfo>
+        )
+        break
+      case 3:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockText1Step3>Total tokens you have contributed</ProgressBlockText1Step3>
+            <BlockWithdrawnStep4 style={{ paddingBottom: '15px' }}>
+              <ProgressBlockText2PrimaryStep3 style={{ paddingRight: '5px' }}>
+                My Invest{' '}
+              </ProgressBlockText2PrimaryStep3>
+              <ProgressBlockText2Step3>: 0.0000 {findInfoToken()}</ProgressBlockText2Step3>
+            </BlockWithdrawnStep4>
+            <ProgressBlockText1Step3>Transactions history</ProgressBlockText1Step3>
+
+            <ProgressBlockStepInfoText3Block>
+              <GoAccountBtnStep3>
+                Go to my account <ProgressBlockStep3ImgArrow src="/images/metafound/arrow1.svg" />
+              </GoAccountBtnStep3>
+              <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
+            </ProgressBlockStepInfoText3Block>
+          </ProgressBlockStepInfo>
+        )
+        break
+      default:
+        investProgress = (
+          <ProgressBlockStepInfo>
+            <ProgressBlockStepInfoText2>Enter the amount of tokens you want to withdraw</ProgressBlockStepInfoText2>
+            <BlockWithdrawnStep4>
+              <TextBlackWithdrawnStep4>withdrawable</TextBlackWithdrawnStep4>
+              <TextWithdrawnStep4> : 0.000 {findInfoToken()}</TextWithdrawnStep4>
+              <TextWithdrawnStep4 style={{ padding: '0 10px' }}> | </TextWithdrawnStep4>
+              <TextBlackWithdrawnStep4>Profit withdrawn</TextBlackWithdrawnStep4>
+              <TextWithdrawnStep4> : 0.000 {findInfoToken()}</TextWithdrawnStep4>
+            </BlockWithdrawnStep4>
+            <BlockSearchWithButton>
+              <BlockSearchInvest>
+                <SearchInput type="number" placeholder="0.00" />
+                <SearchIcon>Max</SearchIcon>
+                <CurrencyIcon src="/images/metafound/USDT.svg" />
+              </BlockSearchInvest>
+              <ButtonInvestSearchStep4>Withdraw Profit</ButtonInvestSearchStep4>
+            </BlockSearchWithButton>
+            {/* <ProgressBlockStepInfoText3Block> */}
+            {/*   <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
+            {/*   <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
+            {/* </ProgressBlockStepInfoText3Block> */}
+          </ProgressBlockStepInfo>
+        )
+    }
+    return investProgress
+  }
+
+  const findInfoToken = (takeSymbol = true) => {
+    if (ctbToken) {
+      let token = null
+      switch (true) {
+        case Object.entries(unserializedTokens).some(([, value]) => value.address === ctbToken):
+          token = Object.entries(unserializedTokens).find(([, value]) => value.address === ctbToken)[1]
+          break
+        case Object.entries(testnetTokens).some(([, value]) => value.address === ctbToken):
+          token = Object.entries(testnetTokens).find(([, value]) => value.address === ctbToken)[1]
+          break
+        default:
+          token = null
+      }
+      return takeSymbol ? token.symbol : token.decimals
+    }
+    return null
+  }
+
+  const calculateCtb = (number, decimal) => {
+    if (number === 0) {
+      return number
+    }
+    return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
   }
 
   const settings = {
@@ -777,6 +1254,28 @@ const InvestDetail = () => {
           </LocationInfo>
         </LocationBlock>
         <TimelineProgressSection>
+          <ProgressPercentBlock>
+            <ProgressPercent>
+              <TotalContributedCapital>Total Contributed Capital</TotalContributedCapital>
+              <PercentBlock>
+                <ActivePercent width={+Math.round(+investData?.totalCtb / +investData?.totalCtbMax).toFixed(2)}>
+                  <NumberPercent>
+                    {+Math.round(+investData?.totalCtb / +investData?.totalCtbMax).toFixed(2)}%
+                  </NumberPercent>
+                </ActivePercent>
+              </PercentBlock>
+
+              <TotalBlock>
+                <TotalLayout>
+                  <TotalText1>Total:</TotalText1>
+                  <TotalText2 marginLeft="6px">{calculateCtb(+investData?.totalCtb, findInfoToken(false))} </TotalText2>
+                  <TotalText1>
+                    /{calculateCtb(+investData?.totalCtbMax, findInfoToken(false))} {findInfoToken()}{' '}
+                  </TotalText1>
+                </TotalLayout>
+              </TotalBlock>
+            </ProgressPercent>
+          </ProgressPercentBlock>
           <TimelineBlock>
             <TimelineBlockTitle>Timeline</TimelineBlockTitle>
             <TimelineItem>
@@ -824,38 +1323,24 @@ const InvestDetail = () => {
           <ProgressBlock>
             <ProgressBlockTitle>Investment Progress</ProgressBlockTitle>
             <ProgressBlockStep>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(1)}>
                 <ProgressBlockStepItemNumber active={progressStep === 1}>1</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 1}>Stake MTF</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(2)}>
                 <ProgressBlockStepItemNumber active={progressStep === 2}>2</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 2}>Invest</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(3)}>
                 <ProgressBlockStepItemNumber active={progressStep === 3}>3</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 3}>Investing</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
-              <ProgressBlockStepItem>
+              <ProgressBlockStepItem onClick={() => handleInvestingProgress(4)}>
                 <ProgressBlockStepItemNumber active={progressStep === 4}>4</ProgressBlockStepItemNumber>
                 <ProgressBlockStepItemText active={progressStep === 4}>Withdraw Profit</ProgressBlockStepItemText>
               </ProgressBlockStepItem>
             </ProgressBlockStep>
-            <ProgressBlockStepInfo>
-              <ProgressBlockStepInfoText1>Stake to achive MetaFound Tier</ProgressBlockStepInfoText1>
-              <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Dimond)</ProgressBlockStepInfoText2>
-              <ProgressBlockStepInfoTier>
-                <ProgressBlockStepInfoTier1>
-                  <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1>
-                  <ProgressBlockStepInfoTier1Text2>Gold</ProgressBlockStepInfoTier1Text2>
-                </ProgressBlockStepInfoTier1>
-                <ProgressBlockStepInfoTier2>Stake now</ProgressBlockStepInfoTier2>
-              </ProgressBlockStepInfoTier>
-              <ProgressBlockStepInfoText3Block>
-                <ProgressBlockStepInfoText3>You have staked, you can invest now</ProgressBlockStepInfoText3>
-                <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
-              </ProgressBlockStepInfoText3Block>
-            </ProgressBlockStepInfo>
+            {renderInvestingProgress()}
           </ProgressBlock>
         </TimelineProgressSection>
         <ProjectInfoSection>
@@ -877,7 +1362,11 @@ const InvestDetail = () => {
                 <ProjectInfoContentDetailGeneralContentTitle>
                   General Description
                 </ProjectInfoContentDetailGeneralContentTitle>
-                <ProjectInfoContentGeneralContent>{detailItem?.generalDescription}</ProjectInfoContentGeneralContent>
+                <ProjectInfoContentGeneralContent
+                  dangerouslySetInnerHTML={{
+                    __html: detailItem?.generalDescription,
+                  }}
+                />
               </ProjectInfoContentDetailGeneralContent>
               <ProjectInfoContentDetailGeneralContent>
                 <ProjectInfoContentDetailGeneralContentTitle>Video</ProjectInfoContentDetailGeneralContentTitle>
@@ -913,9 +1402,11 @@ const InvestDetail = () => {
                     <ProjectInfoContentTransactionsItem key={index}>
                       <ProjectInfoContentTransactionsItemText1>{item?.type}</ProjectInfoContentTransactionsItemText1>
                       {/* <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2> */}
-                      <ProjectInfoContentTransactionsItemText3>1 Day ago</ProjectInfoContentTransactionsItemText3>
+                      <ProjectInfoContentTransactionsItemText3>
+                        {moment().diff(item?.created_at, 'days')} Day ago
+                      </ProjectInfoContentTransactionsItemText3>
                       <ProjectInfoContentTransactionsItemText4>
-                        {item?.value} $MTF
+                        {calculateCtb(+item?.value, findInfoToken(false))} {findInfoToken()}
                       </ProjectInfoContentTransactionsItemText4>
                     </ProjectInfoContentTransactionsItem>
                   )

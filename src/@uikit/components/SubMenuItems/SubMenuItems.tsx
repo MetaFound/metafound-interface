@@ -21,9 +21,9 @@ display: flex;
 font-weight: 600;
 font-size: 18px;
 // color: #FFFFFF;
+cursor: pointer;
 ${({ isActive }) => isActive && 'background: #FDB814;'}
 `
-
 
 const SubMenuItems: React.FC<SubMenuItemsProps> = ({ items = [], activeItem, isMobileOnly = false, ...props }) => {
   return (

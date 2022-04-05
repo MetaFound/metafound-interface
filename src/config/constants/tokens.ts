@@ -2017,6 +2017,13 @@ export const mainnetTokens = defineTokens({
     'League Of Ancients',
     'https://www.leagueofancients.com/',
   ),
+  mtf: new Token(
+    MAINNET,
+    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', //todo
+    18,
+    'MTF',
+    'Metafound Token',
+  ),
 } as const)
 
 export const testnetTokens = defineTokens({
@@ -2064,9 +2071,16 @@ export const testnetTokens = defineTokens({
     TESTNET,
     '0x230e23f0744fE767aa628Fcbb6F079087DF23C1C',
     18,
-    'BTCST',
-    'StandardBTCHashrate Token',
-    'https://www.1-b.tc/',
+    'MTF',
+    'Metafound Token',
+  ),
+  usdt: new Token(
+    TESTNET,
+    '0x35EAdB18587D789C755EA7C56e6C331eC74F189c',
+    18,
+    'USDT',
+    'Tether USD',
+    'https://tether.to/',
   ),
 } as const)
 

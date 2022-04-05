@@ -18,6 +18,7 @@ import io from 'socket.io-client'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useRouter } from 'next/router'
 
+
 const WS_URL = '116.118.49.31:8003'
 
 function Loading() {
@@ -89,6 +90,7 @@ const RealEsate = () => {
   const [transactionHash, setTransactionHash] = useState('')
   const contract = useMetafoundContract()
   const [inputs, setInputs] = useState({} as any)
+  const [accessToken, setAccessToken] = useState('')
   const handleChange = (e) => setInputs((prevState) => ({ ...prevState, [e.target.name]: e.target.value }))
 
   const getOwner = async () => {
@@ -101,9 +103,27 @@ const RealEsate = () => {
   }
 
   useEffect(() => {
+    async function getAccessToken() {
+      const result = await axios({
+        method: 'post',
+        url: 'http://116.118.49.31:8003/api/v1/login',
+        data: {
+          walletAddress: account
+        }
+      })
+      setAccessToken(result.data.data.accessToken)
+    }
+    if (account) {
+      getAccessToken()
+    }
+  }, [account])
+
+
+  useEffect(() => {
     let owner = ''
 
     function handleTransaction(data) {
+      console.log(2, data)
       if (data.transaction === transactionHash) {
         Swal.fire({
           title: 'Add Pool Successfully',
@@ -116,6 +136,7 @@ const RealEsate = () => {
     async function initData() {
       owner = await getOwner()
       setOwner(owner)
+      console.log(3, owner)
       socket.on(`Client-${owner.toLowerCase()}`, handleTransaction)
     }
 
@@ -130,15 +151,7 @@ const RealEsate = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    if (!localStorage.getItem('ACCESS_TOKEN')) {
-      await Swal.fire({
-        title: 'You must connect wallet',
-        icon: 'error',
-        confirmButtonColor: '#ff6900',
-        confirmButtonText: 'OK',
-      })
-      return
-    }
+
     const detail = {
       land_acreage: inputs.landAcreage,
       construction_area: inputs.constructionArea,
@@ -157,13 +170,20 @@ const RealEsate = () => {
     const _closeTime = new Date(inputs.closeTime).getTime()
     if (_closeTime < _endCtbTime) {
       await Swal.fire({
-        title: 'End Ctb time must be earlier than Close tine',
+        title: 'End Ctb time must be earlier than Close time',
         icon: 'error',
         confirmButtonColor: '#ff6900',
         confirmButtonText: 'OK',
       })
       return
     }
+
+    const arrayImgUrl = imgUrl.split('\n').filter((x) => x)
+    const objectUrl = {}
+
+    arrayImgUrl.forEach((x, index) => {
+      objectUrl[index + 1] = x
+    })
 
     const _ctbToken = unserializedTokens[inputs.symbolToken.toLowerCase()].address
     const _withdrawFee = inputs.withdrawFee
@@ -172,20 +192,20 @@ const RealEsate = () => {
     const _ctbMin = new BigNumber(inputs.ctbMin).times(decimals)
 
     const params = [_ctbToken, _withdrawFee, _totalCtbMax.toString(), _ctbMin.toString(), _endCtbTime, _closeTime]
-    console.log(params)
+    
     const addPoolContract: TransactionResponse = await contract.addPool(...params)
     if (addPoolContract.hash) {
       setTransactionHash(addPoolContract.hash)
       try {
-        const result = await axios({
+        await axios({
           method: 'post',
           url: 'http://116.118.49.31:8003/api/v1/invest-pools',
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           data: {
             name,
-            imgUrl,
+            imgUrl: objectUrl,
             thumbnail,
             location,
             video,
@@ -195,7 +215,6 @@ const RealEsate = () => {
             transactionHash: addPoolContract.hash,
           },
         })
-        console.log(result)
       } catch (error) {
         console.log(error)
       }
@@ -206,7 +225,7 @@ const RealEsate = () => {
       {account && ownerAccount && account.toLowerCase() === ownerAccount ? (
         <PageContainer onSubmit={onSubmit}>
           <Text color="#333" fontSize="24px" fontWeight={500}>
-            Contract Info
+            Contract Infomation
           </Text>
           <Flex justifyContent="space-between" mt="15px">
             <HalfRow>
@@ -220,17 +239,17 @@ const RealEsate = () => {
           </Flex>
           <Flex justifyContent="space-between" mt="15px">
             <HalfRow>
-              <TextInput>Total Ctb Max</TextInput>
+              <TextInput>Total Contribute Max</TextInput>
               <InputCustom name="totalCtbMax" value={inputs.totalCtbMax || ''} onChange={handleChange} />
             </HalfRow>
             <HalfRow>
-              <TextInput>Ctb Min</TextInput>
+              <TextInput>Contribute Min</TextInput>
               <InputCustom name="ctbMin" value={inputs.ctbMin || ''} onChange={handleChange} />
             </HalfRow>
           </Flex>
           <Flex justifyContent="space-between" mt="15px">
             <HalfRow>
-              <TextInput>End Ctb Time</TextInput>
+              <TextInput>End Contribute Time</TextInput>
               <InputCustom
                 type="datetime-local"
                 name="endCtbTime"
@@ -249,7 +268,7 @@ const RealEsate = () => {
             </HalfRow>
           </Flex>
           <Text color="#333" fontSize="24px" fontWeight={500} mt="25px">
-            Common Info
+            Common Infomation
           </Text>
 
           <Flex justifyContent="space-between" mt="15px">
@@ -258,27 +277,27 @@ const RealEsate = () => {
               <InputCustom name="name" value={inputs.name || ''} onChange={handleChange} />
             </HalfRow>
             <HalfRow>
-              <TextInput>imgUrl</TextInput>
-              <InputCustom name="imgUrl" value={inputs.imgUrl || ''} onChange={handleChange} />
+              <TextInput>Images&apos; url</TextInput>
+              <textarea style={{width: '100%', height: 100, border: '1px solid #26213033'}} name="imgUrl" value={inputs.imgUrl || ''} onChange={handleChange} />
             </HalfRow>
           </Flex>
           <Flex justifyContent="space-between" mt="15px">
             <HalfRow>
-              <TextInput>thumbnail</TextInput>
+              <TextInput>Thumbnail</TextInput>
               <InputCustom name="thumbnail" value={inputs.thumbnail || ''} onChange={handleChange} />
             </HalfRow>
             <HalfRow>
-              <TextInput>location</TextInput>
+              <TextInput>Location</TextInput>
               <InputCustom name="location" value={inputs.location || ''} onChange={handleChange} />
             </HalfRow>
           </Flex>
           <Flex justifyContent="space-between" mt="15px">
             <HalfRow>
-              <TextInput>video</TextInput>
+              <TextInput>Video</TextInput>
               <InputCustom name="video" value={inputs.video || ''} onChange={handleChange} />
             </HalfRow>
             <HalfRow>
-              <TextInput>map</TextInput>
+              <TextInput>Map</TextInput>
               <InputCustom name="map" value={inputs.map || ''} onChange={handleChange} />
             </HalfRow>
           </Flex>
