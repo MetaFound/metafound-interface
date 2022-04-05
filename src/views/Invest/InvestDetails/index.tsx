@@ -1024,7 +1024,7 @@ const InvestDetail = () => {
       let token = null
       switch (true) {
         case Object.entries(unserializedTokens).some(([, value]) => value.address === ctbToken):
-          token = Object.entries(testnetTokens).find(([, value]) => value.address === ctbToken)[1]
+          token = Object.entries(unserializedTokens).find(([, value]) => value.address === ctbToken)[1]
           break
         case Object.entries(testnetTokens).some(([, value]) => value.address === ctbToken):
           token = Object.entries(testnetTokens).find(([, value]) => value.address === ctbToken)[1]
