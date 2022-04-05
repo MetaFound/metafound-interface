@@ -618,9 +618,6 @@ const InvestDetail = () => {
   const router = useRouter()
   const { investId } = router.query
 
-  useEffect(() => {
-    console.log(123123, investId)
-  }, [investId])
   const settings = {
     className: 'center',
     centerMode: true,

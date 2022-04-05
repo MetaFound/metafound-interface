@@ -18,6 +18,7 @@ import io from 'socket.io-client'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useRouter } from 'next/router'
 
+
 const WS_URL = '116.118.49.31:8003'
 
 function Loading() {
@@ -128,17 +129,20 @@ const RealEsate = () => {
     }
   }, [transactionHash, account, router])
 
+  const getAccessToken = async () => {
+    const result = await axios({
+      method: 'post',
+      url: 'http://116.118.49.31:8003/api/v1/login',
+      data: {
+        walletAddress: account
+      }
+    })
+    return result.data.data.accessToken
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault()
-    if (!localStorage.getItem('ACCESS_TOKEN')) {
-      await Swal.fire({
-        title: 'You must connect wallet',
-        icon: 'error',
-        confirmButtonColor: '#ff6900',
-        confirmButtonText: 'OK',
-      })
-      return
-    }
+
     const detail = {
       land_acreage: inputs.landAcreage,
       construction_area: inputs.constructionArea,

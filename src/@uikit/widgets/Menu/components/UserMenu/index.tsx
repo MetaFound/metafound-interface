@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 import axios from 'axios';
+import useAccessToken from "hooks/useAccessToken";
 import { Box, Flex } from "../../../../components/Box";
 import { ChevronDownIcon } from "../../../../components/Svg";
 import { UserMenuProps, variants } from "./types";
@@ -72,6 +73,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
   children,
   ...props
 }) => {
+  // const {accessToken} = useAccessToken()
   const [isOpen, setIsOpen] = useState(false)
   const [targetRef, setTargetRef] = useState<HTMLDivElement | null>(null)
   const [tooltipRef, setTooltipRef] = useState<HTMLDivElement | null>(null)
@@ -82,26 +84,11 @@ const UserMenu: React.FC<UserMenuProps> = ({
     modifiers: [{ name: 'offset', options: { offset: [0, 0] } }],
   })
 
-  useEffect(() => {
-    async function getAccessToken() {
-      const result = await axios({
-        method: 'post',
-        url: 'http://116.118.49.31:8003/api/v1/login',
-        data: {
-          walletAddress: account
-        }
-      })
-      if (result.data) {
-        localStorage.setItem('ACCESS_TOKEN', result.data.data.accessToken)
-        localStorage.setItem('FETCH_TIME_ACCESS_TOKEN', `${new Date(result.data.time).getTime()}`)
-      }
-    }
-    if (account) {
-        if (!localStorage.getItem('FETCH_TIME_ACCESS_TOKEN') && (new Date().getTime() - parseFloat(localStorage.getItem('FETCH_TIME_ACCESS_TOKEN')) > 1000 * 60 * 60 *24)) {
-          getAccessToken()
-        }
-    }
-  }, [account])
+  // useEffect(() => {
+  //   if (accessToken) {
+  //     console.log(accessToken)
+  //   }
+  // }, [accessToken])
 
   useEffect(() => {
     const showDropdownMenu = () => {

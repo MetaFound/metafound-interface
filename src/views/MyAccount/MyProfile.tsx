@@ -1,9 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import useAuth from 'hooks/useAuth'
+import BigNumber from 'bignumber.js'
+import unserializedTokens from 'config/constants/tokens'
+import { TransactionResponse } from '@ethersproject/providers'
+import { useMetafoundContract } from 'hooks/useContract'
+import { useWalletModal } from '@pancakeswap/uikit'
+import { useTranslation } from 'contexts/Localization'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { getMetafoundAddress } from 'utils/addressHelpers'
+import { TokenAmount } from '@pancakeswap/sdk'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '../../@uikit'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 
 const MyProfileWrapper = styled.div``
 
@@ -38,7 +49,7 @@ const IconMetamask = styled.img`
   height: 36px;
   display: none;
   ${({ theme }) => theme.mediaQueries.sm} {
-      display: block;
+    display: block;
   }
 `
 
@@ -65,6 +76,11 @@ const StepButton = styled.div<{ active: boolean }>`
   font-weight: 500;
   font-size: 14px;
   color: #fdb814;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+  cursor: pointer;
   ${({ active }) => active && 'background: #FDB814; color: #000000;'}
 `
 const StepCircle = styled.div`
@@ -78,8 +94,47 @@ const StepCircle = styled.div`
   font-weight: 500;
 `
 
+const BtnChange = styled(Text)`
+  cursor: pointer;
+`
+
+const InputStake = styled(Input)``
+
 const MyProfile = () => {
-  const { theme } = useTheme()
+  const decimals = new BigNumber(10).pow(unserializedTokens.mtf.decimals)
+  const { account } = useActiveWeb3React()
+  const [addressWallet, setAddressWallet] = useState('')
+  const [stakeInput, setStakeInput] = useState('')
+  const { t } = useTranslation()
+  const { login, logout } = useAuth()
+  const contract = useMetafoundContract()
+  const [approval, approveCallback] = useApproveCallback(
+    !stakeInput
+      ? undefined
+      : new TokenAmount(unserializedTokens.mtf, new BigNumber(stakeInput).times(decimals).toString()),
+    getMetafoundAddress(),
+  )
+
+  useEffect(() => {
+    if (account) {
+      setAddressWallet(account)
+    }
+  }, [account])
+
+  const stakeMtf = async () => {
+    const value = new BigNumber(stakeInput).times(decimals)
+    if (approval === ApprovalState.APPROVED) {
+      const stake = await contract.stakeMtf(value.toString())
+      console.log(1, stake)
+    } else if (approval !== ApprovalState.PENDING) {
+      await approveCallback()
+    }
+  }
+
+  const onChange = (e) => {
+    setStakeInput(e.target.value)
+  }
+
   return (
     <MyProfileWrapper>
       <Title>My Profile</Title>
@@ -92,14 +147,17 @@ const MyProfile = () => {
                 Main Wallet Address
               </Text>
               <Text color="#fff" fontSize="16px">
-                4he3f34t********8f7cf93B
+                {`${addressWallet.slice(0, 8)}*********${addressWallet.slice(
+                  addressWallet.length - 8,
+                  addressWallet.length,
+                )}`}
               </Text>
             </TextWallet>
             <IconMetamask src="/images/myAccount/metamark1.svg" />
           </Flex>
-          <Text color="#FDB814" fontSize="16px">
+          {/* <BtnChange color="#FDB814" fontSize="16px" onClick={onPresentConnectModal}>
             Change
-          </Text>
+          </BtnChange> */}
         </Flex>
       </MainWallet>
       <Text color="#fff" fontSize="20px">
@@ -117,12 +175,17 @@ const MyProfile = () => {
             Stake MTF to achieve tier (Silver, Gold, Dimond)
           </Text>
           <Flex mt="20px" justifyContent="space-between" alignItems="center">
-            <StepButton active>Stake now</StepButton>
+            <Flex>
+              <InputStake onChange={onChange} value={stakeInput} />
+              <StepButton active onClick={stakeMtf}>
+                Stake now
+              </StepButton>
+            </Flex>
             <StepCircle>1</StepCircle>
           </Flex>
         </StepItem>
       </StepCont>
-      <StepCont>
+      {/* <StepCont>
         <StepItem>
           <Text color="#959595" fontSize="14px">
             Complete KYC
@@ -149,7 +212,7 @@ const MyProfile = () => {
             <StepCircle>3</StepCircle>
           </Flex>
         </StepItem>
-      </StepCont>
+      </StepCont> */}
     </MyProfileWrapper>
   )
 }
