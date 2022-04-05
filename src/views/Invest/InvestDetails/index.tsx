@@ -6,9 +6,8 @@ import axios from 'axios'
 import moment from 'moment'
 import BigNumber from 'bignumber.js'
 import io from 'socket.io-client'
-import Swal from 'sweetalert2'
 import useTheme from '../../../hooks/useTheme'
-import { Box, Flex, Heading, Input, Skeleton, Text } from '../../../@uikit'
+import { Box, Flex, Input, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
 import unserializedTokens, { testnetTokens } from '../../../config/constants/tokens'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
@@ -353,7 +352,6 @@ const ProgressBlockStepInfoTier1Text1 = styled(TextStyle2)`
 `
 
 const ProgressBlockStepInfoTier1Text2 = styled(TextStyle2)`
-  color: #fdb814;
   font-weight: 600;
   padding-left: 5px;
 `
@@ -368,6 +366,7 @@ const ProgressBlockStepInfoTier2 = styled(Flex)`
   padding: 0 15px;
   height: 30px;
   outline: none;
+  cursor: pointer;
 `
 
 const ProgressBlockStepInfoText3Block = styled(Flex)`
@@ -855,33 +854,6 @@ const InvestDetail = () => {
     }
   }, [account])
 
-  useEffect(() => {
-    let owner = ''
-
-    function handleTransaction(data) {
-      if (data) {
-        getTransactions()
-        getData()
-        getInvest()
-        // console.log('data', data)
-      }
-    }
-
-    async function initData() {
-      owner = await getOwner()
-      setOwner(owner)
-      socket.on(`Client-${owner.toLowerCase()}`, handleTransaction)
-    }
-
-    initData()
-
-    return () => {
-      if (socket) {
-        socket.off(`Client-${owner.toLowerCase()}`)
-      }
-    }
-  }, [router, account, investId, getTransactions])
-
   const getData = useCallback(() => {
     axios
       .get(`http://116.118.49.31:8003/api/v1/invest-pools/${investId}`)
@@ -896,18 +868,18 @@ const InvestDetail = () => {
   const getInvest = useCallback(async () => {
     const result = await axios.get(`http://116.118.49.31:8003/api/v1/invest-pools?page=1&limit=9999`)
     if (result.data?.data?.investPools) {
-      const pool = result.data.data.investPools.find((pool) => pool.id.toString() === investId)
-      setInvestData(pool)
-      setCtbToken(pool.token)
+      const _investData = result.data.data.investPools.find((pool) => pool.id.toString() === investId)
+      setInvestData(_investData)
+      setCtbToken(_investData.token)
     }
   }, [investId])
 
   useEffect(() => {
-    if (investId && accessToken) {
+    if (investId) {
       getData()
       getInvest()
     }
-  }, [investId, accessToken, getData, getInvest])
+  }, [investId, getData, getInvest])
 
   useEffect(() => {
     if (detailItem?.stage) {
@@ -916,9 +888,8 @@ const InvestDetail = () => {
           moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.closeTime):
           setTimelineStep(2)
           break
-        case moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.startTime) ||
-          (moment(+detailItem?.stage?.startTime).isBefore(moment().unix() * 1000) &&
-            moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.endCtb)):
+        case moment(+detailItem?.stage?.startTime).isBefore(moment().unix() * 1000) &&
+          moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.endCtb):
           setTimelineStep(1)
           break
         case moment(+detailItem?.stage?.closeTime).isBefore(moment().unix() * 1000):
@@ -929,6 +900,38 @@ const InvestDetail = () => {
       }
     }
   }, [detailItem])
+
+  const [myTier, setMyTier] = useState('')
+
+  useEffect(() => {
+    async function getTier() {
+      const result = await axios({
+        method: 'get',
+        url: 'http://116.118.49.31:8003/api/v1/users/my-tier',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
+      const convertedMyPoint = new BigNumber(result.data.data.myPoint).div(decimals)
+      const silver = new BigNumber(result.data.data.tier.silver).div(decimals)
+      const gold = new BigNumber(result.data.data.tier.gold).div(decimals)
+      const diamond = new BigNumber(result.data.data.tier.diamond).div(decimals)
+      setMyTier(
+        convertedMyPoint.gte(diamond)
+          ? 'Diamond'
+          : convertedMyPoint.gte(gold)
+          ? 'Gold'
+          : convertedMyPoint.gte(silver)
+          ? 'Silver'
+          : 'N/A',
+      )
+    }
+
+    if (accessToken) {
+      getTier()
+    }
+  }, [accessToken])
 
   const getTransactions = useCallback(async () => {
     if (!account) {
@@ -964,6 +967,33 @@ const InvestDetail = () => {
         })
     }
   }, [account, investId, transactionPageNumber])
+
+  useEffect(() => {
+    let owner = ''
+
+    function handleTransaction(data) {
+      if (data) {
+        getTransactions()
+        getData()
+        getInvest()
+        // console.log('data', data)
+      }
+    }
+
+    async function initData() {
+      owner = await getOwner()
+      setOwner(owner)
+      socket.on(`Client-${owner.toLowerCase()}`, handleTransaction)
+    }
+
+    initData()
+
+    return () => {
+      if (socket) {
+        socket.off(`Client-${owner.toLowerCase()}`)
+      }
+    }
+  }, [router, account, investId, getTransactions])
 
   useEffect(() => {
     if (investId) {
@@ -1066,12 +1096,18 @@ const InvestDetail = () => {
             <ProgressBlockStepInfoTier>
               <ProgressBlockStepInfoTier1>
                 <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1>
-                <ProgressBlockStepInfoTier1Text2>{investData?.myTier}</ProgressBlockStepInfoTier1Text2>
+                <ProgressBlockStepInfoTier1Text2
+                  style={{ color: myTier === 'Diamond' ? '#1FAEFF' : myTier === 'Gold' ? '#fdb814' : '#fff' }}
+                >
+                  {myTier}
+                </ProgressBlockStepInfoTier1Text2>
               </ProgressBlockStepInfoTier1>
-              <ProgressBlockStepInfoTier2>Stake now</ProgressBlockStepInfoTier2>
+              <ProgressBlockStepInfoTier2 onClick={() => router.push('/my-account')}>
+                Stake now
+              </ProgressBlockStepInfoTier2>
             </ProgressBlockStepInfoTier>
             <ProgressBlockStepInfoText3Block>
-              <ProgressBlockStepInfoText3>You have staked, you can invest now</ProgressBlockStepInfoText3>
+              <ProgressBlockStepInfoText3>You need to stake for investing.</ProgressBlockStepInfoText3>
               <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question>
             </ProgressBlockStepInfoText3Block>
           </ProgressBlockStepInfo>
@@ -1246,8 +1282,8 @@ const InvestDetail = () => {
         <Slider {...settings}>
           {detailItem?.imgUrl &&
             Object.values(detailItem.imgUrl).map((img, index) => (
-              <CarouselBlock key={index}>
-                <CarouselImg src={img} />
+              <CarouselBlock key={index.toString()}>
+                <CarouselImg src={img as any} />
               </CarouselBlock>
             ))}
         </Slider>
@@ -1359,7 +1395,7 @@ const InvestDetail = () => {
                 <ProjectInfoContentDetailGeneralContentTitle>Detail</ProjectInfoContentDetailGeneralContentTitle>
                 <ProjectInfoContentDetailContent>
                   {Object.entries(detailItem?.detail ?? {}).map(([key, value], i) => (
-                    <ProjectInfoContentDetailContentItem key={i}>
+                    <ProjectInfoContentDetailContentItem key={i.toString()}>
                       <ProjectInfoContentDetailContentText1>{snakeToPascal(key)}</ProjectInfoContentDetailContentText1>
                       <ProjectInfoContentDetailContentText2> : {value}</ProjectInfoContentDetailContentText2>
                     </ProjectInfoContentDetailContentItem>
@@ -1397,6 +1433,7 @@ const InvestDetail = () => {
                   style={{ width: '100%', border: '0', padding: '35px 0', borderRadius: '10px' }}
                   loading="lazy"
                   allowFullScreen
+                  title="map"
                   referrerPolicy="no-referrer-when-downgrade"
                   src={detailItem?.map}
                 />
@@ -1407,7 +1444,7 @@ const InvestDetail = () => {
               {listTransaction.length > 0 &&
                 listTransaction.map((item, index) => {
                   return (
-                    <ProjectInfoContentTransactionsItem key={index}>
+                    <ProjectInfoContentTransactionsItem key={index.toString()}>
                       <ProjectInfoContentTransactionsItemText1>{item?.type}</ProjectInfoContentTransactionsItemText1>
                       {/* <ProjectInfoContentTransactionsItemText2>8 Parts</ProjectInfoContentTransactionsItemText2> */}
                       <ProjectInfoContentTransactionsItemText3>

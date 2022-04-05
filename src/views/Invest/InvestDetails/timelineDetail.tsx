@@ -96,11 +96,8 @@ const TimelineDetail = (props: TimelineDetailProps) => {
       let diffTime = null
       switch (step) {
         case 1:
-          if (moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.startTime)) {
-            diffTime = moment(+detailItem?.stage?.startTime).diff(moment().unix() * 1000)
-          }
           if (
-            moment(+detailItem?.stage?.startTime).isBefore(moment().unix() * 1000) &&
+            moment(+detailItem?.stage?.startTime * 1000).isBefore(moment().unix() * 1000) &&
             moment(moment().unix() * 1000).isSameOrBefore(+detailItem?.stage?.endCtb)
           ) {
             diffTime = moment(+detailItem?.stage?.endCtb).diff(moment(moment().unix() * 1000))
@@ -151,7 +148,7 @@ const TimelineDetail = (props: TimelineDetailProps) => {
     let fromTime = ''
     switch (step) {
       case 1:
-        fromTime = moment(+detailItem?.stage?.startTime).format('h:mm, D MMM  YYYY')
+        fromTime = moment(+detailItem?.stage?.startTime * 1000).format('h:mm, D MMM  YYYY')
         break
       case 2:
         fromTime = moment(+detailItem?.stage?.endCtb).format('h:mm, D MMM  YYYY')
@@ -192,7 +189,7 @@ const TimelineDetail = (props: TimelineDetailProps) => {
         <TimelineContentStartIn visible={step !== 3}>
           {step === 2 ||
           (step === 1 &&
-            moment(+detailItem?.stage?.startTime).isBefore(moment().unix() * 1000) &&
+            moment(+detailItem?.stage?.startTime * 1000).isBefore(moment().unix() * 1000) &&
             moment(moment().unix() * 1000).isBefore(+detailItem?.stage?.endCtb))
             ? 'End in'
             : 'Start in'}
