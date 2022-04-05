@@ -797,6 +797,7 @@ const InvestDetail = () => {
   const [detailItem, setDetailItem] = useState(null)
   const [investData, setInvestData] = useState(null)
   const [ownerAccount, setOwner] = useState('')
+  const [accessToken, setAccessToken] = useState('')
 
   const [ctbToken, setCtbToken] = useState(null)
 
@@ -816,14 +817,31 @@ const InvestDetail = () => {
   }
 
   useEffect(() => {
+    async function getAccessToken() {
+      const result = await axios({
+        method: 'post',
+        url: 'http://116.118.49.31:8003/api/v1/login',
+        data: {
+          walletAddress: account,
+        },
+      })
+      setAccessToken(result.data.data.accessToken)
+    }
+
+    if (account) {
+      getAccessToken()
+    }
+  }, [account])
+
+  useEffect(() => {
     let owner = ''
 
     function handleTransaction(data) {
       if (data) {
-        getTransactions().then(r => )
-        getData()
-        getInvest()
-        console.log('data', data)
+        // getTransactions().then(r => )
+        // getData()
+        // getInvest()
+        // console.log('data', data)
       }
     }
     async function initData() {
@@ -841,12 +859,47 @@ const InvestDetail = () => {
     }
   }, [router, account, investId])
 
+  const getData = useCallback(() => {
+    axios
+      .get(`http://116.118.49.31:8003/api/v1/invest-pools/${investId}`)
+      .then(function (response) {
+        setDetailItem(response?.data?.data ?? {})
+      })
+      .catch(function (error) {
+        throw error
+      })
+  }, [investId])
+  
+
+  const getInvest = useCallback(async () => {
+    if (!account) {
+      return
+    }
+    axios
+      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then(function (response) {
+        console.log('list invest: ', response?.data?.data)
+        setInvestData(response?.data?.data ?? {})
+        setCtbToken(response?.data?.data?.ctbToken)
+      })
+      .catch(function (error) {
+        // router.push(`/${error.response.status}`)
+        console.error(error)
+      })
+  }, [accessToken, account, investId])
+  
+
+
   useEffect(() => {
-    if (investId) {
+    if (investId && accessToken) {
       getData()
       getInvest()
     }
-  }, [investId, account])
+  }, [investId, accessToken, getData, getInvest])
 
   useEffect(() => {
     if (detailItem?.stage) {
@@ -868,53 +921,6 @@ const InvestDetail = () => {
       }
     }
   }, [detailItem])
-
-  const getData = () => {
-    axios
-      .get(`http://116.118.49.31:8003/api/v1/invest-pools/${investId}`)
-      .then(function (response) {
-        setDetailItem(response?.data?.data ?? {})
-      })
-      .catch(function (error) {
-        throw error
-      })
-  }
-
-  const getInvest = async () => {
-    if (!account) {
-      return
-    }
-    const result = await axios({
-      method: 'post',
-      url: 'http://116.118.49.31:8003/api/v1/login',
-      data: {
-        walletAddress: account,
-      },
-    })
-    if (result.data.data.accessToken) {
-      axios
-        .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}`, {
-          headers: {
-            Authorization: `Bearer ${result.data.data.accessToken}`,
-          },
-        })
-        .then(function (response) {
-          console.log('list invest: ', response?.data?.data)
-          setInvestData(response?.data?.data ?? {})
-          setCtbToken(response?.data?.data?.ctbToken)
-        })
-        .catch(function (error) {
-          // router.push(`/${error.response.status}`)
-          console.error(error)
-        })
-    }
-  }
-
-  useEffect(() => {
-    if (investId) {
-      getTransactions()
-    }
-  }, [transactionPageNumber, investId, account])
 
   const getTransactions = useCallback(async () => {
     if (!account) {
@@ -949,7 +955,14 @@ const InvestDetail = () => {
           console.error('error:', error.response)
         })
     }
-  }, [account])
+  }, [account, investId, transactionPageNumber])
+  
+  useEffect(() => {
+    if (investId) {
+      getTransactions()
+    }
+  }, [investId, getTransactions])
+
   //
   // const getTransactions = async () => {
   //   if (!account) {
