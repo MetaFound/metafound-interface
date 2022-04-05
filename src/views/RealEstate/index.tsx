@@ -123,6 +123,7 @@ const RealEsate = () => {
     let owner = ''
 
     function handleTransaction(data) {
+      console.log(2, data)
       if (data.transaction === transactionHash) {
         Swal.fire({
           title: 'Add Pool Successfully',
@@ -135,6 +136,7 @@ const RealEsate = () => {
     async function initData() {
       owner = await getOwner()
       setOwner(owner)
+      console.log(3, owner)
       socket.on(`Client-${owner.toLowerCase()}`, handleTransaction)
     }
 

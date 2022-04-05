@@ -4,13 +4,13 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
+import BigNumber from 'bignumber.js'
+import io from 'socket.io-client'
+import Swal from 'sweetalert2'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Heading, Input, Skeleton, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
 import unserializedTokens, { testnetTokens } from '../../../config/constants/tokens'
-import BigNumber from 'bignumber.js'
-import io from 'socket.io-client'
-import Swal from 'sweetalert2'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const Page = styled(Box)``
@@ -794,7 +794,6 @@ const InvestDetail = () => {
   const { account } = useActiveWeb3React()
   const { investId } = router.query
 
-<<<<<<< HEAD
   const [detailItem, setDetailItem] = useState(null)
   const [investData, setInvestData] = useState(null)
   const [ownerAccount, setOwner] = useState('')
@@ -839,9 +838,9 @@ const InvestDetail = () => {
 
     function handleTransaction(data) {
       if (data) {
-        // getTransactions().then(r => )
-        // getData()
-        // getInvest()
+        getTransactions()
+        getData()
+        getInvest()
         // console.log('data', data)
       }
     }
@@ -858,7 +857,7 @@ const InvestDetail = () => {
         socket.off(`Client-${owner.toLowerCase()}`)
       }
     }
-  }, [router, account, investId])
+  }, [router, account, investId, getTransactions])
 
   const getData = useCallback(() => {
     axios
@@ -870,7 +869,6 @@ const InvestDetail = () => {
         throw error
       })
   }, [investId])
-  
 
   const getInvest = useCallback(async () => {
     if (!account) {
@@ -892,8 +890,6 @@ const InvestDetail = () => {
         console.error(error)
       })
   }, [accessToken, account, investId])
-  
-
 
   useEffect(() => {
     if (investId && accessToken) {
@@ -957,7 +953,7 @@ const InvestDetail = () => {
         })
     }
   }, [account, investId, transactionPageNumber])
-  
+
   useEffect(() => {
     if (investId) {
       getTransactions()
@@ -1166,8 +1162,6 @@ const InvestDetail = () => {
     return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
   }
 
-=======
->>>>>>> my_account_api
   const settings = {
     className: 'center',
     centerMode: true,
@@ -1368,7 +1362,11 @@ const InvestDetail = () => {
                 <ProjectInfoContentDetailGeneralContentTitle>
                   General Description
                 </ProjectInfoContentDetailGeneralContentTitle>
-                <ProjectInfoContentGeneralContent>{detailItem?.generalDescription}</ProjectInfoContentGeneralContent>
+                <ProjectInfoContentGeneralContent
+                  dangerouslySetInnerHTML={{
+                    __html: detailItem?.generalDescription,
+                  }}
+                />
               </ProjectInfoContentDetailGeneralContent>
               <ProjectInfoContentDetailGeneralContent>
                 <ProjectInfoContentDetailGeneralContentTitle>Video</ProjectInfoContentDetailGeneralContentTitle>

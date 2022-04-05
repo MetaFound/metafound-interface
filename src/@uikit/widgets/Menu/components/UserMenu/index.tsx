@@ -84,7 +84,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
     modifiers: [{ name: 'offset', options: { offset: [0, 0] } }],
   })
 
-<<<<<<< HEAD
   useEffect(() => {
     async function getAccessToken() {
       const result = await axios({
@@ -108,13 +107,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
       }
     }
   }, [account])
-=======
-  // useEffect(() => {
-  //   if (accessToken) {
-  //     console.log(accessToken)
-  //   }
-  // }, [accessToken])
->>>>>>> my_account_api
 
   useEffect(() => {
     const showDropdownMenu = () => {
