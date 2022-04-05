@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 import axios from 'axios';
+import useAccessToken from "hooks/useAccessToken";
 import { Box, Flex } from "../../../../components/Box";
 import { ChevronDownIcon } from "../../../../components/Svg";
 import { UserMenuProps, variants } from "./types";
@@ -72,6 +73,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
   children,
   ...props
 }) => {
+  // const {accessToken} = useAccessToken()
   const [isOpen, setIsOpen] = useState(false)
   const [targetRef, setTargetRef] = useState<HTMLDivElement | null>(null)
   const [tooltipRef, setTooltipRef] = useState<HTMLDivElement | null>(null)
@@ -82,6 +84,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
     modifiers: [{ name: 'offset', options: { offset: [0, 0] } }],
   })
 
+<<<<<<< HEAD
   useEffect(() => {
     async function getAccessToken() {
       const result = await axios({
@@ -105,6 +108,13 @@ const UserMenu: React.FC<UserMenuProps> = ({
       }
     }
   }, [account])
+=======
+  // useEffect(() => {
+  //   if (accessToken) {
+  //     console.log(accessToken)
+  //   }
+  // }, [accessToken])
+>>>>>>> my_account_api
 
   useEffect(() => {
     const showDropdownMenu = () => {

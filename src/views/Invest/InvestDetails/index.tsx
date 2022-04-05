@@ -794,6 +794,7 @@ const InvestDetail = () => {
   const { account } = useActiveWeb3React()
   const { investId } = router.query
 
+<<<<<<< HEAD
   const [detailItem, setDetailItem] = useState(null)
   const [investData, setInvestData] = useState(null)
   const [ownerAccount, setOwner] = useState('')
@@ -1165,6 +1166,8 @@ const InvestDetail = () => {
     return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
   }
 
+=======
+>>>>>>> my_account_api
   const settings = {
     className: 'center',
     centerMode: true,

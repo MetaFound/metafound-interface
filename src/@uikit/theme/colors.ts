@@ -70,7 +70,7 @@ export const darkColors: Colors = {
   input: '#101010',
   inputSecondary: '#262130',
   primaryDark: '#0098A1',
-  tertiary: '#353547',
+  tertiary: '#FDB814',
   text: '#FFFFFF',
   textDisabled: '#a1a1a1',
   textSubtle: '#ffffff',
