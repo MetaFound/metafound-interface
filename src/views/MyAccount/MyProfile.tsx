@@ -124,9 +124,11 @@ const MyProfile = () => {
   const stakeMtf = async () => {
     const value = new BigNumber(stakeInput).times(decimals)
     if (approval === ApprovalState.APPROVED) {
+      console.log(1)
       const stake = await contract.stakeMtf(value.toString())
       console.log(1, stake)
     } else if (approval !== ApprovalState.PENDING) {
+      console.log(2)
       await approveCallback()
     }
   }
@@ -178,7 +180,10 @@ const MyProfile = () => {
             <Flex>
               <InputStake onChange={onChange} value={stakeInput} />
               <StepButton active onClick={stakeMtf}>
-                Stake now
+                {(() => {
+                  console.log(approval, ApprovalState.UNKNOWN)
+                })()}
+              {approval === ApprovalState.APPROVED ? 'Stake now' : approval === ApprovalState.PENDING ? 'Approving...' : approval === ApprovalState.NOT_APPROVED ? 'Approve' : null}
               </StepButton>
             </Flex>
             <StepCircle>1</StepCircle>
