@@ -252,6 +252,7 @@ const InvestItemBlock = styled(Flex)`
 
 const InvestItemImg = styled.img`
   max-width: 100%;
+  max-height: 360px;
   border-radius: 20px;
   ${({ theme }) => theme.mediaQueries.md} {
     width: 366px;

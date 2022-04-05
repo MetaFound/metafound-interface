@@ -2074,6 +2074,14 @@ export const testnetTokens = defineTokens({
     'MTF',
     'Metafound Token',
   ),
+  usdt: new Token(
+    TESTNET,
+    '0x35EAdB18587D789C755EA7C56e6C331eC74F189c',
+    18,
+    'USDT',
+    'Tether USD',
+    'https://tether.to/',
+  ),
 } as const)
 
 const tokens = () => {
