@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import {testnetTokens} from 'config/constants/tokens'
+import { testnetTokens } from 'config/constants/tokens'
 import axios from 'axios'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text, Button } from '../../@uikit'
+import { useCurrentBlock } from 'state/block/hooks'
 
 const MyProfileWrapper = styled.div``
 
@@ -47,13 +48,13 @@ const BtnStake = styled(Button)`
   cursor: pointer;
 `
 
-const DivTablePoint =  styled.div`
-margin-top: 26px;
-border: 1px solid #fdb81480;
-width: 351px;
-box-sizing: border-box;
-border-radius: 6px;
-padding: 12px 28px;
+const DivTablePoint = styled.div`
+  margin-top: 26px;
+  border: 1px solid #fdb81480;
+  width: 351px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 12px 28px;
 `
 const TablePoint = styled.table`
   width: 100%;
@@ -62,33 +63,34 @@ const TablePoint = styled.table`
   }
 `
 
-const Diamond =  styled.div`
+const Diamond = styled.div`
   width: 80px;
   text-align: center;
 `
-const Gold =  styled.div`
+const Gold = styled.div`
   width: 100px;
   text-align: center;
 `
-const Silver =  styled.div`
+const Silver = styled.div`
   width: 100px;
   text-align: center;
 `
 
-const DivBorder =  styled.div`
-border: 1px solid #fdb81480;
-box-sizing: border-box;
-border-radius: 5px;
-padding: 16px;
-margin-top: 16px;
+const DivBorder = styled.div`
+  border: 1px solid #fdb81480;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 16px;
+  margin-top: 16px;
 `
 
-
-const MyTier = ({accessToken}) => {
+const MyTier = ({ accessToken, setOutsideTab }) => {
   const [tab, setTab] = useState('Reputation Point')
   const [myPoint, setMyPoint] = useState('')
   const [tier, setTier] = useState(null)
   const [pointToRankUp, setPointToRankUp] = useState('')
+
+  const blockNumber = useCurrentBlock()
 
   useEffect(() => {
     async function getTier() {
@@ -96,8 +98,8 @@ const MyTier = ({accessToken}) => {
         method: 'get',
         url: 'http://116.118.49.31:8003/api/v1/users/my-tier',
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
       const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
       const convertedMyPoint = new BigNumber(result.data.data.myPoint).div(decimals)
@@ -112,18 +114,18 @@ const MyTier = ({accessToken}) => {
       }
       setTier(convertedTier)
       if (convertedMyPoint < silver) {
-        setPointToRankUp(`${new BigNumber(silver).div(convertedMyPoint)}`)
+        setPointToRankUp(`${new BigNumber(silver).minus(convertedMyPoint)}`)
       } else if (convertedMyPoint < gold) {
-        setPointToRankUp(`${new BigNumber(gold).div(convertedMyPoint)}`)
+        setPointToRankUp(`${new BigNumber(gold).minus(convertedMyPoint)}`)
       } else if (convertedMyPoint < diamond) {
-        setPointToRankUp(`${new BigNumber(diamond).div(convertedMyPoint)}`)
+        setPointToRankUp(`${new BigNumber(diamond).minus(convertedMyPoint)}`)
       }
     }
 
     if (accessToken) {
       getTier()
     }
-  }, [accessToken])
+  }, [accessToken, blockNumber])
 
   return (
     <MyProfileWrapper>
@@ -136,110 +138,183 @@ const MyTier = ({accessToken}) => {
           Tier Benefits
         </Tab>
       </Flex>
-      {
-        tab === 'Reputation Point' ?
+      {tab === 'Reputation Point' ? (
         <>
-        {!myPoint ? (
-        <>
-          <TextSpan color="#868686">
-            You currently have <TextSpan color="#FDB814">0 points</TextSpan> earned. You must stake to earn Reputation
-            points.
-          </TextSpan>
-          <BtnStake>Stake Now</BtnStake>
+          {!myPoint ? (
+            <>
+              <TextSpan color="#868686">
+                You currently have <TextSpan color="#FDB814">0 points</TextSpan> earned. You must stake to earn
+                Reputation points.
+              </TextSpan>
+              <BtnStake>Stake Now</BtnStake>
+            </>
+          ) : (
+            <>
+              <Flex mb="10px">
+                <Text width="100px">My Tier</Text>
+                <Text
+                  color={
+                    tier &&
+                    (myPoint >= tier.diamond
+                      ? '#1FAEFF'
+                      : myPoint >= tier.gold
+                      ? '#FDB814'
+                      : myPoint >= tier.silver
+                      ? '#fff'
+                      : '#fff')
+                  }
+                >
+                  {tier &&
+                    (myPoint >= tier.diamond
+                      ? 'Diamond'
+                      : myPoint >= tier.gold
+                      ? 'Gold'
+                      : myPoint >= tier.silver
+                      ? 'Silver'
+                      : 'N/A')}
+                </Text>
+              </Flex>
+              <Flex>
+                <Text width="100px">My Point</Text>
+                <Text>{myPoint}</Text>
+              </Flex>
+              {parseFloat(pointToRankUp) >= 0 && (
+                <TextSpan color="#868686" fontSize="13px" mt="4px">
+                  you need to get <TextSpan color="#fff" fontSize="13px">{`${pointToRankUp} points`}</TextSpan> to be
+                  able to rank up
+                </TextSpan>
+              )}
+
+              <BtnStake onClick={() => setOutsideTab('my-profile')}>Stake Now</BtnStake>
+              <DivTablePoint>
+                <TablePoint>
+                  <tr>
+                    <td>
+                      <Text color="#868686" fontSize="14px">
+                        Tier
+                      </Text>
+                    </td>
+                    <td>
+                      <Text color="#fff" fontSize="14px">
+                        Silver
+                      </Text>
+                    </td>
+                    <td>
+                      <Text color="#FDB814" fontSize="14px">
+                        Gold
+                      </Text>
+                    </td>
+                    <td>
+                      <Text color="#1FAEFF" fontSize="14px">
+                        Diamond
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <Text color="#868686" fontSize="14px">
+                        Point
+                      </Text>
+                    </td>
+                    <td>
+                      <Text color="#fff" fontSize="14px">
+                        {tier ? tier.silver : ''}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text color="#fff" fontSize="14px">
+                        {tier ? tier.gold : ''}
+                      </Text>
+                    </td>
+                    <td>
+                      <Text color="#fff" fontSize="14px">
+                        {tier ? tier.diamond : ''}
+                      </Text>
+                    </td>
+                  </tr>
+                </TablePoint>
+              </DivTablePoint>
+            </>
+          )}
         </>
       ) : (
         <>
-          <Flex mb="10px">
-            <Text width="100px">My Tier</Text>
-            <Text color="#FDB814">Gold</Text>
+          <Flex justifyContent="space-between" pr="16px" pl="16px">
+            <Text color="#868686">Tier Benefits</Text>
+            <Flex>
+              <Silver>
+                <Text color="#fff">Silver</Text>
+              </Silver>
+              <Gold>
+                <Text color="#FDB814">Gold</Text>
+              </Gold>
+              <Diamond>
+                <Text color="#1FAEFF">Diamond</Text>
+              </Diamond>
+            </Flex>
           </Flex>
-          <Flex>
-            <Text width="100px">My Point</Text>
-            <Text>{myPoint}</Text>
-          </Flex>
-          {
-            parseFloat(pointToRankUp) >= 0 &&
-            <TextSpan color="#868686" fontSize='13px' mt="4px">
-            you need to get <TextSpan color="#fff" fontSize='13px'>{`${pointToRankUp} points`}</TextSpan> to be able to rank up
-          </TextSpan>
-          }
-          
-          <BtnStake>Stake Now</BtnStake>
-          <DivTablePoint>
-          <TablePoint>
-            <tr>
-              <td><Text color="#868686" fontSize="14px">Tier</Text></td>
-              <td><Text color="#fff" fontSize="14px" >Silver</Text></td>
-              <td><Text color="#FDB814" fontSize="14px" >Gold</Text></td>
-              <td><Text color="#1FAEFF" fontSize="14px" >Diamond</Text></td>
-            </tr>
-            <tr>
-              <td><Text color="#868686" fontSize="14px">Point</Text></td>
-              <td><Text color="#fff" fontSize="14px" >{tier ? tier.silver : ''}</Text></td>
-              <td><Text color="#fff" fontSize="14px" >{tier ? tier.gold : ''}</Text></td>
-              <td><Text color="#fff" fontSize="14px" >{tier ? tier.diamond : ''}</Text></td>
-            </tr>
-          </TablePoint>
-          </DivTablePoint>
-          
+          <DivBorder>
+            <Flex justifyContent="space-between">
+              <Text color="#fff" fontSize="14px">
+                transaction costs on the platform
+              </Text>
+              <Flex>
+                <Silver>
+                  <Text color="#fff" fontSize="14px">
+                    Fee Lost
+                  </Text>
+                </Silver>
+                <Gold>
+                  <Text color="#fff" fontSize="14px">
+                    Sale 50%
+                  </Text>
+                </Gold>
+                <Diamond>
+                  <Text color="#fff" fontSize="14px">
+                    Free
+                  </Text>
+                </Diamond>
+              </Flex>
+            </Flex>
+          </DivBorder>
+          <DivBorder>
+            <Flex justifyContent="space-between">
+              <Text color="#fff" fontSize="14px">
+                Participate in voting for projects that are about to be listed
+              </Text>
+              <Flex>
+                <Silver>
+                  <img src="/images/myAccount/untick.svg" alt="untick icon" />
+                </Silver>
+                <Gold>
+                  <img src="/images/myAccount/ticked.svg" alt="ticked icon" />
+                </Gold>
+                <Diamond>
+                  <img src="/images/myAccount/ticked.svg" alt="untick icon" />
+                </Diamond>
+              </Flex>
+            </Flex>
+          </DivBorder>
+          <DivBorder>
+            <Flex justifyContent="space-between">
+              <Text color="#fff" fontSize="14px">
+                support direct viewing of contributed products
+              </Text>
+              <Flex>
+                <Silver>
+                  <img src="/images/myAccount/untick.svg" alt="untick icon" />
+                </Silver>
+                <Gold>
+                  <img src="/images/myAccount/ticked.svg" alt="ticked icon" />
+                </Gold>
+                <Diamond>
+                  <img src="/images/myAccount/ticked.svg" alt="untick icon" />
+                </Diamond>
+              </Flex>
+            </Flex>
+          </DivBorder>
         </>
       )}
-        </>
-        :
-        <>
-        <Flex justifyContent="space-between" pr="16px" pl="16px">
-          <Text color="#868686">Tier Benefits</Text>
-          <Flex>
-            <Silver><Text color="#fff">Silver</Text></Silver>
-            <Gold><Text color="#FDB814">Gold</Text></Gold>
-            <Diamond><Text color="#1FAEFF">Diamond</Text></Diamond>
-          </Flex>
-        </Flex>
-        <DivBorder>
-        <Flex justifyContent="space-between">
-          <Text color="#fff" fontSize="14px">transaction costs on the platform</Text>
-          <Flex>
-            <Silver><Text color="#fff" fontSize="14px">Fee Lost</Text></Silver>
-            <Gold><Text color="#fff" fontSize="14px">Sale 50%</Text></Gold>
-            <Diamond><Text color="#fff" fontSize="14px">Free</Text></Diamond>
-          </Flex>
-        </Flex>
-        </DivBorder>
-        <DivBorder>
-        <Flex justifyContent="space-between">
-          <Text color="#fff" fontSize="14px">Participate in voting for projects that are about to be listed</Text>
-          <Flex>
-          <Silver>
-              <img src="/images/myAccount/untick.svg" alt="untick icon" />
-            </Silver>
-            <Gold>
-            <img src="/images/myAccount/ticked.svg" alt="ticked icon" />
-            </Gold>
-            <Diamond>
-            <img src="/images/myAccount/ticked.svg" alt="untick icon" />
-            </Diamond>
-          </Flex>
-        </Flex>
-        </DivBorder>
-        <DivBorder>
-        <Flex justifyContent="space-between">
-          <Text color="#fff" fontSize="14px">support direct viewing of contributed products</Text>
-          <Flex>
-          <Silver>
-              <img src="/images/myAccount/untick.svg" alt="untick icon" />
-            </Silver>
-            <Gold>
-            <img src="/images/myAccount/ticked.svg" alt="ticked icon" />
-            </Gold>
-            <Diamond>
-            <img src="/images/myAccount/ticked.svg" alt="untick icon" />
-            </Diamond>
-          </Flex>
-        </Flex>
-        </DivBorder>
-        </>
-      }
-      
     </MyProfileWrapper>
   )
 }

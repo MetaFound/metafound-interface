@@ -57,6 +57,7 @@ const LocationBlock = styled(Section)`
   line-height: 1.5;
   margin-top: 36px;
   color: ${({ theme }) => `${theme.colors.text}`};
+
   ${({ theme }) => theme.mediaQueries.sm} {
     margin-top: 66px;
   }
@@ -66,6 +67,7 @@ const LocationImg = styled.img`
   width: 90px;
   height: 90px;
   border-radius: 10px;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 120px;
     height: 120px;
@@ -80,6 +82,7 @@ const LocationInfoCity = styled.div`
   margin-bottom: 6px;
   font-size: 18px;
   font-weight: 700;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 22px;
   }
@@ -89,6 +92,7 @@ const LocationInfoText = styled.div`
   color: #868686;
   font-size: 14px;
   font-weight: 400;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 16px;
   }
@@ -97,6 +101,7 @@ const LocationInfoText = styled.div`
 const LocationInfoAddress = styled.div`
   font-weight: 500;
   font-size: 16px;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 18px;
   }
@@ -106,6 +111,7 @@ const TimelineProgressSection = styled(Flex)`
   margin-top: 36px;
   gap: 41px;
   flex-wrap: wrap;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     margin-top: 86px;
   }
@@ -181,6 +187,7 @@ const TimelineContentTitle = styled.div`
   font-weight: 500;
   font-size: 18px;
   line-height: 30px;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 20px;
   }
@@ -197,6 +204,7 @@ const ProgressBlock = styled(Flex)`
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 60px 100px;
   }
+
   order: 2;
   @media screen and (min-width: 1477px) {
     order: unset;
@@ -207,6 +215,7 @@ const ProgressBlockTitle = styled(Flex)`
   justify-content: center;
   font-weight: 600;
   font-size: 18px;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 20px;
   }
@@ -221,6 +230,7 @@ const ProgressBlockStepItem = styled(Flex)`
   flex-direction: column;
   align-items: center;
   flex: 0 0 25%;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     flex: unset;
   }
@@ -281,6 +291,7 @@ const ProgressBlockStepInfo = styled.div`
 
 const TextStyle2 = styled.div`
   font-size: 14px;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 16px;
   }
@@ -314,6 +325,7 @@ const ProgressBlockStepInfoText2 = styled(TextStyle2)`
 const ProgressBlockStepInfoTier = styled(Flex)`
   justify-content: space-between;
   margin-bottom: 15px;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     justify-content: unset;
   }
@@ -327,6 +339,7 @@ const ProgressBlockStepInfoTier1 = styled(Flex)`
   border: 1px solid #fdb814;
   min-width: 125px;
   flex-wrap: wrap;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     height: 40px;
     margin-right: 120px;
@@ -383,6 +396,7 @@ const ProgressBlockStepInfoText3Question = styled(Flex)`
   align-items: center;
   background: #fdb814;
   border-radius: 50%;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     height: 27px;
     width: 27px;
@@ -426,6 +440,7 @@ const ProjectInfoContentDetailGeneral = styled(Flex)`
   gap: 40px;
   width: 100%;
   flex: 0 0 100%;
+
   ${({ theme }) => theme.mediaQueries.md} {
     flex: 3;
   }
@@ -461,6 +476,7 @@ const ProjectInfoContentDetailGeneralContentTitle = styled.div`
     left: 0;
     background: #fdb814;
   }
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 20px;
   }
@@ -474,6 +490,7 @@ const ProjectInfoContentDetailContent = styled(Flex)`
 
 const ProjectInfoContentDetailContentItem = styled.div`
   flex: 0 0 100%;
+
   ${({ theme }) => theme.mediaQueries.xxl} {
     flex: 0 0 50%;
   }
@@ -496,6 +513,7 @@ const ProjectInfoContentGeneralContent = styled.div`
   line-height: 30px;
   font-weight: 400;
   margin: 20px 0;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 16px;
   }
@@ -509,6 +527,7 @@ const ProjectInfoContentTransactions = styled.div`
   padding: 30px;
   text-align: start;
   height: 100%;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 30px 34px;
   }
@@ -640,6 +659,7 @@ const TotalText1 = styled(Text)`
   display: inline-block;
   color: #959595;
   font-weight: 400;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 16px;
   }
@@ -650,6 +670,7 @@ const TotalText2 = styled(Text)`
   font-weight: 600;
   font-size: 14px;
   color: ${({ theme }) => `${theme.colors.text}`};
+
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 16px;
   }
@@ -744,6 +765,7 @@ const BlockSearchInvest = styled.div`
   height: 40px;
   max-width: 100%;
   position: relative;
+
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 270px;
   }
@@ -844,6 +866,7 @@ const InvestDetail = () => {
         // console.log('data', data)
       }
     }
+
     async function initData() {
       owner = await getOwner()
       setOwner(owner)
@@ -871,25 +894,13 @@ const InvestDetail = () => {
   }, [investId])
 
   const getInvest = useCallback(async () => {
-    if (!account) {
-      return
+    const result = await axios.get(`http://116.118.49.31:8003/api/v1/invest-pools?page=1&limit=9999`)
+    if (result.data?.data?.investPools) {
+      const pool = result.data.data.investPools.find((pool) => pool.id.toString() === investId)
+      setInvestData(pool)
+      setCtbToken(pool.token)
     }
-    axios
-      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then(function (response) {
-        console.log('list invest: ', response?.data?.data)
-        setInvestData(response?.data?.data ?? {})
-        setCtbToken(response?.data?.data?.ctbToken)
-      })
-      .catch(function (error) {
-        // router.push(`/${error.response.status}`)
-        console.error(error)
-      })
-  }, [accessToken, account, investId])
+  }, [investId])
 
   useEffect(() => {
     if (investId && accessToken) {
@@ -1156,7 +1167,7 @@ const InvestDetail = () => {
   }
 
   const calculateCtb = (number, decimal) => {
-    if (number === 0) {
+    if (number === '0') {
       return number
     }
     return new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString()
@@ -1233,20 +1244,17 @@ const InvestDetail = () => {
     <Page>
       <CarouselSection>
         <Slider {...settings}>
-          <CarouselBlock>
-            <CarouselImg src={detailItem?.thumbnail} />
-          </CarouselBlock>
-          <CarouselBlock>
-            <CarouselImg src={detailItem?.thumbnail} />
-          </CarouselBlock>
-          <CarouselBlock>
-            <CarouselImg src={detailItem?.thumbnail} />
-          </CarouselBlock>
+          {detailItem?.imgUrl &&
+            Object.values(detailItem.imgUrl).map((img, index) => (
+              <CarouselBlock key={index}>
+                <CarouselImg src={img} />
+              </CarouselBlock>
+            ))}
         </Slider>
       </CarouselSection>
       <PageWrapper>
         <LocationBlock>
-          <LocationImg src={detailItem?.imgUrl} />
+          <LocationImg src={detailItem?.thumbnail} />
           <LocationInfo>
             <LocationInfoCity>{detailItem?.name}</LocationInfoCity>
             <LocationInfoText>Location: </LocationInfoText>
@@ -1268,9 +1276,9 @@ const InvestDetail = () => {
               <TotalBlock>
                 <TotalLayout>
                   <TotalText1>Total:</TotalText1>
-                  <TotalText2 marginLeft="6px">{calculateCtb(+investData?.totalCtb, findInfoToken(false))} </TotalText2>
+                  <TotalText2 marginLeft="6px">{calculateCtb(investData?.totalCtb, findInfoToken(false))} </TotalText2>
                   <TotalText1>
-                    /{calculateCtb(+investData?.totalCtbMax, findInfoToken(false))} {findInfoToken()}{' '}
+                    /{calculateCtb(investData?.totalCtbMax, findInfoToken(false))} {findInfoToken()}{' '}
                   </TotalText1>
                 </TotalLayout>
               </TotalBlock>

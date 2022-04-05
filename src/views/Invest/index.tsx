@@ -472,7 +472,7 @@ const Invest = () => {
     axios
       .get('http://116.118.49.31:8003/api/v1/invest-pools', {
         params: {
-          limit: 10,
+          limit: 9999,
           page: 1,
           status: status.toString(),
           name: searchParam ?? '',

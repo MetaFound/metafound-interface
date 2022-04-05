@@ -79,8 +79,8 @@ const MyAccount = () => {
         method: 'post',
         url: 'http://116.118.49.31:8003/api/v1/login',
         data: {
-          walletAddress: account
-        }
+          walletAddress: account,
+        },
       })
       setAccessToken(result.data.data.accessToken)
     }
@@ -96,10 +96,10 @@ const MyAccount = () => {
           <MyAccountItem active={tab === 'my-profile'} onClick={() => setTab('my-profile')}>
             My Profile
           </MyAccountItem>
-          <MyAccountItem  active={tab === 'my-invest'} onClick={() => setTab('my-invest')}>
+          <MyAccountItem active={tab === 'my-invest'} onClick={() => setTab('my-invest')}>
             My Invest
           </MyAccountItem>
-          <MyAccountItem  active={tab === 'my-tier'} onClick={() => setTab('my-tier')}>
+          <MyAccountItem active={tab === 'my-tier'} onClick={() => setTab('my-tier')}>
             My Tier{' '}
           </MyAccountItem>
           <MyAccountItem active={tab === 'need-help'} onClick={() => setTab('need-help')}>
@@ -110,9 +110,9 @@ const MyAccount = () => {
           {tab === 'my-profile' ? (
             <MyProfile />
           ) : tab === 'my-invest' ? (
-            <MyInvest accessToken={accessToken}/>
+            <MyInvest accessToken={accessToken} />
           ) : tab === 'my-tier' ? (
-            <MyTier accessToken={accessToken}/>
+            <MyTier accessToken={accessToken} setOutsideTab={setTab} />
           ) : (
             <NeedHelp />
           )}

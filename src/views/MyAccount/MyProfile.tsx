@@ -15,6 +15,8 @@ import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '../../@uikit'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { constants } from 'http2'
+import HTTP2_HEADER_REFERER = module
 
 const MyProfileWrapper = styled.div``
 
@@ -68,7 +70,7 @@ const StepItem = styled.div`
   padding: 14px 24px;
 `
 
-const StepButton = styled.div<{ active: boolean }>`
+const StepButton = styled.div<{ active: boolean; disabled: boolean }>`
   border: 0.5px solid #fdb81480;
   box-sizing: border-box;
   border-radius: 5px;
@@ -82,6 +84,8 @@ const StepButton = styled.div<{ active: boolean }>`
   margin-left: 12px;
   cursor: pointer;
   ${({ active }) => active && 'background: #FDB814; color: #000000;'}
+
+  ${({ disabled }) => disabled && 'background: #745e29; color: #000000;'}
 `
 const StepCircle = styled.div`
   width: 28px;
@@ -121,15 +125,21 @@ const MyProfile = () => {
     }
   }, [account])
 
+  const [isApproveAttempt, setIsApproveAttempt] = useState(false)
+
   const stakeMtf = async () => {
     const value = new BigNumber(stakeInput).times(decimals)
     if (approval === ApprovalState.APPROVED) {
-      console.log(1)
       const stake = await contract.stakeMtf(value.toString())
-      console.log(1, stake)
     } else if (approval !== ApprovalState.PENDING) {
-      console.log(2)
-      await approveCallback()
+      setIsApproveAttempt(true)
+      try {
+        await approveCallback()
+      } finally {
+        setIsApproveAttempt(false)
+      }
+    } else {
+      console.log(`PENDING...`)
     }
   }
 
@@ -162,12 +172,12 @@ const MyProfile = () => {
           </BtnChange> */}
         </Flex>
       </MainWallet>
-      <Text color="#fff" fontSize="20px">
-        Getting Started
-      </Text>
-      <TextSpan color="#868686">
-        Here are <TextSpan color="#FDB814">3 steps</TextSpan> for you to start on MetaFound.
-      </TextSpan>
+      {/* <Text color="#fff" fontSize="20px"> */}
+      {/*   Getting Started */}
+      {/* </Text> */}
+      {/* <TextSpan color="#868686"> */}
+      {/*   Here are <TextSpan color="#FDB814">3 steps</TextSpan> for you to start on MetaFound. */}
+      {/* </TextSpan> */}
       <StepCont>
         <StepItem>
           <Text color="#959595" fontSize="14px">
@@ -179,14 +189,21 @@ const MyProfile = () => {
           <Flex mt="20px" justifyContent="space-between" alignItems="center">
             <Flex>
               <InputStake onChange={onChange} value={stakeInput} />
-              <StepButton active onClick={stakeMtf}>
-                {(() => {
-                  console.log(approval, ApprovalState.UNKNOWN)
-                })()}
-              {approval === ApprovalState.APPROVED ? 'Stake now' : approval === ApprovalState.PENDING ? 'Approving...' : approval === ApprovalState.NOT_APPROVED ? 'Approve' : null}
+              <StepButton
+                active
+                disabled={!stakeInput || isApproveAttempt || approval === ApprovalState.PENDING}
+                onClick={stakeMtf}
+              >
+                {approval === ApprovalState.APPROVED
+                  ? 'Stake now'
+                  : approval === ApprovalState.PENDING || isApproveAttempt
+                  ? 'Approving...'
+                  : approval === ApprovalState.NOT_APPROVED
+                  ? 'Approve'
+                  : 'Stake now'}
               </StepButton>
             </Flex>
-            <StepCircle>1</StepCircle>
+            {/* <StepCircle>1</StepCircle> */}
           </Flex>
         </StepItem>
       </StepCont>
