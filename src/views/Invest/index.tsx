@@ -6,6 +6,7 @@ import { Box, Flex, Input, Text } from '../../@uikit'
 import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
 import calculate from '../../@uikit/components/Svg/Icons/Calculate'
 import BigNumber from 'bignumber.js'
+import { useRouter } from 'next/router'
 const axios = require('axios')
 
 const PageWrapper = styled(Box)`
@@ -236,6 +237,7 @@ const InvestItemBlock = styled(Flex)`
   gap: 24px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+  cursor: pointer;
 
   :last-child {
     margin-bottom: 0px;
@@ -418,6 +420,7 @@ const MetaFound = () => {
 
 const Invest = () => {
   const { theme } = useTheme()
+  const router = useRouter()
   const [listDetail, setDataDetail] = useState([])
   const [status, setStatus] = useState(1)
   const [searchParam, setSearchParam] = useState('')
@@ -559,7 +562,15 @@ const Invest = () => {
         {listDetail.length > 0 &&
           listDetail.map((item) => {
             return (
-              <InvestItemBlock key={item?.id}>
+              <InvestItemBlock
+                key={item?.id}
+                onClick={() => {
+                  router.push({
+                    pathname: '/invest/[investId]/detail',
+                    query: { investId: item?.id },
+                  })
+                }}
+              >
                 <InvestItemImg src={item?.thumbnail} />
                 <InvestItemInfomation>
                   <InvestItemText1>{item?.name}</InvestItemText1>

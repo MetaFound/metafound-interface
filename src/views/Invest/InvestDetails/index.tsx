@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Slider from 'react-slick'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import useTheme from '../../../hooks/useTheme'
@@ -9,9 +9,13 @@ import { Box, Flex, Heading, Input, Skeleton, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
 import unserializedTokens, { testnetTokens } from '../../../config/constants/tokens'
 import BigNumber from 'bignumber.js'
+import io from 'socket.io-client'
+import Swal from 'sweetalert2'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const Page = styled(Box)``
 
+const WS_URL = '116.118.49.31:8003'
 const CarouselSection = styled.div`
   height: 100%;
 `
@@ -598,7 +602,7 @@ const NoData = styled(Flex)`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 18px;
   color: ${({ theme }) => `${theme.colors.primary}`};
 `
 const ProgressPercent = styled(Flex)`
@@ -779,13 +783,20 @@ const SearchIcon = styled.button`
   font-size: 14px;
 `
 
+const socket = io(WS_URL, { transports: ['websocket'] })
+socket.on('connect', () => {
+  console.log('Connected')
+})
+
 const InvestDetail = () => {
   const { theme } = useTheme()
   const router = useRouter()
+  const { account } = useActiveWeb3React()
   const { investId } = router.query
 
   const [detailItem, setDetailItem] = useState(null)
   const [investData, setInvestData] = useState(null)
+  const [ownerAccount, setOwner] = useState('')
 
   const [ctbToken, setCtbToken] = useState(null)
 
@@ -795,12 +806,47 @@ const InvestDetail = () => {
   const [transactionTotalPage, setTransactionTotalPage] = useState(0)
   const [listTransaction, setListTransaction] = useState([])
 
+  const getOwner = async () => {
+    const getOwnerRes = await axios({
+      method: 'get',
+      url: 'http://116.118.49.31:8003/api/v1/invest-pools/get-owner',
+    })
+    const owner = getOwnerRes.data.data
+    return owner
+  }
+
+  useEffect(() => {
+    let owner = ''
+
+    function handleTransaction(data) {
+      if (data) {
+        getTransactions().then(r => )
+        getData()
+        getInvest()
+        console.log('data', data)
+      }
+    }
+    async function initData() {
+      owner = await getOwner()
+      setOwner(owner)
+      socket.on(`Client-${owner.toLowerCase()}`, handleTransaction)
+    }
+
+    initData()
+
+    return () => {
+      if (socket) {
+        socket.off(`Client-${owner.toLowerCase()}`)
+      }
+    }
+  }, [router, account, investId])
+
   useEffect(() => {
     if (investId) {
       getData()
       getInvest()
     }
-  }, [investId])
+  }, [investId, account])
 
   useEffect(() => {
     if (detailItem?.stage) {
@@ -834,49 +880,111 @@ const InvestDetail = () => {
       })
   }
 
-  const getInvest = () => {
-    axios
-      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}`, {
-        headers: {
-          // Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg3ZWQwODU1MmE3OTdiNThjY2MyZDI5N2ZiNjQzOTEwM2IzYTczZGI1IiwiaWF0IjoxNjQ5MDg1NTU0LCJleHAiOjE2NDkxNzE5NTR9.LY6BC4g1P_oRCiwRJG1Y5d6o_zFujvrIALOg4xA-qZU`,
-        },
-      })
-      .then(function (response) {
-        setInvestData(response?.data?.data ?? {})
-        setCtbToken(response?.data?.data?.ctbToken)
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
+  const getInvest = async () => {
+    if (!account) {
+      return
+    }
+    const result = await axios({
+      method: 'post',
+      url: 'http://116.118.49.31:8003/api/v1/login',
+      data: {
+        walletAddress: account,
+      },
+    })
+    if (result.data.data.accessToken) {
+      axios
+        .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}`, {
+          headers: {
+            Authorization: `Bearer ${result.data.data.accessToken}`,
+          },
+        })
+        .then(function (response) {
+          console.log('list invest: ', response?.data?.data)
+          setInvestData(response?.data?.data ?? {})
+          setCtbToken(response?.data?.data?.ctbToken)
+        })
+        .catch(function (error) {
+          // router.push(`/${error.response.status}`)
+          console.error(error)
+        })
+    }
   }
 
   useEffect(() => {
     if (investId) {
       getTransactions()
     }
-  }, [transactionPageNumber, investId])
+  }, [transactionPageNumber, investId, account])
 
-  const getTransactions = () => {
-    axios
-      .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
-        params: {
-          limit: 10,
-          page: transactionPageNumber,
-        },
-        headers: {
-          // Authorization: `Bearer ${localStorage.getItem('ACCESS_TOKEN')}`,
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3YWxsZXRBZGRyZXNzIjoiMHg3ZWQwODU1MmE3OTdiNThjY2MyZDI5N2ZiNjQzOTEwM2IzYTczZGI1IiwiaWF0IjoxNjQ5MDg1NTU0LCJleHAiOjE2NDkxNzE5NTR9.LY6BC4g1P_oRCiwRJG1Y5d6o_zFujvrIALOg4xA-qZU`,
-        },
-      })
-      .then(function (response) {
-        setListTransaction(response?.data?.data?.transactions ?? [])
-        setTransactionTotalPage(response?.data?.data?.totalCount ? Math.ceil(response?.data?.data?.totalCount / 10) : 0)
-      })
-      .catch((error) => {
-        console.error('error:', error.response)
-      })
-  }
+  const getTransactions = useCallback(async () => {
+    if (!account) {
+      return
+    }
+    const result = await axios({
+      method: 'post',
+      url: 'http://116.118.49.31:8003/api/v1/login',
+      data: {
+        walletAddress: account,
+      },
+    })
+    if (result.data.data.accessToken) {
+      axios
+        .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
+          params: {
+            limit: 10,
+            page: transactionPageNumber,
+          },
+          headers: {
+            Authorization: `Bearer ${result.data.data.accessToken}`,
+          },
+        })
+        .then(function (response) {
+          setListTransaction(response?.data?.data?.transactions ?? [])
+          console.log('data transaction: ', response?.data?.data?.transactions)
+          setTransactionTotalPage(
+            response?.data?.data?.totalCount ? Math.ceil(response?.data?.data?.totalCount / 10) : 0,
+          )
+        })
+        .catch((error) => {
+          console.error('error:', error.response)
+        })
+    }
+  }, [account])
+  //
+  // const getTransactions = async () => {
+  //   if (!account) {
+  //     return
+  //   }
+  //   const result = await axios({
+  //     method: 'post',
+  //     url: 'http://116.118.49.31:8003/api/v1/login',
+  //     data: {
+  //       walletAddress: account,
+  //     },
+  //   })
+  //   if (result.data.data.accessToken) {
+  //     axios
+  //       .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
+  //         params: {
+  //           limit: 10,
+  //           page: transactionPageNumber,
+  //         },
+  //         headers: {
+  //           Authorization: `Bearer ${result.data.data.accessToken}`,
+  //         },
+  //       })
+  //       .then(function (response) {
+  //         setListTransaction(response?.data?.data?.transactions ?? [])
+  //         console.log('data transaction: ', response?.data?.data?.transactions)
+  //         setTransactionTotalPage(
+  //           response?.data?.data?.totalCount ? Math.ceil(response?.data?.data?.totalCount / 10) : 0,
+  //         )
+  //       })
+  //       .catch((error) => {
+  //         console.error('error:', error.response)
+  //       })
+  //   }
+  // }
 
   const snakeToPascal = (string) => {
     return string
