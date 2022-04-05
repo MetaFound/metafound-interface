@@ -33,12 +33,11 @@ interface WalletModalProps extends InjectedModalProps {
 export const LOW_BNB_BALANCE = parseUnits('2', 'gwei')
 
 const ModalHeader = styled(UIKitModalHeader)`
-  background: ${({ theme }) => theme.colors.gradients.bubblegum};
 `
 
 const Tabs = styled.div`
-  background-color: ${({ theme }) => theme.colors.dropdown};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  // background-color: ${({ theme }) => theme.colors.dropdown};
+  // border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
   padding: 16px 24px;
 `
 
@@ -62,7 +61,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ initialView = WalletView.WALL
   )
 
   return (
-    <ModalContainer title={t('Welcome!')} minWidth="320px">
+    <ModalContainer title={t('Welcome!')} minWidth="400px">
       <ModalHeader>
         <ModalTitle>
           <Heading>{t('Your Wallet')}</Heading>
