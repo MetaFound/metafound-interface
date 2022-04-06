@@ -35,7 +35,7 @@ const CarouselImg = styled.img`
   margin: 0 auto;
   padding: 0 16px;
   border-radius: 20px;
-  max-height: 500px;
+  height: 500px;
 `
 
 const PageWrapper = styled(Box)`
