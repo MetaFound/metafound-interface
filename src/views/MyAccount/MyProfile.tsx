@@ -15,8 +15,6 @@ import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '../../@uikit'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { constants } from 'http2'
-import HTTP2_HEADER_REFERER = module
 
 const MyProfileWrapper = styled.div``
 
