@@ -9,8 +9,10 @@ import io from 'socket.io-client'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
-import unserializedTokens, { testnetTokens } from '../../../config/constants/tokens'
+import unserializedTokens, { serializeTokens, testnetTokens } from '../../../config/constants/tokens'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
+import { Token } from '@pancakeswap/sdk'
+import { useCurrencyBalance } from 'state/wallet/hooks'
 
 const Page = styled(Box)``
 
@@ -229,6 +231,7 @@ const ProgressBlockStepItem = styled(Flex)`
   flex-direction: column;
   align-items: center;
   flex: 0 0 25%;
+  cursor: pointer;
 
   ${({ theme }) => theme.mediaQueries.sm} {
     flex: unset;
@@ -802,6 +805,7 @@ const SearchIcon = styled.button`
   line-height: 20px;
   font-weight: 600;
   font-size: 14px;
+  cursor: pointer;
 `
 
 const socket = io(WS_URL, { transports: ['websocket'] })
@@ -1082,8 +1086,14 @@ const InvestDetail = () => {
   }
 
   const handleInvestingProgress = (step) => {
-    setProgressStep(step)
+    if (step > 1) {
+      if (myTier === '' || myTier === 'N/A') return
+      setProgressStep(step)
+    }
+    console.log(`investDetail`, investDetail)
   }
+
+  const [depositTypedValue, setDepositTypedValue] = useState('')
 
   const renderInvestingProgress = () => {
     let investProgress = <></>
@@ -1091,8 +1101,8 @@ const InvestDetail = () => {
       case 1:
         investProgress = (
           <ProgressBlockStepInfo>
-            <ProgressBlockStepInfoText1>Stake to achive MetaFound Tier</ProgressBlockStepInfoText1>
-            <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Dimond)</ProgressBlockStepInfoText2>
+            <ProgressBlockStepInfoText1>Stake to achieve MetaFound Tier</ProgressBlockStepInfoText1>
+            <ProgressBlockStepInfoText2>Stake MTF to achieve tier (Silver, Gold, Diamond)</ProgressBlockStepInfoText2>
             <ProgressBlockStepInfoTier>
               <ProgressBlockStepInfoTier1>
                 <ProgressBlockStepInfoTier1Text1>My Tier</ProgressBlockStepInfoTier1Text1>
@@ -1118,11 +1128,13 @@ const InvestDetail = () => {
           <ProgressBlockStepInfo>
             <ProgressBlockStepInfoText1>Invest</ProgressBlockStepInfoText1>
             <ProgressBlockStepInfoText2>Enter the amount of tokens you want to invest</ProgressBlockStepInfoText2>
-            <ProgressBlockStepInfoText3>Balance: 0.000 {findInfoToken()}</ProgressBlockStepInfoText3>
+            <ProgressBlockStepInfoText3>
+              Balance: {balance ? balance.toSignificant(6) : '--'} {findInfoToken()}
+            </ProgressBlockStepInfoText3>
             <BlockSearchWithButton>
               <BlockSearchInvest>
-                <SearchInput type="number" placeholder="0.00" />
-                <SearchIcon>Max</SearchIcon>
+                <SearchInput type="number" placeholder="0.00" value={depositTypedValue} />
+                <SearchIcon onClick={() => setDepositTypedValue(balance ? balance.toExact() : '')}>Max</SearchIcon>
                 <CurrencyIcon src="/images/metafound/USDT.svg" />
               </BlockSearchInvest>
               <ButtonInvestSearch>Invest</ButtonInvestSearch>
@@ -1201,6 +1213,17 @@ const InvestDetail = () => {
     }
     return null
   }
+
+  const getTokenFromAddress = (address: string | undefined): Token | undefined => {
+    if (address === undefined) return undefined
+    const tokenKeyAddress = Object.values(unserializedTokens).reduce(
+      (acc, token) => ({ ...acc, [token.address]: token }),
+      {},
+    )
+    return tokenKeyAddress[address]
+  }
+
+  const balance = useCurrencyBalance(account, getTokenFromAddress(ctbToken))
 
   const calculateCtb = (number, decimal) => {
     if (number === '0') {
