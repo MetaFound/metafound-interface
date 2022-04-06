@@ -113,9 +113,9 @@ const TimelineProgressSection = styled(Flex)`
   gap: 41px;
   flex-wrap: wrap;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
-    margin-top: 86px;
-  }
+  // ${({ theme }) => theme.mediaQueries.sm} {
+  //   margin-top: 86px;
+  // }
 `
 const ProgressPercentBlock = styled(Flex)`
   justify-content: flex-end;
