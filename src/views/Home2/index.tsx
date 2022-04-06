@@ -6,6 +6,8 @@ import Trans from 'components/Trans'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import { variants } from '@uikit/components/Button/types'
 import { useRouter } from 'next/router'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import Link from 'next/link'
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 60vw, 1300px);
@@ -79,6 +81,28 @@ const ButtonBlock = styled(Flex)`
 `
 
 const ConnectWalletButtonStyled = styled(ConnectWalletButton)`
+  color: ${({ theme }) => `${theme.colors.background}`};
+  border-radius: 10px;
+  font-weight: 600;
+  width: 150px;
+  max-width: 100%;
+  height: 50px;
+  font-size: 12px;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    height: 60px;
+    font-size: 18px;
+    width: 200px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.md} {
+    height: 75px;
+    font-size: 25px;
+    width: 300px;
+  }
+`
+
+const MyAccountButtonStyled = styled(Button)`
   color: ${({ theme }) => `${theme.colors.background}`};
   border-radius: 10px;
   font-weight: 600;
@@ -279,6 +303,7 @@ const MetaFound = () => {
 const Home2 = () => {
   const { theme } = useTheme()
   const router = useRouter()
+  const { account } = useActiveWeb3React()
 
   return (
     <PageWrapper>
@@ -291,7 +316,14 @@ const Home2 = () => {
           <Trans>The real estate industry&apos;s digital and sharing platform for investment</Trans>
         </Text3>
         <ButtonBlock>
-          <ConnectWalletButtonStyled />
+          {
+            account ?
+            <MyAccountButtonStyled>
+              <Link href="/my-account">My Account</Link>
+            </MyAccountButtonStyled> 
+              :
+            <ConnectWalletButtonStyled />
+          }
           <InvestButtonStyled variant={variants.TEXT} onClick={() => router.push('/invest')}>
             <Trans>Invest Now</Trans>
           </InvestButtonStyled>
@@ -363,7 +395,7 @@ const Home2 = () => {
               <RegisterText style={{ color: theme.colors.background, fontWeight: 600, wordBreak: 'keep-all' }}>
                 <Trans>Register Now</Trans>
               </RegisterText>
-              <img src="/images/metafound/arrow.svg" width="28px" />
+              <img src="/images/metafound/arrow.svg" alt="arrow" width="28px" />
             </Flex>
           </RegisterButton>
         </RegisterBox>
@@ -396,7 +428,7 @@ const Home2 = () => {
         >
           <Trans>MetaFound&apos;s Operation</Trans>
         </Text>
-        <img src="/images/metafound/operation.svg" style={{ width: '100%', userSelect: 'none', marginTop: '64px' }} />
+        <img src="/images/metafound/operation.svg" alt="operation" style={{ width: '100%', userSelect: 'none', marginTop: '64px' }} />
       </Section3>
 
       <Section marginTop="150px" />

@@ -48,6 +48,10 @@ const QuillContainer = styled.div`
     height: 40vh;
   }
   margin-top: 20px;
+  .ql-editor {
+    background: #333333;
+    color: #ffffff;
+  }
 `
 
 const HalfRow = styled.div`
