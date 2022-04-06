@@ -6,13 +6,17 @@ import axios from 'axios'
 import moment from 'moment'
 import BigNumber from 'bignumber.js'
 import io from 'socket.io-client'
+import { useCurrencyBalance } from 'state/wallet/hooks'
+import { Token, TokenAmount } from '@pancakeswap/sdk'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
 import unserializedTokens, { serializeTokens, testnetTokens } from '../../../config/constants/tokens'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
-import { Token } from '@pancakeswap/sdk'
-import { useCurrencyBalance } from 'state/wallet/hooks'
+import { getMetafoundAddress } from 'utils/addressHelpers'
+import { useMetafoundContract } from 'hooks/useContract'
+import { useTransactionAdder } from 'state/transactions/hooks'
 
 const Page = styled(Box)``
 
@@ -302,6 +306,7 @@ const TextStyle2 = styled.div`
 const ProgressBlockStepInfoText1 = styled(TextStyle2)`
   color: #868686;
   font-weight: 500;
+  cursor: pointer;
 `
 
 const ProgressBlockText1Step3 = styled(ProgressBlockStepInfoText1)`
@@ -717,8 +722,8 @@ const BlockSearchWithButton = styled(Flex)`
   gap: 10px;
 `
 
-const ButtonInvestSearch = styled.button`
-  background: #fdb814;
+const ButtonInvestSearch = styled.button<{ disabled?: boolean }>`
+  background: ${({ disabled }) => (disabled ? '#8d702a' : '#fdb814')};
   border-radius: 8px;
   outline: none;
   border-color: transparent;
@@ -727,6 +732,7 @@ const ButtonInvestSearch = styled.button`
   height: 32px;
   font-weight: 600;
   font-size: 16px;
+  cursor: pointer;
 `
 
 const GoAccountBtnStep3 = styled(ButtonInvestSearch)`
@@ -1086,13 +1092,90 @@ const InvestDetail = () => {
   }
 
   const handleInvestingProgress = (step) => {
-    if (step > 1) {
-      if (myTier === '' || myTier === 'N/A') return
-      setProgressStep(step)
-    }
+    setProgressStep(step)
   }
 
   const [depositTypedValue, setDepositTypedValue] = useState('')
+  const [withdrawTypedValue, setWithdrawTypedValue] = useState('')
+
+  const getTokenFromAddress = (address: string | undefined): Token | undefined => {
+    if (address === undefined) return undefined
+    const tokenKeyAddress = Object.values(unserializedTokens).reduce(
+      (acc, token) => ({ ...acc, [token.address]: token }),
+      {},
+    )
+    return tokenKeyAddress[address]
+  }
+
+  const contributeToken = getTokenFromAddress(ctbToken)
+
+  const _10 = new BigNumber(10)
+
+  const [approvalAttempt, setApprovalAttempt] = useState(false)
+  const [approval, approveCallback] = useApproveCallback(
+    contributeToken
+      ? new TokenAmount(
+          contributeToken,
+          depositTypedValue
+            ? new BigNumber(depositTypedValue).times(_10.pow(contributeToken.decimals)).toString()
+            : '0',
+        )
+      : undefined,
+    getMetafoundAddress(),
+  )
+
+  const contract = useMetafoundContract()
+
+  const addTransaction = useTransactionAdder()
+
+  const onDeposit = async () => {
+    if (!depositTypedValue) return
+    const value = new BigNumber(depositTypedValue).times(_10.pow(contributeToken.decimals)).toString()
+    if (approval === ApprovalState.APPROVED) {
+      const response = await contract.deposit(detailItem.pid, value)
+      addTransaction(response)
+    } else if (approval !== ApprovalState.PENDING) {
+      setApprovalAttempt(true)
+      try {
+        await approveCallback()
+      } finally {
+        setApprovalAttempt(false)
+      }
+    } else {
+      console.log(`PENDING...`)
+    }
+  }
+
+  const onWithdraw = async () => {
+    if (!withdrawTypedValue) return
+    const value = new BigNumber(withdrawTypedValue).times(_10.pow(contributeToken.decimals)).toString()
+    const response = await contract.withdraw(detailItem.pid, value)
+    addTransaction(response)
+  }
+
+  const [myInvest, setMyInvest] = useState('0')
+
+  useEffect(() => {
+    const getInvestData = async () => {
+      try {
+        const myInvestData = await axios({
+          method: 'get',
+          url: `http://116.118.49.31:8003/api/v1/my-invest/${investId}`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        const myInvestBn = new BigNumber(myInvestData.data.data.myInvest).div(
+          new BigNumber(10).pow(contributeToken.decimals),
+        )
+        setMyInvest(myInvestBn.toFormat(3))
+      } catch (err) {
+        console.log(`err`, err)
+      }
+    }
+
+    getInvestData()
+  }, [accessToken, contributeToken, investId])
 
   const renderInvestingProgress = () => {
     let investProgress = <></>
@@ -1132,11 +1215,22 @@ const InvestDetail = () => {
             </ProgressBlockStepInfoText3>
             <BlockSearchWithButton>
               <BlockSearchInvest>
-                <SearchInput type="number" placeholder="0.00" value={depositTypedValue} />
+                <SearchInput
+                  type="number"
+                  placeholder="0.00"
+                  value={depositTypedValue}
+                  onChange={(e) => setDepositTypedValue(e.currentTarget.value)}
+                />
                 <SearchIcon onClick={() => setDepositTypedValue(balance ? balance.toExact() : '')}>Max</SearchIcon>
                 <CurrencyIcon src="/images/metafound/USDT.svg" />
               </BlockSearchInvest>
-              <ButtonInvestSearch>Invest</ButtonInvestSearch>
+              <ButtonInvestSearch disabled={approval === ApprovalState.PENDING || approvalAttempt} onClick={onDeposit}>
+                {approval === ApprovalState.APPROVED
+                  ? 'Invest'
+                  : approval === ApprovalState.PENDING || approvalAttempt
+                  ? 'Approving...'
+                  : 'Approve'}
+              </ButtonInvestSearch>
             </BlockSearchWithButton>
             {/* <ProgressBlockStepInfoText3Block> */}
             {/*   <ProgressBlockStepInfoText3>1 USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
@@ -1153,7 +1247,9 @@ const InvestDetail = () => {
               <ProgressBlockText2PrimaryStep3 style={{ paddingRight: '5px' }}>
                 My Invest{' '}
               </ProgressBlockText2PrimaryStep3>
-              <ProgressBlockText2Step3>: 0.0000 {findInfoToken()}</ProgressBlockText2Step3>
+              <ProgressBlockText2Step3>
+                : {myInvest} {findInfoToken()}
+              </ProgressBlockText2Step3>
             </BlockWithdrawnStep4>
             <ProgressBlockText1Step3>Transactions history</ProgressBlockText1Step3>
 
@@ -1183,7 +1279,7 @@ const InvestDetail = () => {
                 <SearchIcon>Max</SearchIcon>
                 <CurrencyIcon src="/images/metafound/USDT.svg" />
               </BlockSearchInvest>
-              <ButtonInvestSearchStep4>Withdraw Profit</ButtonInvestSearchStep4>
+              <ButtonInvestSearchStep4 onClick={onWithdraw}>Withdraw Profit</ButtonInvestSearchStep4>
             </BlockSearchWithButton>
             {/* <ProgressBlockStepInfoText3Block> */}
             {/*   <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
@@ -1211,15 +1307,6 @@ const InvestDetail = () => {
       return takeSymbol ? token.symbol : token.decimals
     }
     return null
-  }
-
-  const getTokenFromAddress = (address: string | undefined): Token | undefined => {
-    if (address === undefined) return undefined
-    const tokenKeyAddress = Object.values(unserializedTokens).reduce(
-      (acc, token) => ({ ...acc, [token.address]: token }),
-      {},
-    )
-    return tokenKeyAddress[address]
   }
 
   const balance = useCurrencyBalance(account, getTokenFromAddress(ctbToken))

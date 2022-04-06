@@ -5,6 +5,7 @@ import useTheme from 'hooks/useTheme'
 import Trans from 'components/Trans'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import { variants } from '@uikit/components/Button/types'
+import { useRouter } from 'next/router'
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 60vw, 1300px);
@@ -277,6 +278,8 @@ const MetaFound = () => {
 
 const Home2 = () => {
   const { theme } = useTheme()
+  const router = useRouter()
+
   return (
     <PageWrapper>
       {/* SECTION 1 */}
@@ -289,7 +292,7 @@ const Home2 = () => {
         </Text3>
         <ButtonBlock>
           <ConnectWalletButtonStyled />
-          <InvestButtonStyled variant={variants.TEXT}>
+          <InvestButtonStyled variant={variants.TEXT} onClick={() => router.push('/invest')}>
             <Trans>Invest Now</Trans>
           </InvestButtonStyled>
         </ButtonBlock>

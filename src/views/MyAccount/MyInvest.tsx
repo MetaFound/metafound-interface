@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import {testnetTokens} from 'config/constants/tokens'
+import { testnetTokens } from 'config/constants/tokens'
 import axios from 'axios'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from '../../hooks/useTheme'
@@ -41,17 +41,18 @@ const TableInvest = styled.table`
   }
 `
 
-const MyInvest = ({accessToken}) => {
+const MyInvest = ({ accessToken }) => {
   const [invest, setInvest] = useState([])
 
   useEffect(() => {
     async function getInvest() {
+      console.log(`accessToken`, accessToken)
       const result = await axios({
         method: 'get',
         url: 'http://116.118.49.31:8003/api/v1/users/my-invest',
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
       const convertedInvest = result.data.data
       const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
@@ -80,28 +81,21 @@ const MyInvest = ({accessToken}) => {
           </tr>
         </thead>
         <tbody>
-          {
-            invest.map((item) => (
-              <tr>
-                <td>
-                  {item.name}
-                </td>
-                <td>
-                  {item.status}
-                </td>
-                <td>
-                  { item.totalInvest}
-                </td>
-                <td />
-              </tr>
-            ))
-          }
+          {invest.map((item) => (
+            <tr>
+              <td>{item.name}</td>
+              <td>{item.status}</td>
+              <td>{item.totalInvest}</td>
+              <td />
+            </tr>
+          ))}
         </tbody>
       </TableInvest>
-      {
-        !invest &&
-        <Text fontSize="16px" fontWeight={600} color="#FDB814" textAlign="center">You have not participated in any invest.</Text>
-      }
+      {!invest && (
+        <Text fontSize="16px" fontWeight={600} color="#FDB814" textAlign="center">
+          You have not participated in any invest.
+        </Text>
+      )}
     </MyProfileWrapper>
   )
 }
