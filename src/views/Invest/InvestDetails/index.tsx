@@ -1275,8 +1275,13 @@ const InvestDetail = () => {
             </BlockWithdrawnStep4>
             <BlockSearchWithButton>
               <BlockSearchInvest>
-                <SearchInput type="number" placeholder="0.00" />
-                <SearchIcon>Max</SearchIcon>
+                <SearchInput
+                  type="number"
+                  placeholder="0.00"
+                  value={withdrawTypedValue}
+                  onChange={(e) => setWithdrawTypedValue(e.currentTarget.value)}
+                />
+                <SearchIcon onClick={() => setWithdrawTypedValue(balance ? balance.toExact() : '')}>Max</SearchIcon>
                 <CurrencyIcon src="/images/metafound/USDT.svg" />
               </BlockSearchInvest>
               <ButtonInvestSearchStep4 onClick={onWithdraw}>Withdraw Profit</ButtonInvestSearchStep4>
