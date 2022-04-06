@@ -450,15 +450,14 @@ const Invest = () => {
   }
 
   const numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  }
 
   const calculateCtb = (number, decimal) => {
     if (number === 0) {
       return number
     }
     return numberWithCommas(new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString())
-
   }
 
   const onSearch = () => {
@@ -523,11 +522,11 @@ const Invest = () => {
       <Section marginTop="60px">
         <BlockCommunity>
           <CommunityItem>
-            <CommunityText>68</CommunityText>
+            <CommunityText>2</CommunityText>
             <CommunityContent>IDO Project</CommunityContent>
           </CommunityItem>
           <CommunityItem>
-            <CommunityText>6.868+</CommunityText>
+            <CommunityText>834+</CommunityText>
             <CommunityContent>Community</CommunityContent>
           </CommunityItem>
           <CommunityItem>
