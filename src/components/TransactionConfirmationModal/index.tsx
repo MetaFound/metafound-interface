@@ -10,7 +10,6 @@ import {
   Flex,
   Box,
   Link,
-  Spinner,
   Modal,
   InjectedModalProps,
 } from '@uikit'
