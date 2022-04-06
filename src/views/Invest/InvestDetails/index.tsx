@@ -1090,7 +1090,6 @@ const InvestDetail = () => {
       if (myTier === '' || myTier === 'N/A') return
       setProgressStep(step)
     }
-    console.log(`investDetail`, investDetail)
   }
 
   const [depositTypedValue, setDepositTypedValue] = useState('')
