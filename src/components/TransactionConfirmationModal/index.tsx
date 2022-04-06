@@ -42,7 +42,7 @@ function ConfirmationPendingContent({ pendingText }: { pendingText: string }) {
   return (
     <Wrapper>
       <ConfirmedIcon>
-        <Spinner />
+        <img src="/images/loading.svg"  alt="loading" />
       </ConfirmedIcon>
       <AutoColumn gap="12px" justify="center">
         <Text fontSize="20px">{t('Waiting For Confirmation')}</Text>
