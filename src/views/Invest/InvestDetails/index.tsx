@@ -834,6 +834,14 @@ const APY = styled.div`
   }
 `
 
+const WarningMessageWithdraw = styled.div`
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #868686;
+  margin-top: 16px;
+`
+
 const socket = io(WS_URL, { transports: ['websocket'] })
 socket.on('connect', () => {
   console.log('Connected')
@@ -1305,6 +1313,10 @@ const InvestDetail = () => {
             {/*   <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
             {/*   <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
             {/* </ProgressBlockStepInfoText3Block> */}
+            {
+              timelineStep === 2 &&
+              <WarningMessageWithdraw>*You will be charged a fee: 2% if you withdraw now</WarningMessageWithdraw>
+            }
           </ProgressBlockStepInfo>
         )
     }
