@@ -387,7 +387,7 @@ const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
   width: ${({ width }) => `${width}%`};
-  min-width: 35px;
+  min-width: 55px;
   max-width: 100%;
   border-radius: 10px;
   position: absolute;
@@ -461,7 +461,7 @@ const Invest = () => {
   }
 
   const calculatePercent = (number, number2) => {
-    return numberWithCommas(new BigNumber(number).dividedBy(number2).integerValue())
+    return numberWithCommas(new BigNumber(number).dividedBy(number2).toFixed(2))
   }
 
   const onSearch = () => {
