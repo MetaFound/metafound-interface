@@ -335,7 +335,7 @@ const RealEsate = () => {
               <InputCustom name="investmentTime" value={inputs.investmentTime || ''} onChange={handleChange} />
             </HalfRow>
             <HalfRow>
-              <TextInput>Expected Profit</TextInput>
+              <TextInput>APY</TextInput>
               <InputCustom name="expectedProfit" value={inputs.expectedProfit || ''} onChange={handleChange} />
             </HalfRow>
           </Flex>

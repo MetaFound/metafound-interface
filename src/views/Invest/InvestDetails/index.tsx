@@ -9,14 +9,14 @@ import io from 'socket.io-client'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { Token, TokenAmount } from '@pancakeswap/sdk'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { getMetafoundAddress } from 'utils/addressHelpers'
+import { useMetafoundContract } from 'hooks/useContract'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
 import unserializedTokens, { serializeTokens, testnetTokens } from '../../../config/constants/tokens'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
-import { getMetafoundAddress } from 'utils/addressHelpers'
-import { useMetafoundContract } from 'hooks/useContract'
-import { useTransactionAdder } from 'state/transactions/hooks'
 
 const Page = styled(Box)``
 
@@ -30,7 +30,6 @@ const CarouselBlock = styled.div`
 `
 
 const CarouselImg = styled.img`
-  width: 100%;
   max-width: clamp(1000px, 70vw, 8px);
   margin: 0 auto;
   padding: 0 16px;
@@ -122,7 +121,8 @@ const TimelineProgressSection = styled(Flex)`
   // }
 `
 const ProgressPercentBlock = styled(Flex)`
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   flex: 0 0 100%;
   order: 1;
   @media screen and (min-width: 1477px) {
@@ -208,6 +208,11 @@ const ProgressBlock = styled(Flex)`
 
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 60px 100px;
+  }
+
+  @media screen and (max-width: 1620px)
+  {
+      padding: 30px;
   }
 
   order: 2;
@@ -332,9 +337,10 @@ const ProgressBlockStepInfoText2 = styled(TextStyle2)`
 const ProgressBlockStepInfoTier = styled(Flex)`
   justify-content: space-between;
   margin-bottom: 15px;
-
+  // align-items: center:
   ${({ theme }) => theme.mediaQueries.sm} {
     justify-content: unset;
+    align-items: center;
   }
 `
 
@@ -353,6 +359,7 @@ const ProgressBlockStepInfoTier1 = styled(Flex)`
     min-width: 150px;
     padding: 0 15px;
   }
+
 `
 
 const ProgressBlockStepInfoTier1Text1 = styled(TextStyle2)`
@@ -812,6 +819,19 @@ const SearchIcon = styled.button`
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
+`
+
+const APY = styled.div`
+  background: #fdb814;
+  color: #000;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  display: none;
+  @media screen and (min-width: 1480px) {
+    display: flex;
+  }
 `
 
 const socket = io(WS_URL, { transports: ['websocket'] })
@@ -1408,6 +1428,11 @@ const InvestDetail = () => {
         </LocationBlock>
         <TimelineProgressSection>
           <ProgressPercentBlock>
+            {
+              detailItem?.detail?.expected_profit ?
+              <APY>{`APY: ${detailItem.detail.expected_profit}`}</APY>
+              :<div />
+            }
             <ProgressPercent>
               <TotalContributedCapital>Total Contributed Capital</TotalContributedCapital>
               <PercentBlock>

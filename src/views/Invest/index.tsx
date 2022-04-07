@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 import useTheme from '../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../@uikit'
 
 import calculate from '../../@uikit/components/Svg/Icons/Calculate'
 
-const axios = require('axios')
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 70vw, 1238px);
@@ -411,6 +411,15 @@ const NoData = styled(Flex)`
   color: ${({ theme }) => `${theme.colors.primary}`};
 `
 
+const APY = styled.div`
+  background: #fdb814;
+  color: #000;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+`
+
 const MetaFound = () => {
   const { theme } = useTheme()
   return (
@@ -450,15 +459,14 @@ const Invest = () => {
   }
 
   const numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  }
 
   const calculateCtb = (number, decimal) => {
     if (number === 0) {
       return number
     }
     return numberWithCommas(new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString())
-
   }
 
   const onSearch = () => {
@@ -497,6 +505,7 @@ const Invest = () => {
   }, [status])
 
   const snakeToPascal = (string) => {
+    if (string === 'expected_profit') return 'APY'
     return string
       .split('/')
       .map((snake) =>
@@ -580,14 +589,23 @@ const Invest = () => {
               >
                 <InvestItemImg src={item?.thumbnail} />
                 <InvestItemInfomation>
-                  <InvestItemText1>{item?.name}</InvestItemText1>
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <InvestItemText1>{item?.name}</InvestItemText1>
+                    {
+                      item?.detail?.expected_profit &&
+                      <APY>
+                      {`APY: ${item.detail.expected_profit}`}
+                    </APY>
+                    }
+                  </Flex>
                   <InvestItemText2>Location:</InvestItemText2>
                   <InvestItemText3>{item?.location}</InvestItemText3>
                   <ProjectInformationBlock>
                     <ProjectInformationText1>Project Information:</ProjectInformationText1>
                     <ProjectInformationContent>
-                      {Object.entries(item?.detail ?? {}).map(([key, value], i) => (
-                        <ProjectInformationItem key={i}>
+                      {Object.entries(item?.detail ?? {}).map(([key, value]) => (
+                        key === 'expected_profit' || key === 'ownership_period' ? null :
+                        <ProjectInformationItem key={key}>
                           <ProjectInformationItemKey>{snakeToPascal(key)}</ProjectInformationItemKey>
                           <ProjectInformationItemValue>: {value}</ProjectInformationItemValue>
                         </ProjectInformationItem>
