@@ -387,7 +387,7 @@ const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
   width: ${({ width }) => `${width}%`};
-  min-width: 35px;
+  min-width: 55px;
   max-width: 100%;
   border-radius: 10px;
   position: absolute;
@@ -458,6 +458,10 @@ const Invest = () => {
       return number
     }
     return numberWithCommas(new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString())
+  }
+
+  const calculatePercent = (number, number2) => {
+    return numberWithCommas(new BigNumber(number).dividedBy(number2).toFixed(2))
   }
 
   const onSearch = () => {
@@ -607,14 +611,14 @@ const Invest = () => {
                         {calculateCtb(+item?.totalCtb, findInfoToken(item?.token, false))}
                       </TotalText2>
                       <TotalText1>
-                        /{calculateCtb(+item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
+                        /{calculateCtb(item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
                         {findInfoToken(item?.token)}
                       </TotalText1>
                     </div>
                   </TotalBlock>
                   <PercentBlock>
-                    <ActivePercent width={+Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}>
-                      <NumberPercent>{+Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}%</NumberPercent>
+                    <ActivePercent width={calculatePercent(item?.totalCtb, item?.totalCtbMax)}>
+                      <NumberPercent>{calculatePercent(item?.totalCtb, item?.totalCtbMax)}%</NumberPercent>
                     </ActivePercent>
                   </PercentBlock>
                 </InvestItemInfomation>

@@ -701,7 +701,7 @@ const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
   width: ${({ width }) => `${width}%`};
-  min-width: 35px;
+  min-width: 55px;
   max-width: 100%;
   border-radius: 10px;
   position: absolute;
