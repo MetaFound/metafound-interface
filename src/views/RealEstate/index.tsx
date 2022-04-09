@@ -141,7 +141,6 @@ const RealEsate = () => {
     let owner = ''
 
     function handleTransaction(data) {
-      console.log(2, data)
       if (data.transaction === transactionHash) {
         Swal.fire({
           title: 'Add Pool Successfully',
