@@ -21,6 +21,7 @@ const getLpAddress = (token1: string | Token, token2: string | Token) => {
     }
     token2AsTokenInstance = new Token(ChainId.MAINNET, checksummedToken2Address, 18)
   }
+  if ((token1AsTokenInstance as Token).chainId !== (token2AsTokenInstance as Token).chainId) return undefined
   return Pair.getAddress(token1AsTokenInstance as Token, token2AsTokenInstance as Token)
 }
 

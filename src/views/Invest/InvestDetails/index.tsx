@@ -12,6 +12,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { getMetafoundAddress } from 'utils/addressHelpers'
 import { useMetafoundContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { useCurrentBlock } from 'state/block/hooks'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
@@ -707,7 +708,7 @@ const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
   width: ${({ width }) => `${width}%`};
-  min-width: 35px;
+  min-width: 55px;
   max-width: 100%;
   border-radius: 10px;
   position: absolute;
@@ -848,6 +849,7 @@ socket.on('connect', () => {
 })
 
 const InvestDetail = () => {
+  const blockNumber = useCurrentBlock()
   const { theme } = useTheme()
   const router = useRouter()
   const { account } = useActiveWeb3React()
@@ -910,7 +912,7 @@ const InvestDetail = () => {
       setInvestData(_investData)
       setCtbToken(_investData.token)
     }
-  }, [investId])
+  }, [investId, blockNumber])
 
   useEffect(() => {
     if (investId) {
@@ -1196,14 +1198,29 @@ const InvestDetail = () => {
         const myInvestBn = new BigNumber(myInvestData.data.data.myInvest).div(
           new BigNumber(10).pow(contributeToken.decimals),
         )
-        setMyInvest(myInvestBn.toFormat(3))
+        setMyInvest(myInvestBn.toString())
       } catch (err) {
         console.log(`err`, err)
       }
     }
 
     getInvestData()
-  }, [accessToken, contributeToken, investId])
+  }, [accessToken, contributeToken, investId, blockNumber])
+
+  const [claimableProfit, setClaimableProfit] = useState('0')
+
+  useEffect(() => {
+    const getClaimableProfit = async () => {
+      try {
+        const result = await contract.getPendingProfit(detailItem.pid, account)
+        setClaimableProfit(result.toString())
+      } catch (err) {
+        console.log(`err`, err)
+      }
+    }
+
+    getClaimableProfit()
+  }, [contract, blockNumber, detailItem, account])
 
   const renderInvestingProgress = () => {
     let investProgress = <></>
@@ -1295,19 +1312,27 @@ const InvestDetail = () => {
           <ProgressBlockStepInfo>
             <ProgressBlockStepInfoText2>Enter the amount of tokens you want to withdraw</ProgressBlockStepInfoText2>
             <BlockWithdrawnStep4>
-              <TextBlackWithdrawnStep4>withdrawable</TextBlackWithdrawnStep4>
-              <TextWithdrawnStep4> : 0.000 {findInfoToken()}</TextWithdrawnStep4>
-              <TextWithdrawnStep4 style={{ padding: '0 10px' }}> | </TextWithdrawnStep4>
-              <TextBlackWithdrawnStep4>Profit withdrawn</TextBlackWithdrawnStep4>
-              <TextWithdrawnStep4> : 0.000 {findInfoToken()}</TextWithdrawnStep4>
+              <TextBlackWithdrawnStep4>Claimable profit</TextBlackWithdrawnStep4>
+              <TextWithdrawnStep4>
+                {' '}
+                : {claimableProfit} {findInfoToken()}
+              </TextWithdrawnStep4>
+              {/* <TextWithdrawnStep4 style={{ padding: '0 10px' }}> | </TextWithdrawnStep4> */}
+              {/* <TextBlackWithdrawnStep4>Profit withdrawn</TextBlackWithdrawnStep4> */}
+              {/* <TextWithdrawnStep4> : 0.000 {findInfoToken()}</TextWithdrawnStep4> */}
             </BlockWithdrawnStep4>
             <BlockSearchWithButton>
               <BlockSearchInvest>
-                <SearchInput type="number" placeholder="0.00" />
-                <SearchIcon>Max</SearchIcon>
+                <SearchInput
+                  type="number"
+                  placeholder="0.00"
+                  value={withdrawTypedValue}
+                  onChange={(e) => setWithdrawTypedValue(e.currentTarget.value)}
+                />
+                <SearchIcon onClick={() => setWithdrawTypedValue(myInvest || '')}>Max</SearchIcon>
                 <CurrencyIcon src="/images/metafound/USDT.svg" />
               </BlockSearchInvest>
-              <ButtonInvestSearchStep4 onClick={onWithdraw}>Withdraw Profit</ButtonInvestSearchStep4>
+              <ButtonInvestSearchStep4 onClick={onWithdraw}>Withdraw</ButtonInvestSearchStep4>
             </BlockSearchWithButton>
             {/* <ProgressBlockStepInfoText3Block> */}
             {/*   <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
@@ -1416,6 +1441,11 @@ const InvestDetail = () => {
     ],
   }
 
+  const contributedPercent = new BigNumber(investData?.totalCtb ?? '0')
+    .times(100)
+    .div(investData?.totalCtbMax ?? '1')
+    .toFixed(2)
+
   // @ts-ignore
   return (
     <Page>
@@ -1448,10 +1478,8 @@ const InvestDetail = () => {
             <ProgressPercent>
               <TotalContributedCapital>Total Contributed Capital</TotalContributedCapital>
               <PercentBlock>
-                <ActivePercent width={+Math.round(+investData?.totalCtb / +investData?.totalCtbMax).toFixed(2)}>
-                  <NumberPercent>
-                    {+Math.round(+investData?.totalCtb / +investData?.totalCtbMax).toFixed(2)}%
-                  </NumberPercent>
+                <ActivePercent width={+contributedPercent}>
+                  <NumberPercent>{contributedPercent}%</NumberPercent>
                 </ActivePercent>
               </PercentBlock>
 

@@ -400,7 +400,8 @@ export function usePairAdder(): (pair: Pair) => void {
  * @param tokenA one of the two tokens
  * @param tokenB the other token
  */
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token | undefined {
+  if (tokenA.chainId !== tokenB.chainId) return undefined
   return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'Cake-LP', 'Pancake LPs')
 }
 
@@ -459,7 +460,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list
     const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>((memo, [tokenA, tokenB]) => {
-      const sorted = tokenA.sortsBefore(tokenB)
+      const sorted = tokenA.address.toLowerCase() < tokenB.address.toLowerCase()
       const key = sorted ? `${tokenA.address}:${tokenB.address}` : `${tokenB.address}:${tokenA.address}`
       if (memo[key]) return memo
       memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA]

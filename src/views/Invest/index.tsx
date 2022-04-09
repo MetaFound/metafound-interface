@@ -387,7 +387,7 @@ const ActivePercent = styled.div<{ width: number }>`
   background: #101010;
   height: 20px;
   width: ${({ width }) => `${width}%`};
-  min-width: 35px;
+  min-width: 55px;
   max-width: 100%;
   border-radius: 10px;
   position: absolute;
@@ -469,6 +469,10 @@ const Invest = () => {
     return numberWithCommas(new BigNumber(number).dividedBy(new BigNumber(10).pow(decimal)).toString())
   }
 
+  const calculatePercent = (number, number2) => {
+    return numberWithCommas(new BigNumber(number).dividedBy(number2).toFixed(2))
+  }
+
   const onSearch = () => {
     getData()
   }
@@ -532,11 +536,11 @@ const Invest = () => {
       <Section marginTop="60px">
         <BlockCommunity>
           <CommunityItem>
-            <CommunityText>68</CommunityText>
+            <CommunityText>2</CommunityText>
             <CommunityContent>IDO Project</CommunityContent>
           </CommunityItem>
           <CommunityItem>
-            <CommunityText>6.868+</CommunityText>
+            <CommunityText>834+</CommunityText>
             <CommunityContent>Community</CommunityContent>
           </CommunityItem>
           <CommunityItem>
@@ -626,14 +630,14 @@ const Invest = () => {
                         {calculateCtb(+item?.totalCtb, findInfoToken(item?.token, false))}
                       </TotalText2>
                       <TotalText1>
-                        /{calculateCtb(+item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
+                        /{calculateCtb(item?.totalCtbMax, findInfoToken(item?.token, false))}{' '}
                         {findInfoToken(item?.token)}
                       </TotalText1>
                     </div>
                   </TotalBlock>
                   <PercentBlock>
-                    <ActivePercent width={+Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}>
-                      <NumberPercent>{+Math.round(+item?.totalCtb / +item?.totalCtbMax).toFixed(2)}%</NumberPercent>
+                    <ActivePercent width={calculatePercent(item?.totalCtb, item?.totalCtbMax)}>
+                      <NumberPercent>{calculatePercent(item?.totalCtb, item?.totalCtbMax)}%</NumberPercent>
                     </ActivePercent>
                   </PercentBlock>
                 </InvestItemInfomation>

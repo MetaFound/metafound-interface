@@ -18,7 +18,6 @@ import io from 'socket.io-client'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useRouter } from 'next/router'
 
-
 const WS_URL = '116.118.49.31:8003'
 
 function Loading() {
@@ -32,18 +31,22 @@ const LazyReactQuill = Loadable({
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 70vw, 1238px);
-  padding: 0 16px;
   margin: 0 auto;
   min-height: 100vh;
+  padding: 0 16px 40px;
 `
 const PageContainer = styled.form`
   // background: yellow;
-  background: #fff;
-  padding: 25px;
+  background: transparent;
+  padding-top: 25px;
 `
 
 const QuillContainer = styled.div`
   height: 50vh;
+  border-radius: 20px;
+  .ql-toolbar.ql-snow {
+    background: #fff !important;
+  }
   .ql-container.ql-snow {
     height: 40vh;
   }
@@ -55,29 +58,41 @@ const QuillContainer = styled.div`
 `
 
 const HalfRow = styled.div`
-  width: 48%;
+  width: 100%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 48%;
+  }
 `
 
 const TextInput = styled.div`
   margin-bottom: 10px;
+  color: #fff;
 `
 const InputCustom = styled(Input)`
   background: #fff;
   color: #000;
   border: 1px solid #26213033;
+  width: 100%;
 `
 
 const ButtonSubmit = styled.button`
   background-color: #fdb814;
   color: #000;
-  padding: 14px 19px;
-  border-radius: 5px;
+  padding: 14px 50px;
+  border-radius: 25px;
   display: inline-flex;
   font-size: 16px;
   font-weight: 600;
   justify-content: center;
   cursor: pointer;
   border: none;
+`
+
+const CustomContainerInput = styled(Flex)`
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 15px;
+  gap: 10px;
 `
 
 const socket = io(WS_URL, { transports: ['websocket'] })
@@ -112,8 +127,8 @@ const RealEsate = () => {
         method: 'post',
         url: 'http://116.118.49.31:8003/api/v1/login',
         data: {
-          walletAddress: account
-        }
+          walletAddress: account,
+        },
       })
       setAccessToken(result.data.data.accessToken)
     }
@@ -121,7 +136,6 @@ const RealEsate = () => {
       getAccessToken()
     }
   }, [account])
-
 
   useEffect(() => {
     let owner = ''
@@ -196,7 +210,7 @@ const RealEsate = () => {
     const _ctbMin = new BigNumber(inputs.ctbMin).times(decimals)
 
     const params = [_ctbToken, _withdrawFee, _totalCtbMax.toString(), _ctbMin.toString(), _endCtbTime, _closeTime]
-    
+
     const addPoolContract: TransactionResponse = await contract.addPool(...params)
     if (addPoolContract.hash) {
       setTransactionHash(addPoolContract.hash)
@@ -228,10 +242,10 @@ const RealEsate = () => {
     <PageWrapper>
       {account && ownerAccount && account.toLowerCase() === ownerAccount ? (
         <PageContainer onSubmit={onSubmit}>
-          <Text color="#333" fontSize="24px" fontWeight={500}>
+          <Text color="#fff" fontSize="24px" fontWeight={500}>
             Contract Infomation
           </Text>
-          <Flex justifyContent="space-between" mt="15px">
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Symbol Token</TextInput>
               <InputCustom name="symbolToken" value={inputs.symbolToken || ''} onChange={handleChange} />
@@ -240,8 +254,8 @@ const RealEsate = () => {
               <TextInput>Withdraw Fee</TextInput>
               <InputCustom name="withdrawFee" value={inputs.withdrawFee || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Flex justifyContent="space-between" mt="15px">
+          </CustomContainerInput>
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Total Contribute Max</TextInput>
               <InputCustom name="totalCtbMax" value={inputs.totalCtbMax || ''} onChange={handleChange} />
@@ -250,8 +264,8 @@ const RealEsate = () => {
               <TextInput>Contribute Min</TextInput>
               <InputCustom name="ctbMin" value={inputs.ctbMin || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Flex justifyContent="space-between" mt="15px">
+          </CustomContainerInput>
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>End Contribute Time</TextInput>
               <InputCustom
@@ -270,22 +284,27 @@ const RealEsate = () => {
                 onChange={handleChange}
               />
             </HalfRow>
-          </Flex>
-          <Text color="#333" fontSize="24px" fontWeight={500} mt="25px">
+          </CustomContainerInput>
+          <Text color="#fff" fontSize="24px" fontWeight={500} mt="25px">
             Common Infomation
           </Text>
 
-          <Flex justifyContent="space-between" mt="15px">
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Name</TextInput>
               <InputCustom name="name" value={inputs.name || ''} onChange={handleChange} />
             </HalfRow>
             <HalfRow>
               <TextInput>Images&apos; url</TextInput>
-              <textarea style={{width: '100%', height: 100, border: '1px solid #26213033'}} name="imgUrl" value={inputs.imgUrl || ''} onChange={handleChange} />
+              <textarea
+                style={{ width: '100%', height: 100, border: '1px solid #26213033' }}
+                name="imgUrl"
+                value={inputs.imgUrl || ''}
+                onChange={handleChange}
+              />
             </HalfRow>
-          </Flex>
-          <Flex justifyContent="space-between" mt="15px">
+          </CustomContainerInput>
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Thumbnail</TextInput>
               <InputCustom name="thumbnail" value={inputs.thumbnail || ''} onChange={handleChange} />
@@ -294,8 +313,8 @@ const RealEsate = () => {
               <TextInput>Location</TextInput>
               <InputCustom name="location" value={inputs.location || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Flex justifyContent="space-between" mt="15px">
+          </CustomContainerInput>
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Video</TextInput>
               <InputCustom name="video" value={inputs.video || ''} onChange={handleChange} />
@@ -304,12 +323,12 @@ const RealEsate = () => {
               <TextInput>Map</TextInput>
               <InputCustom name="map" value={inputs.map || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Text color="#333" fontSize="24px" fontWeight={500} mt="25px">
+          </CustomContainerInput>
+          <Text color="#fff" fontSize="24px" fontWeight={500} mt="25px">
             Detail
           </Text>
 
-          <Flex justifyContent="space-between" mt="15px">
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Land Acreage</TextInput>
               <InputCustom name="landAcreage" value={inputs.landAcreage || ''} onChange={handleChange} />
@@ -318,8 +337,8 @@ const RealEsate = () => {
               <TextInput>Construction Area</TextInput>
               <InputCustom name="constructionArea" value={inputs.constructionArea || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Flex justifyContent="space-between" mt="15px">
+          </CustomContainerInput>
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Uses</TextInput>
               <InputCustom name="uses" value={inputs.uses || ''} onChange={handleChange} />
@@ -328,8 +347,8 @@ const RealEsate = () => {
               <TextInput>Juridical</TextInput>
               <InputCustom name="juridical" value={inputs.juridical || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Flex justifyContent="space-between" mt="15px">
+          </CustomContainerInput>
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Investment Time</TextInput>
               <InputCustom name="investmentTime" value={inputs.investmentTime || ''} onChange={handleChange} />
@@ -338,8 +357,8 @@ const RealEsate = () => {
               <TextInput>APY</TextInput>
               <InputCustom name="expectedProfit" value={inputs.expectedProfit || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Flex justifyContent="space-between" mt="15px">
+          </CustomContainerInput>
+          <CustomContainerInput>
             <HalfRow>
               <TextInput>Ownership Period</TextInput>
               <InputCustom name="ownershipPeriod" value={inputs.ownershipPeriod || ''} onChange={handleChange} />
@@ -348,8 +367,8 @@ const RealEsate = () => {
               <TextInput>Formality Use</TextInput>
               <InputCustom name="formalityUse" value={inputs.formalityUse || ''} onChange={handleChange} />
             </HalfRow>
-          </Flex>
-          <Text color="#333" fontSize="24px" fontWeight={500} mt="25px">
+          </CustomContainerInput>
+          <Text color="#fff" fontSize="24px" fontWeight={500} mt="25px">
             General Description
           </Text>
           <QuillContainer>

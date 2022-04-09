@@ -33,9 +33,10 @@ const StyledNav = styled.nav`
   margin: 0 auto;
 `
 
-const FixedContainer = styled.div<{ showMenu: boolean; height: number }>`
+const FixedContainer = styled.div<{ showMenu: boolean; height: number; isOpacity: boolean }>`
   position: fixed;
   top: ${({ showMenu, height }) => (showMenu ? 0 : `-${height}px`)};
+  background: ${({ isOpacity }) => (isOpacity ? `rgba(0, 0, 0, 0.7)` : `none`)};
   left: 0;
   transition: top 0.2s;
   height: ${({ height }) => `${height}px`};
@@ -83,6 +84,7 @@ const Menu: React.FC<NavProps> = ({
 }) => {
   const { isMobile } = useMatchBreakpoints()
   const [showMenu, setShowMenu] = useState(true)
+  const [isOpacity, setOpacity] = useState(true)
   const refPrevOffset = useRef(typeof window === 'undefined' ? 0 : window.pageYOffset)
 
   const topBannerHeight = isMobile ? TOP_BANNER_HEIGHT_MOBILE : TOP_BANNER_HEIGHT
@@ -97,10 +99,12 @@ const Menu: React.FC<NavProps> = ({
       // Always show the menu when user reach the top
       if (isTopOfPage) {
         setShowMenu(true)
+        setOpacity(false)
       }
       // Avoid triggering anything at the bottom because of layout shift
       else if (!isBottomOfPage) {
         if (currentOffset < refPrevOffset.current || currentOffset <= totalTopMenuHeight) {
+          setOpacity(true)
           // Has scroll up
           setShowMenu(true)
         } else {
@@ -127,7 +131,7 @@ const Menu: React.FC<NavProps> = ({
   return (
     <MenuContext.Provider value={{ linkComponent }}>
       <Wrapper>
-        <FixedContainer showMenu={showMenu} height={totalTopMenuHeight}>
+        <FixedContainer showMenu={showMenu} height={totalTopMenuHeight} isOpacity={isOpacity}>
           {banner && <TopBannerContainer height={topBannerHeight}>{banner}</TopBannerContainer>}
           <StyledNav>
             <Flex>
