@@ -424,6 +424,7 @@ const Invest = () => {
   const { theme } = useTheme()
   const router = useRouter()
   const [listDetail, setDataDetail] = useState([])
+  const [dataStatistic, setDataStatistic] = useState(null)
   const [status, setStatus] = useState(1)
   const [searchParam, setSearchParam] = useState('')
 
@@ -491,13 +492,32 @@ const Invest = () => {
         setDataDetail(response?.data?.data?.investPools)
       })
       .catch(function (error) {
-        console.log(123123, error)
+        console.log(error)
       })
   }
 
   useEffect(() => {
     getData()
   }, [status])
+
+  useEffect(() => {
+    getStatistic()
+  }, [])
+
+  const getStatistic = () => {
+    axios
+      .get('http://116.118.49.31:8003/api/v1/invest-pools/statistics')
+      .then(function (response) {
+        setDataStatistic(response.data.data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
+  const convertStatistic = (data) => {
+    return new BigNumber(data).toFixed(0)
+  }
 
   const snakeToPascal = (string) => {
     return string
@@ -526,15 +546,19 @@ const Invest = () => {
       <Section marginTop="60px">
         <BlockCommunity>
           <CommunityItem>
-            <CommunityText>2</CommunityText>
+            <CommunityText>
+              {dataStatistic?.idoProject ? `${convertStatistic(dataStatistic?.idoProject)}` : `0`}
+            </CommunityText>
             <CommunityContent>IDO Project</CommunityContent>
           </CommunityItem>
           <CommunityItem>
-            <CommunityText>834+</CommunityText>
+            <CommunityText>
+              {dataStatistic?.community ? `${convertStatistic(dataStatistic?.community)}+` : `0`}
+            </CommunityText>
             <CommunityContent>Community</CommunityContent>
           </CommunityItem>
           <CommunityItem>
-            <CommunityText>68%</CommunityText>
+            <CommunityText>{dataStatistic?.apy ? `${convertStatistic(dataStatistic?.apy)}%` : `0%`}</CommunityText>
             <CommunityContent>APY</CommunityContent>
           </CommunityItem>
         </BlockCommunity>
