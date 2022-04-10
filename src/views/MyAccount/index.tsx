@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import axios from 'axios'
+import {API_ENDPOINT} from 'config/constants/api'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
@@ -77,7 +78,7 @@ const MyAccount = () => {
     async function getAccessToken() {
       const result = await axios({
         method: 'post',
-        url: 'http://116.118.49.31:8003/api/v1/login',
+        url: `${API_ENDPOINT}/api/v1/login`,
         data: {
           walletAddress: account,
         },
