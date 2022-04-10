@@ -1,1 +1,1 @@
-export const API_ENDPOINT = 'http://116.118.49.31:8003'
+export const API_ENDPOINT = 'https://api.metafound.io'
