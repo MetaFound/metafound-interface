@@ -4,6 +4,7 @@ import { Box, Flex, Input, Text } from '@uikit'
 import axios from 'axios'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import Swal from 'sweetalert2'
+import {API_ENDPOINT} from 'config/constants/api'
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 70vw, 1238px);
@@ -49,7 +50,7 @@ const EditStatistic = () => {
     try {
       const result = await axios({
         method: 'post',
-        url: 'http://116.118.49.31:8003/api/v1/login',
+        url: `${API_ENDPOINT}/api/v1/login`,
         data: {
           walletAddress: account,
         },
@@ -64,7 +65,7 @@ const EditStatistic = () => {
     try {
       const getOwnerRes = await axios({
         method: 'get',
-        url: 'http://116.118.49.31:8003/api/v1/invest-pools/get-owner',
+        url: `${API_ENDPOINT}/api/v1/invest-pools/get-owner`,
       })
       setOwner(getOwnerRes.data.data)
     } catch (e) {
@@ -87,7 +88,7 @@ const EditStatistic = () => {
     try {
       const result = await axios({
         method: 'post',
-        url: 'http://116.118.49.31:8003/api/v1/invest-pools/update-static',
+        url: `${API_ENDPOINT}/api/v1/invest-pools/update-static`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

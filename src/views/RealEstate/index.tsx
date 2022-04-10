@@ -2,13 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components'
 import Loadable from 'react-loadable'
 import 'react-quill/dist/quill.snow.css'
-import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { useMetafoundContract } from 'hooks/useContract'
-import Select from 'react-select'
 import unserializedTokens from 'config/constants/tokens'
-import useTheme from 'hooks/useTheme'
-import Trans from 'components/Trans'
-import { variants } from '@uikit/components/Button/types'
 import { Box, Flex, Input, Text } from '@uikit'
 import { TransactionResponse } from '@ethersproject/providers'
 import axios from 'axios'
@@ -17,8 +12,9 @@ import Swal from 'sweetalert2'
 import io from 'socket.io-client'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useRouter } from 'next/router'
+import {API_ENDPOINT} from 'config/constants/api'
 
-const WS_URL = '116.118.49.31:8003'
+const WS_URL = API_ENDPOINT
 
 function Loading() {
   return <div>Loading...</div>
@@ -115,7 +111,7 @@ const RealEsate = () => {
   const getOwner = async () => {
     const getOwnerRes = await axios({
       method: 'get',
-      url: 'http://116.118.49.31:8003/api/v1/invest-pools/get-owner',
+      url: `${API_ENDPOINT}/api/v1/invest-pools/get-owner`,
     })
     const owner = getOwnerRes.data.data
     return owner
@@ -125,7 +121,7 @@ const RealEsate = () => {
     async function getAccessToken() {
       const result = await axios({
         method: 'post',
-        url: 'http://116.118.49.31:8003/api/v1/login',
+        url: `${API_ENDPOINT}/api/v1/login`,
         data: {
           walletAddress: account,
         },
@@ -216,7 +212,7 @@ const RealEsate = () => {
       try {
         await axios({
           method: 'post',
-          url: 'http://116.118.49.31:8003/api/v1/invest-pools',
+          url: `${API_ENDPOINT}/api/v1/invest-pools`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

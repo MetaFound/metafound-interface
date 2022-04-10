@@ -13,6 +13,7 @@ import { getMetafoundAddress } from 'utils/addressHelpers'
 import { useMetafoundContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useCurrentBlock } from 'state/block/hooks'
+import {API_ENDPOINT} from 'config/constants/api'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
@@ -21,7 +22,7 @@ import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const Page = styled(Box)``
 
-const WS_URL = '116.118.49.31:8003'
+const WS_URL = API_ENDPOINT
 const CarouselSection = styled.div`
   height: 100%;
 `
@@ -850,7 +851,6 @@ socket.on('connect', () => {
 
 const InvestDetail = () => {
   const blockNumber = useCurrentBlock()
-  const { theme } = useTheme()
   const router = useRouter()
   const { account } = useActiveWeb3React()
   const { investId } = router.query
@@ -867,11 +867,12 @@ const InvestDetail = () => {
   const [transactionPageNumber, setTransactionPageNumber] = useState(1)
   const [transactionTotalPage, setTransactionTotalPage] = useState(0)
   const [listTransaction, setListTransaction] = useState([])
+  const [withdrawFeeAndDiscount, setWithdrawFeeAndDiscount] = useState(null)
 
   const getOwner = async () => {
     const getOwnerRes = await axios({
       method: 'get',
-      url: 'http://116.118.49.31:8003/api/v1/invest-pools/get-owner',
+      url: `${API_ENDPOINT}/api/v1/invest-pools/get-owner`,
     })
     const owner = getOwnerRes.data.data
     return owner
@@ -881,7 +882,7 @@ const InvestDetail = () => {
     async function getAccessToken() {
       const result = await axios({
         method: 'post',
-        url: 'http://116.118.49.31:8003/api/v1/login',
+        url: `${API_ENDPOINT}/api/v1/login`,
         data: {
           walletAddress: account,
         },
@@ -896,7 +897,7 @@ const InvestDetail = () => {
 
   const getData = useCallback(() => {
     axios
-      .get(`http://116.118.49.31:8003/api/v1/invest-pools/${investId}`)
+      .get(`${API_ENDPOINT}/api/v1/invest-pools/${investId}`)
       .then(function (response) {
         setDetailItem(response?.data?.data ?? {})
       })
@@ -906,7 +907,7 @@ const InvestDetail = () => {
   }, [investId])
 
   const getInvest = useCallback(async () => {
-    const result = await axios.get(`http://116.118.49.31:8003/api/v1/invest-pools?page=1&limit=9999`)
+    const result = await axios.get(`${API_ENDPOINT}/api/v1/invest-pools?page=1&limit=9999`)
     if (result.data?.data?.investPools) {
       const _investData = result.data.data.investPools.find((pool) => pool.id.toString() === investId)
       setInvestData(_investData)
@@ -947,11 +948,12 @@ const InvestDetail = () => {
     async function getTier() {
       const result = await axios({
         method: 'get',
-        url: 'http://116.118.49.31:8003/api/v1/users/my-tier',
+        url: `${API_ENDPOINT}/api/v1/users/my-tier`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       })
+      console.log(result)
       const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
       const convertedMyPoint = new BigNumber(result.data.data.myPoint).div(decimals)
       const silver = new BigNumber(result.data.data.tier.silver).div(decimals)
@@ -974,19 +976,20 @@ const InvestDetail = () => {
   }, [accessToken])
 
   const getTransactions = useCallback(async () => {
-    if (!account) {
+    if (!account || !investId) {
       return
     }
     const result = await axios({
       method: 'post',
-      url: 'http://116.118.49.31:8003/api/v1/login',
+      url: `${API_ENDPOINT}/api/v1/login`,
       data: {
         walletAddress: account,
       },
     })
     if (result.data.data.accessToken) {
+      console.log('ok', transactionPageNumber)
       axios
-        .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
+        .get(`${API_ENDPOINT}/api/v1/my-invest/${investId}/history`, {
           params: {
             limit: 10,
             page: transactionPageNumber,
@@ -995,7 +998,7 @@ const InvestDetail = () => {
             Authorization: `Bearer ${result.data.data.accessToken}`,
           },
         })
-        .then(function (response) {
+        .then((response) => {
           setListTransaction(response?.data?.data?.transactions ?? [])
           console.log('data transaction: ', response?.data?.data?.transactions)
           setTransactionTotalPage(
@@ -1033,49 +1036,13 @@ const InvestDetail = () => {
         socket.off(`Client-${owner.toLowerCase()}`)
       }
     }
-  }, [router, account, investId, getTransactions])
+  }, [router, account, investId, getTransactions, getData, getInvest])
 
   useEffect(() => {
     if (investId) {
       getTransactions()
     }
   }, [investId, getTransactions])
-
-  //
-  // const getTransactions = async () => {
-  //   if (!account) {
-  //     return
-  //   }
-  //   const result = await axios({
-  //     method: 'post',
-  //     url: 'http://116.118.49.31:8003/api/v1/login',
-  //     data: {
-  //       walletAddress: account,
-  //     },
-  //   })
-  //   if (result.data.data.accessToken) {
-  //     axios
-  //       .get(`http://116.118.49.31:8003/api/v1/my-invest/${investId}/history`, {
-  //         params: {
-  //           limit: 10,
-  //           page: transactionPageNumber,
-  //         },
-  //         headers: {
-  //           Authorization: `Bearer ${result.data.data.accessToken}`,
-  //         },
-  //       })
-  //       .then(function (response) {
-  //         setListTransaction(response?.data?.data?.transactions ?? [])
-  //         console.log('data transaction: ', response?.data?.data?.transactions)
-  //         setTransactionTotalPage(
-  //           response?.data?.data?.totalCount ? Math.ceil(response?.data?.data?.totalCount / 10) : 0,
-  //         )
-  //       })
-  //       .catch((error) => {
-  //         console.error('error:', error.response)
-  //       })
-  //   }
-  // }
 
   const snakeToPascal = (string) => {
     return string
@@ -1190,7 +1157,7 @@ const InvestDetail = () => {
       try {
         const myInvestData = await axios({
           method: 'get',
-          url: `http://116.118.49.31:8003/api/v1/my-invest/${investId}`,
+          url: `${API_ENDPOINT}/api/v1/my-invest/${investId}`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -1198,13 +1165,18 @@ const InvestDetail = () => {
         const myInvestBn = new BigNumber(myInvestData.data.data.myInvest).div(
           new BigNumber(10).pow(contributeToken.decimals),
         )
+        setWithdrawFeeAndDiscount({
+          withdrawFee: myInvestData.data.data.withdrawFee,
+          discountWithdrawFee: myInvestData.data.data.discountWithdrawFee
+        })
         setMyInvest(myInvestBn.toString())
       } catch (err) {
         console.log(`err`, err)
       }
     }
-
-    getInvestData()
+    if (investId && accessToken) {
+      getInvestData()
+    }
   }, [accessToken, contributeToken, investId, blockNumber])
 
   const [claimableProfit, setClaimableProfit] = useState('0')
@@ -1218,9 +1190,10 @@ const InvestDetail = () => {
         console.log(`err`, err)
       }
     }
-
-    getClaimableProfit()
-  }, [contract, blockNumber, detailItem, account])
+    if (detailItem && contract && account) {
+      getClaimableProfit()
+    }
+  }, [contract, detailItem, account])
 
   const renderInvestingProgress = () => {
     let investProgress = <></>
@@ -1340,7 +1313,16 @@ const InvestDetail = () => {
             {/* </ProgressBlockStepInfoText3Block> */}
             {
               timelineStep === 2 &&
-              <WarningMessageWithdraw>*You will be charged a fee: 2% if you withdraw now</WarningMessageWithdraw>
+              <WarningMessageWithdraw>*You will be charged a fee: 15% if you withdraw now</WarningMessageWithdraw>
+            }
+            {
+              timelineStep === 3 && withdrawFeeAndDiscount &&
+              <WarningMessageWithdraw>{`*You will be charged a fee: ${
+                withdrawFeeAndDiscount.withdrawFee * 
+                (1 - (myTier === 'Diamond' ? withdrawFeeAndDiscount.discountWithdrawFee.diamond
+                :myTier === 'Gold' ? withdrawFeeAndDiscount.discountWithdrawFee.gold
+                :withdrawFeeAndDiscount.discountWithdrawFee.silver)) * 100
+              }%`}</WarningMessageWithdraw>
             }
           </ProgressBlockStepInfo>
         )

@@ -4,6 +4,7 @@ import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import {API_ENDPOINT} from 'config/constants/api'
 import useTheme from '../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../@uikit'
 
@@ -489,7 +490,7 @@ const Invest = () => {
   }
   const getData = () => {
     axios
-      .get('http://116.118.49.31:8003/api/v1/invest-pools', {
+      .get(`${API_ENDPOINT}/api/v1/invest-pools`, {
         params: {
           limit: 9999,
           page: 1,
@@ -515,7 +516,7 @@ const Invest = () => {
 
   const getStatistic = () => {
     axios
-      .get('http://116.118.49.31:8003/api/v1/invest-pools/statistics')
+      .get(`${API_ENDPOINT}/api/v1/invest-pools/statistics`)
       .then(function (response) {
         setDataStatistic(response.data.data)
       })
