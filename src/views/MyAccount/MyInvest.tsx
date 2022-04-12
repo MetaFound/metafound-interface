@@ -4,10 +4,7 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { testnetTokens } from 'config/constants/tokens'
 import axios from 'axios'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useTheme from '../../hooks/useTheme'
-import Trans from '../../components/Trans'
-import { variants } from '../../@uikit/components/Button/types'
+import {API_ENDPOINT} from 'config/constants/api'
 import { Box, Flex, Input, Text } from '../../@uikit'
 
 const MyProfileWrapper = styled.div``
@@ -46,10 +43,9 @@ const MyInvest = ({ accessToken }) => {
 
   useEffect(() => {
     async function getInvest() {
-      console.log(`accessToken`, accessToken)
       const result = await axios({
         method: 'get',
-        url: 'http://116.118.49.31:8003/api/v1/users/my-invest',
+        url: `${API_ENDPOINT}/api/v1/users/my-invest`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

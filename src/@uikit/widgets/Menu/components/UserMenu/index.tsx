@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 import axios from 'axios';
-import useAccessToken from "hooks/useAccessToken";
+import {API_ENDPOINT} from 'config/constants/api'
 import { Box, Flex } from "../../../../components/Box";
 import { ChevronDownIcon } from "../../../../components/Svg";
 import { UserMenuProps, variants } from "./types";
@@ -88,7 +88,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
     async function getAccessToken() {
       const result = await axios({
         method: 'post',
-        url: 'http://116.118.49.31:8003/api/v1/login',
+        url: `${API_ENDPOINT}/api/v1/login`,
         data: {
           walletAddress: account
         }

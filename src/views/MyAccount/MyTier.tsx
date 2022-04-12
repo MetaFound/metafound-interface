@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { testnetTokens } from 'config/constants/tokens'
 import axios from 'axios'
+import { useCurrentBlock } from 'state/block/hooks'
+import {API_ENDPOINT} from 'config/constants/api'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
 import { Box, Flex, Input, Text, Button } from '../../@uikit'
-import { useCurrentBlock } from 'state/block/hooks'
 
 const MyProfileWrapper = styled.div``
 
@@ -96,7 +97,7 @@ const MyTier = ({ accessToken, setOutsideTab }) => {
     async function getTier() {
       const result = await axios({
         method: 'get',
-        url: 'http://116.118.49.31:8003/api/v1/users/my-tier',
+        url: `${API_ENDPOINT}/api/v1/users/my-tier`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

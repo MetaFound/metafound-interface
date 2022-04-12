@@ -1,4 +1,4 @@
-import EditStatistic from '../../views/EditStatistic'
+import EditStatistic from 'views/EditStatistic'
 
 const EditStatisticPage = () => {
   return <EditStatistic />
