@@ -84,7 +84,7 @@ const Menu: React.FC<NavProps> = ({
 }) => {
   const { isMobile } = useMatchBreakpoints()
   const [showMenu, setShowMenu] = useState(true)
-  const [isOpacity, setOpacity] = useState(true)
+  const [isOpacity, setOpacity] = useState(false)
   const refPrevOffset = useRef(typeof window === 'undefined' ? 0 : window.pageYOffset)
 
   const topBannerHeight = isMobile ? TOP_BANNER_HEIGHT_MOBILE : TOP_BANNER_HEIGHT
