@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import Footer2 from '@uikit/components/Footer/Footer2'
 import { DropdownMenu } from '@uikit/components/DropdownMenu'
 import MenuItem from '@uikit/components/MenuItem'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import BottomNav from '../../components/BottomNav'
 import { Box } from '../../components/Box'
 import Flex from '../../components/Box/Flex'
@@ -17,7 +18,6 @@ import { MENU_HEIGHT, TOP_BANNER_HEIGHT, TOP_BANNER_HEIGHT_MOBILE } from './conf
 import { NavProps } from './types'
 import LangSelector from '../../components/LangSelector/LangSelector'
 import { MenuContext } from './context'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 const SubItemMyAccount = [
   {
