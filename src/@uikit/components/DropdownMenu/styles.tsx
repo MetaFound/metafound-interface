@@ -51,6 +51,10 @@ export const StyledDropdownMenuItemContainer = styled.div`
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
   }
+  border-bottom: 1px solid #86868680;
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 export const DropdownMenuDivider = styled.hr`
@@ -70,7 +74,7 @@ export const StyledDropdownMenu = styled.div<{ $isOpen: boolean; $isBottomNav: b
   width: ${({ $isBottomNav }) => ($isBottomNav ? "calc(100% - 32px)" : "280px")};
   visibility: visible;
   z-index: 1001;
-
+  border: 1px solid #86868680;
   ${({ $isOpen }) =>
     !$isOpen &&
     `

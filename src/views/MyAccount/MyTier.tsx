@@ -3,8 +3,9 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { testnetTokens } from 'config/constants/tokens'
 import axios from 'axios'
+import Link from 'next/link'
 import { useCurrentBlock } from 'state/block/hooks'
-import {API_ENDPOINT} from 'config/constants/api'
+import { API_ENDPOINT } from 'config/constants/api'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
@@ -85,7 +86,7 @@ const DivBorder = styled.div`
   margin-top: 16px;
 `
 
-const MyTier = ({ accessToken, setOutsideTab }) => {
+const MyTier = ({ accessToken }) => {
   const [tab, setTab] = useState('Reputation Point')
   const [myPoint, setMyPoint] = useState('')
   const [tier, setTier] = useState(null)
@@ -147,7 +148,9 @@ const MyTier = ({ accessToken, setOutsideTab }) => {
                 You currently have <TextSpan color="#FDB814">0 points</TextSpan> earned. You must stake to earn
                 Reputation points.
               </TextSpan>
-              <BtnStake>Stake Now</BtnStake>
+              <Link href="/my-account/my-profile">
+                <BtnStake>Stake Now </BtnStake>
+              </Link>
             </>
           ) : (
             <>
@@ -186,7 +189,9 @@ const MyTier = ({ accessToken, setOutsideTab }) => {
                 </TextSpan>
               )}
 
-              <BtnStake onClick={() => setOutsideTab('my-profile')}>Stake Now</BtnStake>
+              <Link href="/my-account/my-profile">
+                <BtnStake>Stake Now </BtnStake>
+              </Link>
               <DivTablePoint>
                 <TablePoint>
                   <tr>
