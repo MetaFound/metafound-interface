@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import axios from 'axios'
 import useActiveWeb3React from './useActiveWeb3React'
+import { useAccessTokenManager } from 'state/user/hooks'
 
 /**
  * Provides a web3 provider with or without user's signer
@@ -8,8 +9,8 @@ import useActiveWeb3React from './useActiveWeb3React'
  */
 const useAccessToken = () => {
   const { account } = useActiveWeb3React()
-  const [accessToken, setAccessToken] = useState('')
-
+  const [accessToken, onSetAccessToken] = useAccessTokenManager()
+  
   useEffect(() => {
     async function getAccessToken() {
       const result = await axios({

@@ -33,6 +33,7 @@ import {
   setChartViewMode,
   ChartViewMode,
   setSubgraphHealthIndicatorDisplayed,
+  setAccessToken,
 } from './actions'
 import { GAS_PRICE_GWEI } from './hooks/helpers'
 
@@ -84,6 +85,7 @@ export interface UserState {
   watchlistTokens: string[]
   watchlistPools: string[]
   hideTimestampPhishingWarningBanner: number
+  accessToken: string
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -115,6 +117,7 @@ export const initialState: UserState = {
   watchlistTokens: [],
   watchlistPools: [],
   hideTimestampPhishingWarningBanner: null,
+  accessToken: null
 }
 
 export default createReducer(initialState, (builder) =>
@@ -253,5 +256,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setSubgraphHealthIndicatorDisplayed, (state, { payload }) => {
       state.isSubgraphHealthIndicatorDisplayed = payload
-    }),
+    })
+    .addCase(setAccessToken, (state, { payload }) => {
+      state.accessToken = payload
+    })
+    ,
 )

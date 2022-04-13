@@ -38,6 +38,7 @@ import {
   ChartViewMode,
   setChartViewMode,
   setSubgraphHealthIndicatorDisplayed,
+  setAccessToken,
 } from '../actions'
 import { deserializeToken, GAS_PRICE_GWEI, serializeToken } from './helpers'
 
@@ -375,6 +376,20 @@ export function useGasPriceManager(): [string, (userGasPrice: string) => void] {
   )
 
   return [userGasPrice, setGasPrice]
+}
+
+export function useAccessTokenManager(): [string, (newAccessToken: string) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const accessToken = useSelector<AppState, AppState['user']['accessToken']>((state) => state.user.accessToken)
+
+  const onSetAccessToken = useCallback(
+    (newAccessToken: string) => {
+      dispatch(setAccessToken(newAccessToken))
+    },
+    [dispatch],
+  )
+
+  return [accessToken, onSetAccessToken]
 }
 
 function serializePair(pair: Pair): SerializedPair {
