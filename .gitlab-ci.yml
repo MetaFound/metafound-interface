@@ -1,0 +1,16 @@
+image: alpine:latest
+
+deploy-frontend:
+  stage: deploy
+  before_script:
+  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  script:
+  - ssh $SSH_USER@$SSH_HOST "cd metafound-frontend && cp .env.production .env && git pull && yarn && yarn build && pm2 delete frontend && pm2 start yarn --interpreter bash --name frontend -- start"
+  only:
+  - main
