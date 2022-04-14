@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import axios from 'axios'
-import {API_ENDPOINT} from 'config/constants/api'
+import Link from 'next/link'
+import { API_ENDPOINT } from 'config/constants/api'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
@@ -69,8 +70,7 @@ const RightPanel = styled.div`
   }
 `
 
-const MyAccount = () => {
-  const [tab, setTab] = useState('my-profile')
+const MyAccount = ({ tab }) => {
   const { account } = useActiveWeb3React()
   const [accessToken, setAccessToken] = useState('')
 
@@ -94,18 +94,18 @@ const MyAccount = () => {
     <PageWrapper>
       <PageContainer>
         <LeftPanel>
-          <MyAccountItem active={tab === 'my-profile'} onClick={() => setTab('my-profile')}>
-            My Profile
-          </MyAccountItem>
-          <MyAccountItem active={tab === 'my-invest'} onClick={() => setTab('my-invest')}>
-            My Invest
-          </MyAccountItem>
-          <MyAccountItem active={tab === 'my-tier'} onClick={() => setTab('my-tier')}>
-            My Tier{' '}
-          </MyAccountItem>
-          <MyAccountItem active={tab === 'need-help'} onClick={() => setTab('need-help')}>
-            Need Help
-          </MyAccountItem>
+          <Link href="/my-account/my-profile">
+            <MyAccountItem active={tab === 'my-profile'}>My Profile</MyAccountItem>
+          </Link>
+          <Link href="/my-account/my-invest">
+            <MyAccountItem active={tab === 'my-invest'}>My Invest </MyAccountItem>
+          </Link>
+          <Link href="/my-account/my-tier">
+            <MyAccountItem active={tab === 'my-tier'}>My Tier </MyAccountItem>
+          </Link>
+          <Link href="/my-account/need-help">
+            <MyAccountItem active={tab === 'need-help'}>Need Help </MyAccountItem>
+          </Link>
         </LeftPanel>
         <RightPanel>
           {tab === 'my-profile' ? (
@@ -113,7 +113,7 @@ const MyAccount = () => {
           ) : tab === 'my-invest' ? (
             <MyInvest accessToken={accessToken} />
           ) : tab === 'my-tier' ? (
-            <MyTier accessToken={accessToken} setOutsideTab={setTab} />
+            <MyTier accessToken={accessToken} />
           ) : (
             <NeedHelp />
           )}

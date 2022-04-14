@@ -1,6 +1,11 @@
 import throttle from 'lodash/throttle'
 import React, { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
+import Footer2 from '@uikit/components/Footer/Footer2'
+import { DropdownMenu } from '@uikit/components/DropdownMenu'
+import MenuItem from '@uikit/components/MenuItem'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import BottomNav from '../../components/BottomNav'
 import { Box } from '../../components/Box'
 import Flex from '../../components/Box/Flex'
@@ -13,7 +18,25 @@ import { MENU_HEIGHT, TOP_BANNER_HEIGHT, TOP_BANNER_HEIGHT_MOBILE } from './conf
 import { NavProps } from './types'
 import LangSelector from '../../components/LangSelector/LangSelector'
 import { MenuContext } from './context'
-import Footer2 from '@uikit/components/Footer/Footer2'
+
+const SubItemMyAccount = [
+  {
+    label: 'My Profile',
+    href: '/my-account/my-profile',
+  },
+  {
+    label: 'My Invest',
+    href: '/my-account/my-invest',
+  },
+  {
+    label: 'My Tier',
+    href: '/my-account/my-tier',
+  },
+  {
+    label: 'Need Help',
+    href: '/my-account/need-help',
+  },
+]
 
 const Wrapper = styled.div`
   position: relative;
@@ -63,6 +86,16 @@ const Inner = styled.div<{ isPushed: boolean; showMenu: boolean }>`
   max-width: 100%;
 `
 
+const MyAccountItem = styled.div<{ isActive: boolean }>`
+  cursor: pointer;
+  padding: 0 16px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: ${({ isActive }) => (isActive ? '#FDB814' : '#fff')};
+`
+
 const Menu: React.FC<NavProps> = ({
   linkComponent = 'a',
   userMenu,
@@ -84,7 +117,9 @@ const Menu: React.FC<NavProps> = ({
 }) => {
   const { isMobile } = useMatchBreakpoints()
   const [showMenu, setShowMenu] = useState(true)
-  const [isOpacity, setOpacity] = useState(false)
+  const [isOpacity, setOpacity] = useState(true)
+  const { pathname } = useRouter()
+  const { account } = useActiveWeb3React()
   const refPrevOffset = useRef(typeof window === 'undefined' ? 0 : window.pageYOffset)
 
   const topBannerHeight = isMobile ? TOP_BANNER_HEIGHT_MOBILE : TOP_BANNER_HEIGHT
@@ -144,7 +179,14 @@ const Menu: React.FC<NavProps> = ({
                   <CakePrice cakePriceUsd={cakePriceUsd} />
                 </Box>
               )} */}
+              {account && (
+                <DropdownMenu items={SubItemMyAccount} activeItem="/my-account" mr="20px">
+                  <MyAccountItem isActive={pathname.includes('/my-account')}>My Account</MyAccountItem>
+                </DropdownMenu>
+              )}
+
               {userMenu}
+
               <Box mt="8px" ml="12px">
                 <LangSelector
                   currentLang={currentLang}

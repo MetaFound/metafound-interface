@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { usePopper } from "react-popper";
-import styled from "styled-components";
-import axios from 'axios';
-import {API_ENDPOINT} from 'config/constants/api'
-import { Box, Flex } from "../../../../components/Box";
-import { ChevronDownIcon } from "../../../../components/Svg";
-import { UserMenuProps, variants } from "./types";
-import MenuIcon from "./MenuIcon";
-import { UserMenuItem } from "./styles";
+import React, { useEffect, useState } from 'react'
+import { usePopper } from 'react-popper'
+import styled from 'styled-components'
+import axios from 'axios'
+import { API_ENDPOINT } from 'config/constants/api'
+import { Box, Flex } from '../../../../components/Box'
+import { ChevronDownIcon } from '../../../../components/Svg'
+import { UserMenuProps, variants } from './types'
+import MenuIcon from './MenuIcon'
+import { UserMenuItem } from './styles'
 
 export const StyledUserMenu = styled(Flex)`
   align-items: center;
@@ -90,8 +90,8 @@ const UserMenu: React.FC<UserMenuProps> = ({
         method: 'post',
         url: `${API_ENDPOINT}/api/v1/login`,
         data: {
-          walletAddress: account
-        }
+          walletAddress: account,
+        },
       })
       if (result.data) {
         localStorage.setItem('ACCESS_TOKEN', result.data.data.accessToken)
@@ -142,7 +142,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
         <ChevronDownIcon color="text" width="24px" />
       </StyledUserMenu>
       <Menu
-        style={{ ...styles.popper, transform: 'translate3d(-16px, 98px, 0)' }}
+        style={{ ...styles.popper, transform: 'translate3d(-16px, 98px, 0)', border: '1px solid #86868680' }}
         ref={setTooltipRef}
         {...attributes.popper}
         isOpen={isOpen}
