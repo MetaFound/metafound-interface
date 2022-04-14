@@ -4,6 +4,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import axios from 'axios'
 import Link from 'next/link'
 import { API_ENDPOINT } from 'config/constants/api'
+import { useAccessTokenManager } from 'state/user/hooks'
 import useTheme from '../../hooks/useTheme'
 import Trans from '../../components/Trans'
 import { variants } from '../../@uikit/components/Button/types'
@@ -71,24 +72,7 @@ const RightPanel = styled.div`
 `
 
 const MyAccount = ({ tab }) => {
-  const { account } = useActiveWeb3React()
-  const [accessToken, setAccessToken] = useState('')
-
-  useEffect(() => {
-    async function getAccessToken() {
-      const result = await axios({
-        method: 'post',
-        url: `${API_ENDPOINT}/api/v1/login`,
-        data: {
-          walletAddress: account,
-        },
-      })
-      setAccessToken(result.data.data.accessToken)
-    }
-    if (account) {
-      getAccessToken()
-    }
-  }, [account])
+  const [accessToken] = useAccessTokenManager()
 
   return (
     <PageWrapper>

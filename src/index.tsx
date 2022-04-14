@@ -4,10 +4,12 @@ import useActiveWeb3React from './hooks/useActiveWeb3React'
 import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
+import UserUpdater from './state/user/updater'
 
 export function Updaters() {
   return (
     <>
+      <UserUpdater />
       <ListsUpdater />
       <TransactionUpdater />
       <MulticallUpdater />

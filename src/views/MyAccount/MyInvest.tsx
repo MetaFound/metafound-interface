@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import { testnetTokens } from 'config/constants/tokens'
 import axios from 'axios'
 import {API_ENDPOINT} from 'config/constants/api'
+import useAxiosCallback from 'hooks/useAxiosCallback'
 import { Box, Flex, Input, Text } from '../../@uikit'
 
 const MyProfileWrapper = styled.div``
@@ -40,15 +41,12 @@ const TableInvest = styled.table`
 
 const MyInvest = ({ accessToken }) => {
   const [invest, setInvest] = useState([])
+  const api = useAxiosCallback()
 
   useEffect(() => {
     async function getInvest() {
-      const result = await axios({
-        method: 'get',
-        url: `${API_ENDPOINT}/api/v1/users/my-invest`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+      const result: any = await api({
+        endpoint: `api/v1/users/my-invest`
       })
       const convertedInvest = result.data.data
       const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
@@ -61,7 +59,7 @@ const MyInvest = ({ accessToken }) => {
     if (accessToken) {
       getInvest()
     }
-  }, [accessToken])
+  }, [accessToken, api])
 
   return (
     <MyProfileWrapper>
@@ -72,8 +70,8 @@ const MyInvest = ({ accessToken }) => {
           <tr>
             <th>Project Name</th>
             <th>Status</th>
-            <th>total investment</th>
-            <th>Profit</th>
+            <th>Total investment</th>
+            {/* <th>Profit</th> */}
           </tr>
         </thead>
         <tbody>
@@ -82,7 +80,7 @@ const MyInvest = ({ accessToken }) => {
               <td>{item.name}</td>
               <td>{item.status}</td>
               <td>{item.totalInvest}</td>
-              <td />
+              {/* <td /> */}
             </tr>
           ))}
         </tbody>
