@@ -5,9 +5,9 @@
   "scripts": {
     "analyze": "ANALYZE=true yarn build",
     "dev": "next dev -p 20236",
-    "build": "next build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
     "build:dev": "env-cmd -f .env.development next build",
-    "start": "next start",
+    "start": "NODE_OPTIONS=--max-old-space-size=4096 next start",
     "test": "jest",
     "test:config": "jest src/config/__tests__/ --testPathIgnorePatterns",
     "integration-test": "start-server-and-test start http://localhost:3000 'cypress run'",
