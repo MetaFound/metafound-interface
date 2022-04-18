@@ -13,9 +13,8 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     background-color: ${({ theme }) => theme.colors.background};
-    background-image: url('/images/metafound/bg-home.png');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url('/images/metafound/bg-mtf.png');
+    background-size: 100%;
 
     img {
       height: auto;

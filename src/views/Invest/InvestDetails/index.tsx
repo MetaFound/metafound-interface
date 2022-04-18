@@ -29,14 +29,17 @@ const CarouselSection = styled.div`
 
 const CarouselBlock = styled.div`
   outline: none;
+  padding: 0 54px;
 `
 
 const CarouselImg = styled.img`
-  max-width: clamp(1000px, 70vw, 8px);
-  margin: 0 auto;
-  padding: 0 16px;
   border-radius: 20px;
-  height: 500px;
+  width: 100%;
+  object-fit: cover;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin: 0 54px;
+    height: 500px;
+  }
 `
 
 const PageWrapper = styled(Box)`
@@ -89,7 +92,7 @@ const LocationInfoCity = styled.div`
   font-size: 18px;
   font-weight: 700;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 22px;
   }
 `
@@ -99,7 +102,7 @@ const LocationInfoText = styled.div`
   font-size: 14px;
   font-weight: 400;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
   }
 `
@@ -108,7 +111,7 @@ const LocationInfoAddress = styled.div`
   font-weight: 500;
   font-size: 16px;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 18px;
   }
 `
@@ -146,9 +149,12 @@ const TimelineBlock = styled(Flex)`
 `
 const TimelineBlockTitle = styled(Flex)`
   font-weight: 600;
-  font-size: 20px;
-  line-height: 30px;
+  font-size: 16px;
   margin-bottom: 26px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 20px;
+  line-height: 30px;
+  }
 `
 
 const TimelineItem = styled(Flex)`
@@ -192,10 +198,8 @@ const TimelineContent = styled.div`
 
 const TimelineContentTitle = styled.div`
   font-weight: 500;
-  font-size: 18px;
-  line-height: 30px;
-
-  ${({ theme }) => theme.mediaQueries.sm} {
+  font-size: 16px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
 `
@@ -226,9 +230,9 @@ const ProgressBlock = styled(Flex)`
 const ProgressBlockTitle = styled(Flex)`
   justify-content: center;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
 `
@@ -269,17 +273,17 @@ const ProgressBlockStepItemNumber = styled(Flex)<{ active: boolean }>`
 
 const ProgressBlockStepItemText = styled(Flex)<{ active: boolean }>`
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 20px;
   gap: 5px;
   margin-top: 10px;
   border-radius: 5px;
-  padding: 0 5px;
+  padding: 0 15px;
   text-align: center;
   background: ${({ active }) => `${active ? '#fdb814' : 'unset'}`};
   color: ${({ active }) => `${active ? '#000' : 'unset'}`};
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
     padding: 0 15px;
     gap: unset;
@@ -305,7 +309,7 @@ const ProgressBlockStepInfo = styled.div`
 const TextStyle2 = styled.div`
   font-size: 14px;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
   }
 `
@@ -427,8 +431,8 @@ const ProjectInfoSection = styled(Section)`
 
 const ProjectInfoSectionTitle = styled.div`
   font-weight: 600;
-  font-size: 25px;
-  line-height: 30px;
+  font-size: 20px;
+
   padding-bottom: 20px;
   position: relative;
 
@@ -440,6 +444,10 @@ const ProjectInfoSectionTitle = styled.div`
     bottom: 0;
     left: 0;
     background: #fdb814;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 25px;
+    line-height: 30px;
   }
 `
 
@@ -493,7 +501,7 @@ const ProjectInfoContentDetailGeneralContentTitle = styled.div`
     background: #fdb814;
   }
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
 `
@@ -566,7 +574,7 @@ const ProjectInfoContentTransactionsTitle = styled.div`
     background: #fdb814;
   }
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 22px;
   }
 `
@@ -637,8 +645,11 @@ const NoData = styled(Flex)`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   color: ${({ theme }) => `${theme.colors.primary}`};
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 18px;
+  }
 `
 const ProgressPercent = styled(Flex)`
   justify-content: flex-end;

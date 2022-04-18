@@ -4,6 +4,7 @@ import unserializedTokens, { testnetTokens } from 'config/constants/tokens'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import style from 'style/InvestStyle'
 import {API_ENDPOINT} from 'config/constants/api'
 import useTheme from '../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../@uikit'
@@ -41,8 +42,9 @@ const Text1 = styled.span`
   font-size: 32px;
   line-height: 1.5;
   color: ${({ theme }) => `${theme.colors.text}`};
+  font-size: 36px;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 50px;
     line-height: 70px;
   }
@@ -52,9 +54,12 @@ const Text2 = styled(Text)`
   font-weight: 300;
   font-size: 22px;
   line-height: 2;
-  margin-top: 48px;
   color: ${({ theme }) => `${theme.colors.text}`};
-  ${({ theme }) => theme.mediaQueries.sm} {
+  font-size: 16px;
+  margin-top: 16px;
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    margin-top: 48px;
     font-size: 25.9px;
     line-height: 45px;
   }
@@ -96,16 +101,23 @@ const CommunityItem = styled(Text)`
 `
 
 const CommunityText = styled.div`
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 45px;
+  line-height: 40px;
   color: ${({ theme }) => `${theme.colors.primary}`};
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 30px;
+    line-height: 45px;
+  }
 `
 
 const CommunityContent = styled.div`
   font-weight: 300;
-  font-size: 22px;
+  font-size: 16px;
   line-height: 45px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 22px;
+  }
 `
 
 const LineBreak = styled.div`
@@ -121,7 +133,7 @@ const ProjectListText = styled(Text)`
   margin-top: 16px;
   align-self: flex-start;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 30px;
     font-weight: 700;
     margin-top: 20px;
@@ -175,11 +187,13 @@ const FilterButtonItem = styled.div<{ status: boolean }>`
   cursor: pointer;
   text-align: center;
   background: ${({ status }) => `${status ? '#FDB814' : 'none'}`};
+  width: unset;
 
-  ${({ theme }) => theme.mediaQueries.lg} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     width: unset;
     font-size: 18px;
   }
+
 `
 
 const BlockSearch = styled.div`
@@ -268,10 +282,13 @@ const InvestItemInfomation = styled.div`
 `
 
 const InvestItemText1 = styled(Text)`
-  font-size: 22px;
-  line-height: 30px;
+  font-size: 18px;
   font-weight: 700;
   color: ${({ theme }) => `${theme.colors.text}`};
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 22px;
+    line-height: 30px;
+  }
 `
 
 const InvestItemText2 = styled(Text)`
@@ -279,7 +296,7 @@ const InvestItemText2 = styled(Text)`
   line-height: 30px;
   color: #828282;
   margin-top: 5px;
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
   }
 `
@@ -288,7 +305,7 @@ const InvestItemText3 = styled(Text)`
   font-size: 16px;
   line-height: 30px;
   color: ${({ theme }) => `${theme.colors.text}`};
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 18px;
   }
 `
@@ -302,12 +319,12 @@ const ProjectInformationBlock = styled.div`
 
 const ProjectInformationText1 = styled(Text)`
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.5;
   margin-bottom: 10px;
   color: ${({ theme }) => `${theme.colors.text}`};
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
     margin-bottom: 3px;
   }
@@ -319,17 +336,18 @@ const ProjectInformationContent = styled(Flex)`
 `
 
 const ProjectInformationItem = styled.div`
-  width: 280px;
+  width: 50%;
   font-size: 14px;
   line-height: 30px;
   height: 30px;
-  ${({ theme }) => theme.mediaQueries.sm} {
+  display: flex;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
   }
 `
 
 const ProjectInformationItemKey = styled.div`
-  width: 155px;
+  width: 140px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -339,7 +357,7 @@ const ProjectInformationItemKey = styled.div`
 `
 
 const ProjectInformationItemValue = styled.div`
-  width: 124px;
+  // width: 124px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -361,7 +379,7 @@ const TotalText1 = styled(Text)`
   display: inline-block;
   color: #959595;
   font-weight: 400;
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
   }
 `
@@ -371,7 +389,7 @@ const TotalText2 = styled(Text)`
   font-weight: 600;
   font-size: 14px;
   color: ${({ theme }) => `${theme.colors.text}`};
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
   }
 `
@@ -418,7 +436,10 @@ const APY = styled.div`
   padding: 10px 15px;
   border-radius: 10px;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const MetaFound = () => {
@@ -671,6 +692,7 @@ const Invest = () => {
           })}
         {listDetail.length <= 0 && <NoData>No data</NoData>}
       </SectionInvest>
+      <style jsx global>{style}</style>
     </PageWrapper>
   )
 }

@@ -56,10 +56,10 @@ const StyledNav = styled.nav`
   margin: 0 auto;
 `
 
-const FixedContainer = styled.div<{ showMenu: boolean; height: number; isOpacity: boolean }>`
+const FixedContainer = styled.div<{ height: number }>`
   position: fixed;
-  top: ${({ showMenu, height }) => (showMenu ? 0 : `-${height}px`)};
-  background: ${({ isOpacity }) => (isOpacity ? `rgba(0, 0, 0, 0.7)` : `none`)};
+  top: 0;
+  background: rgba(0, 0, 0, 0.7);
   left: 0;
   transition: top 0.2s;
   height: ${({ height }) => `${height}px`};
@@ -166,7 +166,7 @@ const Menu: React.FC<NavProps> = ({
   return (
     <MenuContext.Provider value={{ linkComponent }}>
       <Wrapper>
-        <FixedContainer showMenu={showMenu} height={totalTopMenuHeight} isOpacity={isOpacity}>
+        <FixedContainer height={totalTopMenuHeight}>
           {banner && <TopBannerContainer height={topBannerHeight}>{banner}</TopBannerContainer>}
           <StyledNav>
             <Flex>

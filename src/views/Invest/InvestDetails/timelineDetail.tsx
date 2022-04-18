@@ -18,9 +18,9 @@ const TimelineContent = styled.div`
 
 const TimelineContentTitle = styled.div`
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 30px;
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
 `
@@ -32,22 +32,37 @@ const TimelineContentBody = styled.div<{ visible: boolean }>`
 const TimelineContentFromTo = styled(Flex)<{ visible: boolean }>`
   justify-content: space-between;
   display: ${({ visible }) => `${visible ? 'flex' : 'none'}`};
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const TextStyle1 = styled.div`
   justify-content: space-between;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 30px;
   font-weight: 400;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const TimelineContentFromToTitle = styled(TextStyle1)`
   color: #868686;
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const TimelineContentStartIn = styled(TextStyle1)<{ visible: boolean }>`
   margin-top: 10px;
   display: ${({ visible }) => `${visible ? 'block' : 'none'}`};
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const TimelineContentStartInBlock = styled(Flex)<{ visible: boolean }>`
@@ -72,10 +87,13 @@ const TimelineContentStartInTimeBox = styled(Flex)`
   width: 40px;
   height: 40px;
   border-radius: 4px;
-  font-size: 18px;
   font-weight: 400;
   justify-content: center;
   align-items: center;
+  font-size: 16px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 18px;
+  }
 `
 
 const TimelineContentStartInTimeText = styled(Flex)`
