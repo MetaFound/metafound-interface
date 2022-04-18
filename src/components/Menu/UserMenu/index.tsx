@@ -56,10 +56,6 @@ const UserMenu = () => {
     }
   }
 
-  const clickMyAccount = () => {
-    router.push('/my-account')
-  }
-
   const UserMenuItems = () => {
     return (
       <>
