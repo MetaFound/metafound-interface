@@ -56,16 +56,9 @@ const UserMenu = () => {
     }
   }
 
-  const clickMyAccount = () => {
-    router.push('/my-account')
-  }
-
   const UserMenuItems = () => {
     return (
       <>
-        <UserMenuItem as="button" onClick={clickMyAccount}>
-          {t('My Account')}
-        </UserMenuItem>
         <WalletUserMenuItem
           hasLowBnbBalance={hasLowBnbBalance}
           isWrongNetwork={isWrongNetwork}

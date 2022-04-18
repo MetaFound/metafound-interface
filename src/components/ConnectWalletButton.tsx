@@ -1,4 +1,4 @@
-import { Button, useWalletModal } from '@uikit'
+import { Button, useMatchBreakpoints, useWalletModal } from '@uikit'
 import styled from 'styled-components'
 import useAuth from 'hooks/useAuth'
 import { useTranslation } from 'contexts/Localization'
@@ -15,10 +15,12 @@ const ConnectWalletButton = (props) => {
   const { t } = useTranslation()
   const { login, logout } = useAuth()
   const { onPresentConnectModal } = useWalletModal(login, logout, t)
+  const { isMobile } = useMatchBreakpoints();
+
 
   return (
     <ButtonConnenctWallet onClick={onPresentConnectModal} {...props}>
-      <Trans>Connect Wallet</Trans>
+      <Trans>{isMobile ? "Connect":"Connect Wallet"}</Trans>
     </ButtonConnenctWallet>
   )
 }

@@ -8,6 +8,7 @@ import { variants } from '@uikit/components/Button/types'
 import { useRouter } from 'next/router'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import Link from 'next/link'
+import style from 'style/HomeStyle'
 
 const PageWrapper = styled(Box)`
   max-width: clamp(1000px, 60vw, 1300px);
@@ -17,27 +18,29 @@ const PageWrapper = styled(Box)`
 
 const Text1 = styled(Text)`
   font-weight: 800;
-  font-size: clamp(32px, 5vw, 65px);
   text-transform: uppercase;
+  font-size: 40px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: clamp(32px, 5vw, 65px);
+  }
 `
 
 const Text2 = styled(Text)`
   font-weight: 700;
-  font-size: 32px;
   line-height: 45px;
-
-  ${({ theme }) => theme.mediaQueries.sm} {
+  font-size: 20px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 35px;
   }
 `
 
 const Text3 = styled(Text)`
   font-weight: 300;
-  font-size: clamp(20px, 2vw, 30px);
   margin-top: 16px;
-
-  ${({ theme }) => theme.mediaQueries.sm} {
+  font-size: 16px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     margin-top: 32px;
+    font-size: clamp(20px, 2vw, 30px);
   }
 `
 
@@ -46,7 +49,7 @@ const Text4 = styled(Text)`
   font-size: 16px;
   line-height: 35px;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
 `
@@ -56,10 +59,17 @@ const Section = styled(Flex)`
   justify-content: center;
   align-items: center;
   text-align: center;
+  margin-top: 14vw;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    margin-top: 22vh;
+  }
 `
 
 const Section2 = styled(Section)`
-  margin-top: 300px;
+  margin-top: 22vw;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    margin-top: 300px;
+  }
 `
 
 const Section3 = styled(Section)`
@@ -76,6 +86,10 @@ const ButtonBlock = styled(Flex)`
   margin-top: 32px;
 
   ${({ theme }) => theme.mediaQueries.sm} {
+    margin-top: 48px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     margin-top: 64px;
   }
 `
@@ -84,18 +98,19 @@ const ConnectWalletButtonStyled = styled(ConnectWalletButton)`
   color: ${({ theme }) => `${theme.colors.background}`};
   border-radius: 10px;
   font-weight: 600;
-  width: 150px;
+  padding: 9px 20px;
   max-width: 100%;
   height: 50px;
   font-size: 12px;
 
+  height: 36px;
+  font-size: 14px;
+
   ${({ theme }) => theme.mediaQueries.sm} {
-    height: 60px;
-    font-size: 18px;
-    width: 200px;
+    padding: 9px 20px;
   }
 
-  ${({ theme }) => theme.mediaQueries.md} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     height: 75px;
     font-size: 25px;
     width: 300px;
@@ -106,18 +121,21 @@ const MyAccountButtonStyled = styled(Button)`
   color: ${({ theme }) => `${theme.colors.background}`};
   border-radius: 10px;
   font-weight: 600;
-  width: 150px;
+  padding: 9px 20px;
   max-width: 100%;
   height: 50px;
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
-    height: 60px;
-    font-size: 18px;
-    width: 200px;
-  }
+  // ${({ theme }) => theme.mediaQueries.sm} {
+  //   height: 60px;
+  //   font-size: 18px;
+  //   width: 200px;
+  // }
+  height: 36px;
+  font-size: 14px;
+  // width: 144px;
 
-  ${({ theme }) => theme.mediaQueries.md} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     height: 75px;
     font-size: 25px;
     width: 300px;
@@ -128,18 +146,20 @@ const InvestButtonStyled = styled(Button)`
   border: ${({ theme }) => `1px solid ${theme.colors.primary}`};
   border-radius: 10px;
   font-weight: 600;
-  width: 150px;
+  padding: 9px 20px;
+
   max-width: 100%;
   height: 50px;
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
-    height: 60px;
-    font-size: 18px;
-    width: 200px;
-  }
-
-  ${({ theme }) => theme.mediaQueries.md} {
+  // ${({ theme }) => theme.mediaQueries.sm} {
+  //   height: 60px;
+  //   font-size: 18px;
+  //   width: 200px;
+  // }
+  height: 36px;
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     height: 75px;
     font-size: 25px;
     width: 300px;
@@ -182,8 +202,8 @@ const Page2IconShadow = styled.img`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 280px;
-  min-height: 280px;
+  min-width: 120px;
+  min-height: 120px;
   z-index: 1;
 `
 
@@ -192,8 +212,8 @@ const Page2Text = styled(Text)`
   margin-top: 32px;
   max-width: 25ch;
   font-weight: 500;
-
-  ${({ theme }) => theme.mediaQueries.sm} {
+  padding: 0 10px;
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 18px;
     font-weight: 600;
   }
@@ -220,7 +240,7 @@ const RegisterText = styled(Text)`
   max-width: 70ch;
   text-align: left;
 
-  ${({ theme }) => theme.mediaQueries.sm} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
 `
@@ -233,7 +253,7 @@ const RegisterButton = styled(Button)`
   font-size: 22px;
   font-weight: 600;
 
-  ${({ theme }) => theme.mediaQueries.md} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 25px;
     height: 70px;
   }
@@ -241,13 +261,13 @@ const RegisterButton = styled(Button)`
 
 const Section4Text = styled(Text)`
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   width: 100%;
   padding: 16px;
   background: linear-gradient(270deg, #443000 0%, #855e00 34.68%, #ba8300 68.12%, #fdb814 100%);
   border-radius: 15px;
 
-  ${({ theme }) => theme.mediaQueries.md} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     padding: 32px 0;
     font-size: 18px;
   }
@@ -265,7 +285,7 @@ const Section4Text2 = styled(Text)`
   padding: 16px;
   font-size: 16px;
 
-  ${({ theme }) => theme.mediaQueries.lg} {
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
     padding: 32px 58px;
   }
@@ -291,6 +311,19 @@ const Section4RowCol = styled(Flex)`
   }
 `
 
+const Section3Text5 = styled(Text)`
+  font-size: 20px;
+  font-weight: 600;
+  padding-left: 16px;
+  border-left: 4px solid rgb(253, 184, 20);
+  align-self: flex-start;
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 30px;
+  }
+`
+
+
 const MetaFound = () => {
   const { theme } = useTheme()
   return (
@@ -308,7 +341,7 @@ const Home2 = () => {
   return (
     <PageWrapper>
       {/* SECTION 1 */}
-      <Section marginTop="22vh">
+      <Section>
         <Text1>
           <MetaFound />
         </Text1>
@@ -416,22 +449,14 @@ const Home2 = () => {
       </Section3>
       {/* SECTION 5 */}
       <Section3>
-        <Text
-          style={{
-            fontSize: '30px',
-            lineHeight: '24px',
-            fontWeight: 600,
-            paddingLeft: '16px',
-            borderLeft: `4px solid ${theme.colors.primary}`,
-            alignSelf: 'flex-start',
-          }}
-        >
+        <Section3Text5>
           <Trans>MetaFound&apos;s Operation</Trans>
-        </Text>
+        </Section3Text5>
         <img src="/images/metafound/operation.svg" alt="operation" style={{ width: '100%', userSelect: 'none', marginTop: '64px' }} />
       </Section3>
 
       <Section marginTop="150px" />
+      <style jsx global>{style}</style>
     </PageWrapper>
   )
 }

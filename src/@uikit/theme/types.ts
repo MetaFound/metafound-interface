@@ -8,6 +8,7 @@ export type MediaQueries = {
   xl: string;
   xxl: string;
   nav: string;
+  xxxl: string;
 };
 
 export type Spacing = number[];

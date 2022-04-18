@@ -48,12 +48,14 @@ const MyInvest = ({ accessToken }) => {
       const result: any = await api({
         endpoint: `api/v1/users/my-invest`
       })
-      const convertedInvest = result.data.data
-      const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
-      convertedInvest.forEach((item) => {
-        item.totalInvest = `${new BigNumber(item.totalInvest).div(decimals)}`
-      })
-      setInvest(convertedInvest)
+      if (result.data) {
+        const convertedInvest = result.data.data
+        const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
+        convertedInvest.forEach((item) => {
+          item.totalInvest = `${new BigNumber(item.totalInvest).div(decimals)}`
+        })
+        setInvest(convertedInvest)
+      }
     }
 
     if (accessToken) {
