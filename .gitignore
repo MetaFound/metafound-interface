@@ -40,3 +40,4 @@ src/config/abi/types
 
 # Sentry
 .sentryclirc
+.vercel
