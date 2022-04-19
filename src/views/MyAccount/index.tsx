@@ -49,13 +49,19 @@ const MyAccountItem = styled.div<{ active: boolean }>`
   width: 155px;
   height: 48px;
   display: flex;
-  justify-content: center;
   align-items: center;
   box-sizing: border-box;
   border-radius: 6px;
   margin-bottom: 12px;
   cursor: pointer;
+  padding-left: 38px;
   ${({ active }) => active && 'background: #333333; border: 0.5px solid #fdb81480; color: #FDB814;'}
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const RightPanel = styled.div`

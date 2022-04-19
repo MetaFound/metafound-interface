@@ -22,7 +22,6 @@ import WalletModal, { LOW_BNB_BALANCE, WalletView } from './WalletModal'
 import WalletUserMenuItem from './WalletUserMenuItem'
 
 const UserMenu = () => {
-  const router = useRouter()
   const { t } = useTranslation()
   const { account, error } = useWeb3React()
   const { logout } = useAuth()

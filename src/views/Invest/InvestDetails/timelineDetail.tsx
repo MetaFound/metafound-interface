@@ -20,6 +20,9 @@ const TimelineContentTitle = styled.div`
   font-weight: 500;
   font-size: 16px;
   line-height: 30px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }

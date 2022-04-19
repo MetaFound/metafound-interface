@@ -12,6 +12,12 @@ const Title = styled.div`
   font-size: 20px;
   color: #ffffff;
   margin-bottom: 20px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 20px;
+  }
 `
 
 const SubTitle = styled.div`
@@ -20,6 +26,12 @@ const SubTitle = styled.div`
   line-height: 30px;
   color: #868686;
   margin-bottom: 4px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const TextSpan = styled(Text)`
@@ -32,6 +44,12 @@ const ULGuide = styled.div`
     align-items: center;
     color: #fff;
     margin-top: 25px;
+  }
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
   }
 `
 

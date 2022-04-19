@@ -48,23 +48,34 @@ const StyledNav = styled.nav`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: ${MENU_HEIGHT}px;
+  
   transform: translate3d(0, 0, 0);
 
+  height: ${MENU_HEIGHT}px;
   max-width: 1300px;
+  
   padding: 0 16px;
   margin: 0 auto;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    max-width: 1200px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    max-width: 1300px;
+  }
 `
 
-const FixedContainer = styled.div<{ height: number }>`
+const FixedContainer = styled.div<{ height: number, showMenu: any }>`
   position: fixed;
   top: 0;
-  background: rgba(0, 0, 0, 0.7);
+  // background: rgba(0, 0, 0, 1);
   left: 0;
   transition: top 0.2s;
   height: ${({ height }) => `${height}px`};
   width: 100%;
   z-index: 20;
+  background: ${({ showMenu }) =>`${showMenu ? 'transparent' : 'rgba(0, 0, 0, 1)'}` };
 `
 
 const TopBannerContainer = styled.div<{ height: number }>`
@@ -141,7 +152,7 @@ const Menu: React.FC<NavProps> = ({
         if (currentOffset < refPrevOffset.current || currentOffset <= totalTopMenuHeight) {
           setOpacity(true)
           // Has scroll up
-          setShowMenu(true)
+          setShowMenu(false)
         } else {
           // Has scroll down
           setShowMenu(false)
@@ -166,7 +177,7 @@ const Menu: React.FC<NavProps> = ({
   return (
     <MenuContext.Provider value={{ linkComponent }}>
       <Wrapper>
-        <FixedContainer height={totalTopMenuHeight}>
+        <FixedContainer height={totalTopMenuHeight} showMenu={showMenu}>
           {banner && <TopBannerContainer height={topBannerHeight}>{banner}</TopBannerContainer>}
           <StyledNav>
             <Flex>

@@ -42,13 +42,29 @@ const StyledLink = styled('a')`
   }
 `
 
+const ImgLogo = styled.div`
+  img {
+    width: 168px;
+  }
+  ${({ theme }) => theme.mediaQueries.custom} {
+    img {
+      width: 135px;
+    }
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    img {
+      width: 168px;
+    }
+  }
+`
+
 const Logo: React.FC<Props> = ({ href }) => {
   const { linkComponent } = useContext(MenuContext)
   const isAbsoluteUrl = href.startsWith('http')
   const innerLogo = (
-    <>
-      <img src="/images/metafound/logo-with-text.png" alt="metafound-logo-with-text.png" width="168px" />
-    </>
+    <ImgLogo>
+      <img src="/images/metafound/logo-with-text.png" alt="metafound-logo-with-text.png" />
+    </ImgLogo>
   )
 
   return (
