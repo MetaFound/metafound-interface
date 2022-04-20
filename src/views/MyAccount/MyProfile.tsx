@@ -20,9 +20,14 @@ const MyProfileWrapper = styled.div``
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 20px;
   color: #ffffff;
   margin-bottom: 24px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 20px;
+  }
 `
 
 const SubTitle = styled.div`
@@ -30,6 +35,12 @@ const SubTitle = styled.div`
   font-size: 16px;
   color: #ffffff;
   margin-bottom: 24px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const MainWallet = styled.div`
@@ -100,6 +111,49 @@ const BtnChange = styled(Text)`
   cursor: pointer;
 `
 
+const Text1 = styled(Text)`
+  color: #9c9c9c;
+  font-size: 15px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 15px;
+  }
+`
+const Text2 = styled(Text)`
+  color: #fff;
+  font-size: 16px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
+`
+
+const Text3 = styled(Text)`
+  color: #959595;
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 12px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 14px;
+  }
+`
+
+const Text4 = styled(Text)`
+  color: #fff;
+  font-size: 14px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
+`
+
 const InputStake = styled(Input)``
 
 const MyProfile = () => {
@@ -153,15 +207,13 @@ const MyProfile = () => {
         <Flex justifyContent="space-between" alignItems="center">
           <Flex alignItems="center">
             <TextWallet>
-              <Text color="#9C9C9C" fontSize="15px">
-                Main Wallet Address
-              </Text>
-              <Text color="#fff" fontSize="16px">
+              <Text1>Main Wallet Address</Text1>
+              <Text2>
                 {`${addressWallet.slice(0, 8)}*********${addressWallet.slice(
                   addressWallet.length - 8,
                   addressWallet.length,
                 )}`}
-              </Text>
+              </Text2>
             </TextWallet>
             <IconMetamask src="/images/myAccount/metamark1.svg" />
           </Flex>
@@ -178,12 +230,12 @@ const MyProfile = () => {
       {/* </TextSpan> */}
       <StepCont>
         <StepItem>
-          <Text color="#959595" fontSize="14px">
+          <Text3>
             Stake to achive MetaFound Tier
-          </Text>
-          <Text color="#fff" fontSize="16px">
+          </Text3>
+          <Text4>
             Stake MTF to achieve tier (Silver, Gold, Dimond)
-          </Text>
+          </Text4>
           <Flex mt="20px" justifyContent="space-between" alignItems="center">
             <Flex>
               <InputStake onChange={onChange} value={stakeInput} />

@@ -26,6 +26,16 @@ const Section = styled(Flex)`
   text-align: center;
 `
 
+const Section1 = styled(Section)`
+  margin-top: 12vh;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    margin-top: 5vw;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    margin-top: 12vh;
+  }
+`
+
 const ProjectListTextSection = styled(Section)`
   margin-top: 8vh;
   ${({ theme }) => theme.mediaQueries.sm} {
@@ -43,6 +53,9 @@ const Text1 = styled.span`
   line-height: 1.5;
   color: ${({ theme }) => `${theme.colors.text}`};
   font-size: 36px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 40px;
+  }
 
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 50px;
@@ -57,6 +70,10 @@ const Text2 = styled(Text)`
   color: ${({ theme }) => `${theme.colors.text}`};
   font-size: 16px;
   margin-top: 16px;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 20px;
+  }
 
   ${({ theme }) => theme.mediaQueries.xxxl} {
     margin-top: 48px;
@@ -86,6 +103,16 @@ const BlockCommunity = styled(Flex)`
     gap: unset;
     padding: unset;
   }
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    width: 700px;
+    height: 95px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    width: 815px;
+    height: 105px;
+  }
 `
 
 const CommunityItem = styled(Text)`
@@ -105,6 +132,9 @@ const CommunityText = styled.div`
   font-weight: 700;
   line-height: 40px;
   color: ${({ theme }) => `${theme.colors.primary}`};
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 24px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 30px;
     line-height: 45px;
@@ -115,6 +145,10 @@ const CommunityContent = styled.div`
   font-weight: 300;
   font-size: 16px;
   line-height: 45px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 18px;
+    line-height: 24px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 22px;
   }
@@ -174,6 +208,14 @@ const FilterButton = styled.div`
     width: unset;
     margin-bottom: unset;
   }
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    height: unset;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    height: 50px;
+  }
 `
 
 const FilterButtonItem = styled.div<{ status: boolean }>`
@@ -183,7 +225,7 @@ const FilterButtonItem = styled.div<{ status: boolean }>`
   font-size: 14px;
   display: inline-block;
   width: 100%;
-  color: ${({ theme }) => `${theme.colors.text}`};
+  color: ${({ status }) => `${status ? '#000' : '#fff'}`};
   cursor: pointer;
   text-align: center;
   background: ${({ status }) => `${status ? '#FDB814' : 'none'}`};
@@ -341,6 +383,9 @@ const ProjectInformationItem = styled.div`
   line-height: 30px;
   height: 30px;
   display: flex;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 13px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 16px;
   }
@@ -386,7 +431,7 @@ const TotalText1 = styled(Text)`
 
 const TotalText2 = styled(Text)`
   display: inline-block;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 14px;
   color: ${({ theme }) => `${theme.colors.text}`};
   ${({ theme }) => theme.mediaQueries.xxxl} {
@@ -565,7 +610,7 @@ const Invest = () => {
 
   return (
     <PageWrapper>
-      <Section marginTop="12vh">
+      <Section1>
         <BlockTitle>
           <Text1Title>Meta</Text1Title>
           <Text1>Found - Capital Contribution to Real Estate</Text1>
@@ -574,7 +619,7 @@ const Invest = () => {
           The properties on MetaFound are carefully critically appraised by a team of Real Estate industry specialists
           with extensive experience.
         </Text2>
-      </Section>
+      </Section1>
       <Section marginTop="60px">
         <BlockCommunity>
           <CommunityItem>

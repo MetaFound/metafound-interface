@@ -18,6 +18,12 @@ const Title = styled.div`
   font-size: 20px;
   color: #ffffff;
   margin-bottom: 16px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 20px;
+  }
 `
 
 const Tab = styled.div<{ active: boolean }>`
@@ -29,6 +35,12 @@ const Tab = styled.div<{ active: boolean }>`
   border-radius: 6px;
   cursor: pointer;
   ${({ active }) => active && 'background: #4A4A4A; color: #FDB814;'}
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 const TextSpan = styled(Text)`
   display: inline-block;
@@ -84,6 +96,17 @@ const DivBorder = styled.div`
   border-radius: 5px;
   padding: 16px;
   margin-top: 16px;
+`
+
+const Text1 = styled(Text)`
+  font-size: 16px;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 const MyTier = ({ accessToken }) => {
@@ -155,8 +178,8 @@ const MyTier = ({ accessToken }) => {
           ) : (
             <>
               <Flex mb="10px">
-                <Text width="100px">My Tier</Text>
-                <Text
+                <Text1 width="100px">My Tier</Text1>
+                <Text1
                   color={
                     tier &&
                     (myPoint >= tier.diamond
@@ -176,11 +199,11 @@ const MyTier = ({ accessToken }) => {
                       : myPoint >= tier.silver
                       ? 'Silver'
                       : 'N/A')}
-                </Text>
+                </Text1>
               </Flex>
               <Flex>
-                <Text width="100px">My Point</Text>
-                <Text>{myPoint}</Text>
+                <Text1 width="100px">My Point</Text1>
+                <Text1>{myPoint}</Text1>
               </Flex>
               {parseFloat(pointToRankUp) >= 0 && (
                 <TextSpan color="#868686" fontSize="13px" mt="4px">

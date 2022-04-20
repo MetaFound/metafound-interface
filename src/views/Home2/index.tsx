@@ -20,6 +20,9 @@ const Text1 = styled(Text)`
   font-weight: 800;
   text-transform: uppercase;
   font-size: 40px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 52px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: clamp(32px, 5vw, 65px);
   }
@@ -29,6 +32,11 @@ const Text2 = styled(Text)`
   font-weight: 700;
   line-height: 45px;
   font-size: 20px;
+  margin-top: 48px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    margin-top: 24px;
+    font-size: 28px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 35px;
   }
@@ -38,6 +46,9 @@ const Text3 = styled(Text)`
   font-weight: 300;
   margin-top: 16px;
   font-size: 16px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 24px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     margin-top: 32px;
     font-size: clamp(20px, 2vw, 30px);
@@ -48,7 +59,9 @@ const Text4 = styled(Text)`
   font-weight: 400;
   font-size: 16px;
   line-height: 35px;
-
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
@@ -59,7 +72,10 @@ const Section = styled(Flex)`
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-top: 14vw;
+  margin-top: 22vh;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    margin-top: 10vw;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     margin-top: 22vh;
   }
@@ -78,6 +94,14 @@ const Section3 = styled(Section)`
   ${({ theme }) => theme.mediaQueries.sm} {
     margin-top: 150px;
   }
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    margin-top: 90px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    margin-top: 150px;
+  }
 `
 
 const ButtonBlock = styled(Flex)`
@@ -87,6 +111,10 @@ const ButtonBlock = styled(Flex)`
 
   ${({ theme }) => theme.mediaQueries.sm} {
     margin-top: 48px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    margin-top: 60px;
   }
 
   ${({ theme }) => theme.mediaQueries.xxxl} {
@@ -110,11 +138,18 @@ const ConnectWalletButtonStyled = styled(ConnectWalletButton)`
     padding: 9px 20px;
   }
 
+  ${({ theme }) => theme.mediaQueries.custom} {
+    height: 60px;
+    font-size: 19px;
+    width: 240px;
+  }
+
   ${({ theme }) => theme.mediaQueries.xxxl} {
     height: 75px;
     font-size: 25px;
     width: 300px;
   }
+  
 `
 
 const MyAccountButtonStyled = styled(Button)`
@@ -134,6 +169,13 @@ const MyAccountButtonStyled = styled(Button)`
   height: 36px;
   font-size: 14px;
   // width: 144px;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    height: 60px;
+    font-size: 19px;
+    width: 240px;
+  }
+
 
   ${({ theme }) => theme.mediaQueries.xxxl} {
     height: 75px;
@@ -159,6 +201,13 @@ const InvestButtonStyled = styled(Button)`
   // }
   height: 36px;
   font-size: 14px;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    height: 60px;
+    font-size: 19px;
+    width: 240px;
+  }
+
   ${({ theme }) => theme.mediaQueries.xxxl} {
     height: 75px;
     font-size: 25px;
@@ -175,6 +224,13 @@ const BenefitBlock = styled(Flex)`
   ${({ theme }) => theme.mediaQueries.md} {
     flex-wrap: unset;
     justify-content: space-between;
+    margin-top: 120px;
+  }
+  ${({ theme }) => theme.mediaQueries.custom} {
+    margin-top: 80px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     margin-top: 120px;
   }
 `
@@ -195,6 +251,12 @@ const BenefitBox = styled(Flex)`
 
 const Page2Icon = styled.img`
   width: 80px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    width: 65px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    width: 80px;
+  }
 `
 
 const Page2IconShadow = styled.img`
@@ -213,25 +275,32 @@ const Page2Text = styled(Text)`
   max-width: 25ch;
   font-weight: 500;
   padding: 0 10px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 16px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 18px;
     font-weight: 600;
+    margin-top: 32px;
   }
 `
 
 const RegisterBox = styled(Flex)`
   width: 100%;
-  border: ${({ theme }) => `0.5px solid ${theme.colors.primary}`};
+  border: 1px solid #fdb81480;
   padding: 32px;
   justify-content: space-between;
   gap: 32px;
   align-items: center;
   border-radius: 16px;
   flex-wrap: wrap;
-
+  font-weight: 400;
   ${({ theme }) => theme.mediaQueries.md} {
     flex-wrap: unset;
   }
+
 `
 
 const RegisterText = styled(Text)`
@@ -240,6 +309,20 @@ const RegisterText = styled(Text)`
   max-width: 70ch;
   text-align: left;
 
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 20px;
+  }
+`
+
+const RegisterText2 = styled(Text)`
+  font-size: 16px;
+  font-weight: 400;
+  max-width: 70ch;
+  text-align: left;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 20px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
@@ -266,6 +349,11 @@ const Section4Text = styled(Text)`
   padding: 16px;
   background: linear-gradient(270deg, #443000 0%, #855e00 34.68%, #ba8300 68.12%, #fdb814 100%);
   border-radius: 15px;
+  font-weight: 400;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    padding: 24px 0;
+    font-size: 16px;
+  }
 
   ${({ theme }) => theme.mediaQueries.xxxl} {
     padding: 32px 0;
@@ -284,6 +372,12 @@ const Section4Text2 = styled(Text)`
   align-items: center;
   padding: 16px;
   font-size: 16px;
+  font-weight: 400;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    padding: 24px 60px;
+    font-size: 16px;
+  }
 
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
@@ -317,6 +411,10 @@ const Section3Text5 = styled(Text)`
   padding-left: 16px;
   border-left: 4px solid rgb(253, 184, 20);
   align-self: flex-start;
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 25px;
+  }
 
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 30px;
@@ -365,10 +463,10 @@ const Home2 = () => {
       {/* SECTION 2 */}
       <Section2>
         <Box background={theme.colors.primary} width="100px" height="4px" />
-        <Text2 marginTop="48px">
+        <Text2>
           <Trans>What is</Trans> <MetaFound />?
         </Text2>
-        <Text4 marginTop="24px" maxWidth="75ch">
+        <Text4 marginTop="24px">
           <Trans>
             MetaFound (MTF) is a real estate technology platform. MTF utilizes the Blockchain platform to tokenize and
             split real estate as well as investments, allowing individuals to invest in all or a portion of publicly
@@ -425,9 +523,9 @@ const Home2 = () => {
           </RegisterText>
           <RegisterButton>
             <Flex alignItems="center" style={{ gap: '16px' }}>
-              <RegisterText style={{ color: theme.colors.background, fontWeight: 600, wordBreak: 'keep-all' }}>
-                <Trans>Register Now</Trans>
-              </RegisterText>
+              <RegisterText2 style={{ color: theme.colors.background, fontWeight: 600, wordBreak: 'keep-all' }}>
+                <Trans>Register now</Trans>
+              </RegisterText2>
               <img src="/images/metafound/arrow.svg" alt="arrow" width="28px" />
             </Flex>
           </RegisterButton>

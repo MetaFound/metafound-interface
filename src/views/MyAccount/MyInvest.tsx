@@ -15,6 +15,12 @@ const Title = styled.div`
   font-size: 20px;
   color: #ffffff;
   margin-bottom: 12px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 20px;
+  }
 `
 
 const SubTitle = styled.div`
@@ -22,6 +28,12 @@ const SubTitle = styled.div`
   font-size: 16px;
   color: #ffffff;
   margin-bottom: 24px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 const TableInvest = styled.table`
   width: 100%;
@@ -37,6 +49,16 @@ const TableInvest = styled.table`
     padding: 12px 0;
     color: #fff;
   }
+  ${({ theme }) => theme.mediaQueries.custom} {
+   th, td {
+    font-size: 14px;
+   }
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    th, td {
+      font-size: 14px;
+     }
+  }
 `
 
 const MyInvest = ({ accessToken }) => {
@@ -45,16 +67,20 @@ const MyInvest = ({ accessToken }) => {
 
   useEffect(() => {
     async function getInvest() {
-      const result: any = await api({
-        endpoint: `api/v1/users/my-invest`
-      })
-      if (result.data) {
-        const convertedInvest = result.data.data
-        const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
-        convertedInvest.forEach((item) => {
-          item.totalInvest = `${new BigNumber(item.totalInvest).div(decimals)}`
+      try {
+        const result: any = await api({
+          endpoint: `api/v1/users/my-invest`
         })
-        setInvest(convertedInvest)
+        if (result.data) {
+          const convertedInvest = result.data.data
+          const decimals = new BigNumber(10).pow(testnetTokens.mtf.decimals)
+          convertedInvest.forEach((item) => {
+            item.totalInvest = `${new BigNumber(item.totalInvest).div(decimals)}`
+          })
+          setInvest(convertedInvest)
+        }
+      } catch(e) {
+        console.log(e)
       }
     }
 

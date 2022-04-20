@@ -75,6 +75,13 @@ const StyledMenuItem = styled.a<StyledMenuItemProps>`
     }
   `
       : ``}
+  font-weight: 400;    
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+  }
 `
 
 export default StyledMenuItem

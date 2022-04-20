@@ -13,7 +13,7 @@ import { getMetafoundAddress } from 'utils/addressHelpers'
 import { useMetafoundContract } from 'hooks/useContract'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useCurrentBlock } from 'state/block/hooks'
-import {API_ENDPOINT} from 'config/constants/api'
+import { API_ENDPOINT } from 'config/constants/api'
 import useTheme from '../../../hooks/useTheme'
 import { Box, Flex, Input, Text } from '../../../@uikit'
 import TimelineDetail from './timelineDetail'
@@ -37,6 +37,16 @@ const CarouselImg = styled.img`
   width: 100%;
   object-fit: cover;
   ${({ theme }) => theme.mediaQueries.sm} {
+    margin: 0 54px;
+    height: 500px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    margin: 0 54px;
+    height: 380px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
     margin: 0 54px;
     height: 500px;
   }
@@ -138,7 +148,7 @@ const ProgressPercentBlock = styled(Flex)`
 const TimelineBlock = styled(Flex)`
   flex: 4;
   background: #333333;
-  border: 0.5px solid #fdb814;
+  border: 1px solid #fdb81780;
   border-radius: 10px;
   padding: 30px;
   flex-direction: column;
@@ -146,14 +156,25 @@ const TimelineBlock = styled(Flex)`
   ${({ theme }) => theme.mediaQueries.sm} {
     padding: 30px 65px;
   }
+
+  ${({ theme }) => theme.mediaQueries.custom} {
+    padding: 25px 40px;
+  }
+
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    padding: 30px 65px;
+  }
 `
 const TimelineBlockTitle = styled(Flex)`
-  font-weight: 600;
+  font-weight: 500;
   font-size: 16px;
   margin-bottom: 26px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
-  line-height: 30px;
+    line-height: 30px;
   }
 `
 
@@ -199,15 +220,18 @@ const TimelineContent = styled.div`
 const TimelineContentTitle = styled.div`
   font-weight: 500;
   font-size: 16px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 16px;
+  }
   ${({ theme }) => theme.mediaQueries.xxxl} {
     font-size: 20px;
   }
 `
 
 const ProgressBlock = styled(Flex)`
-  flex: 7;
+  flex: 8;
   background: #333333;
-  border: 0.5px solid #fdb814;
+  border: 1px solid #fdb81780;
   border-radius: 10px;
   flex-direction: column;
   padding: 30px;
@@ -216,9 +240,8 @@ const ProgressBlock = styled(Flex)`
     padding: 60px 100px;
   }
 
-  @media screen and (max-width: 1620px)
-  {
-      padding: 30px;
+  @media screen and (max-width: 1620px) {
+    padding: 30px;
   }
 
   order: 2;
@@ -293,8 +316,8 @@ const ProgressBlockStepItemText = styled(Flex)<{ active: boolean }>`
 `
 
 const ProgressBlockStepInfo = styled.div`
-  border: 1px solid #fdb814;
-  box-sizing: border-box;
+border: 1px solid #fdb81780;
+box-sizing: border-box;
   border-radius: 8px;
   padding: 20px;
   margin-top: 26px;
@@ -355,7 +378,7 @@ const ProgressBlockStepInfoTier1 = styled(Flex)`
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
-  border: 1px solid #fdb814;
+  border: 1px solid #fdb81780;
   min-width: 125px;
   flex-wrap: wrap;
 
@@ -365,7 +388,6 @@ const ProgressBlockStepInfoTier1 = styled(Flex)`
     min-width: 150px;
     padding: 0 15px;
   }
-
 `
 
 const ProgressBlockStepInfoTier1Text1 = styled(TextStyle2)`
@@ -472,7 +494,7 @@ const ProjectInfoContentDetailGeneral = styled(Flex)`
 
 const ProjectInfoContentDetailGeneralContent = styled(Flex)`
   background: #333333;
-  border: 1px solid #fdb814;
+  border: 1px solid #fdb81780;
   border-radius: 10px;
   flex-direction: column;
   text-align: left;
@@ -541,12 +563,18 @@ const ProjectInfoContentGeneralContent = styled.div`
   ${({ theme }) => theme.mediaQueries.sm} {
     font-size: 16px;
   }
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxl} {
+    font-size: 16px;
+  }
 `
 
 const ProjectInfoContentTransactions = styled.div`
   flex: 1;
   background: #333333;
-  border: 1px solid #fdb814;
+  border: 1px solid #fdb81780;
   border-radius: 10px;
   padding: 30px;
   text-align: start;
@@ -694,7 +722,7 @@ const TotalText1 = styled(Text)`
 
 const TotalText2 = styled(Text)`
   display: inline-block;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 14px;
   color: ${({ theme }) => `${theme.colors.text}`};
 
@@ -1178,7 +1206,7 @@ const InvestDetail = () => {
         )
         setWithdrawFeeAndDiscount({
           withdrawFee: myInvestData.data.data.withdrawFee,
-          discountWithdrawFee: myInvestData.data.data.discountWithdrawFee
+          discountWithdrawFee: myInvestData.data.data.discountWithdrawFee,
         })
         setMyInvest(myInvestBn.toString())
       } catch (err) {
@@ -1322,19 +1350,21 @@ const InvestDetail = () => {
             {/*   <ProgressBlockStepInfoText3>1USDT = 0.0001 VND</ProgressBlockStepInfoText3> */}
             {/*   <ProgressBlockStepInfoText3Question>?</ProgressBlockStepInfoText3Question> */}
             {/* </ProgressBlockStepInfoText3Block> */}
-            {
-              timelineStep === 2 &&
+            {timelineStep === 2 && (
               <WarningMessageWithdraw>*You will be charged a fee: 15% if you withdraw now</WarningMessageWithdraw>
-            }
-            {
-              timelineStep === 3 && withdrawFeeAndDiscount &&
+            )}
+            {timelineStep === 3 && withdrawFeeAndDiscount && (
               <WarningMessageWithdraw>{`*You will be charged a fee: ${
-                withdrawFeeAndDiscount.withdrawFee * 
-                (1 - (myTier === 'Diamond' ? withdrawFeeAndDiscount.discountWithdrawFee.diamond
-                :myTier === 'Gold' ? withdrawFeeAndDiscount.discountWithdrawFee.gold
-                :withdrawFeeAndDiscount.discountWithdrawFee.silver)) * 100
+                withdrawFeeAndDiscount.withdrawFee *
+                (1 -
+                  (myTier === 'Diamond'
+                    ? withdrawFeeAndDiscount.discountWithdrawFee.diamond
+                    : myTier === 'Gold'
+                    ? withdrawFeeAndDiscount.discountWithdrawFee.gold
+                    : withdrawFeeAndDiscount.discountWithdrawFee.silver)) *
+                100
               }%`}</WarningMessageWithdraw>
-            }
+            )}
           </ProgressBlockStepInfo>
         )
     }
@@ -1463,11 +1493,7 @@ const InvestDetail = () => {
         </LocationBlock>
         <TimelineProgressSection>
           <ProgressPercentBlock>
-            {
-              detailItem?.detail?.expected_profit ?
-              <APY>{`APY: ${detailItem.detail.expected_profit}`}</APY>
-              :<div />
-            }
+            {detailItem?.detail?.expected_profit ? <APY>{`APY: ${detailItem.detail.expected_profit}`}</APY> : <div />}
             <ProgressPercent>
               <TotalContributedCapital>Total Contributed Capital</TotalContributedCapital>
               <PercentBlock>

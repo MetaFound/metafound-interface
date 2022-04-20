@@ -9,6 +9,14 @@ const ButtonConnenctWallet = styled(Button)`
   padding: 14px 19px;
   height: 48px;
   border-radius: 5px;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    font-size: 14px;
+    height: 36px;
+  }
+  ${({ theme }) => theme.mediaQueries.xxxl} {
+    font-size: 16px;
+    height: 48px;
+  }
 `
 
 const ConnectWalletButton = (props) => {
