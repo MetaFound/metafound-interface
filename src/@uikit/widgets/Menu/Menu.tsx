@@ -107,6 +107,13 @@ const MyAccountItem = styled.div<{ isActive: boolean }>`
   color: ${({ isActive }) => (isActive ? '#FDB814' : '#fff')};
 `
 
+const DropdownMenuAccount = styled(DropdownMenu)`
+  display: none;
+  ${({ theme }) => theme.mediaQueries.custom} {
+    display: block;
+  }
+`
+
 const Menu: React.FC<NavProps> = ({
   linkComponent = 'a',
   userMenu,
@@ -191,9 +198,9 @@ const Menu: React.FC<NavProps> = ({
                 </Box>
               )} */}
               {account && (
-                <DropdownMenu items={SubItemMyAccount} activeItem="/my-account" mr="20px">
+                <DropdownMenuAccount items={SubItemMyAccount} activeItem="/my-account" mr="20px">
                   <MyAccountItem isActive={pathname.includes('/my-account')}>My Account</MyAccountItem>
-                </DropdownMenu>
+                </DropdownMenuAccount>
               )}
 
               {userMenu}
