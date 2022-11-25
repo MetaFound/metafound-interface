@@ -37,8 +37,8 @@ env:
   CONTAINER_NAME: 'MetaFoundInterfaceContainer'
   ECS_SERVICE: ${{ secrets.ECS_SERVICE }}             # ECS_SERVICE: 'MetaFoundProdInterfaceService'
   ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}             # ECS_CLUSTER: 'MetaFoundProdCluster'
-  AWS_ACCESS_KEY_ID: ${{ AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ AWS_SECRET_ACCESS_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 permissions:
   contents: read
