@@ -1,5 +1,5 @@
 # build env
-FROM node:12-alpine as build
+FROM node:16-alpine as build
 
 RUN apk update && apk add git
 
