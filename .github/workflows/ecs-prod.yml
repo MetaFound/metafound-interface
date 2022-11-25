@@ -31,26 +31,19 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}                      # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}              # set this to your Amazon ECR repository name
-  ECS_SERVICE: ${{ secrets.ECS_SERVICE }}                    # set this to your Amazon ECS service name
-  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}                    # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: ${{ secrets.ECS_TASK_DEFINITION }}    # set this to the path to your Amazon ECS task definition file
-  CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}              # set this to the name of the container in the containerDefinitions section of your task definition
-
-  # AWS_REGION: 'ap-southeast-1'
-  # ECR_REPOSITORY: 'algobet-interface'
-  # ECS_SERVICE: 'AlgobetInterfaceService'
-  # ECS_CLUSTER: 'AlgobetCluster'
-  # ECS_TASK_DEFINITION: '.aws/task-definition.json'
-  # CONTAINER_NAME: 'AlgobetInterfaceContainer'
+  AWS_REGION: 'ap-southeast-1'
+  ECR_REPOSITORY: 'metafound-interface'
+  ECS_TASK_DEFINITION: '.aws/task-definition.json'
+  CONTAINER_NAME: 'MetaFoundInterfaceContainer'
+  ECS_SERVICE: ${{ secrets.ECS_SERVICE }}           # ECS_SERVICE: 'MetaFoundProdInterfaceService'
+  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}           # ECS_CLUSTER: 'MetaFoundProdCluster'
 
 permissions:
   contents: read
 
 jobs:
   build-interface:
-    name: Build API image
+    name: Build MetaFound Interface image
     runs-on: ubuntu-latest
     environment: production
 
@@ -102,7 +95,7 @@ jobs:
       task-definition: steps.task-def.outputs.task-definition
 
   deploy-interface:
-    name: Deploy Algobet Interface
+    name: Deploy MetaFound Interface
     runs-on: ubuntu-latest
     needs: [build-interface]
     environment: production
