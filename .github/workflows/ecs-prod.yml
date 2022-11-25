@@ -35,8 +35,10 @@ env:
   ECR_REPOSITORY: 'metafound-interface'
   ECS_TASK_DEFINITION: '.aws/task-definition.json'
   CONTAINER_NAME: 'MetaFoundInterfaceContainer'
-  ECS_SERVICE: ${{ secrets.ECS_SERVICE }}           # ECS_SERVICE: 'MetaFoundProdInterfaceService'
-  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}           # ECS_CLUSTER: 'MetaFoundProdCluster'
+  ECS_SERVICE: ${{ secrets.ECS_SERVICE }}             # ECS_SERVICE: 'MetaFoundProdInterfaceService'
+  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}             # ECS_CLUSTER: 'MetaFoundProdCluster'
+  AWS_ACCESS_KEY_ID: ${{ AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ AWS_SECRET_ACCESS_KEY }}
 
 permissions:
   contents: read
@@ -54,8 +56,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
@@ -105,8 +107,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
